@@ -13,14 +13,10 @@ class MovableObject {
     }
 
     moveRight(){
-        setInterval(() => {
             this.posX = this.posX + this.speed;   
-        }, 1000/16); 
     }
 
     moveLeft(){
-        setInterval(() => {
             this.posX = this.posX - this.speed;   
-        }, 1000/16); 
     }
 }

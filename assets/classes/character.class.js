@@ -20,17 +20,20 @@ class Character extends MovableObject {
             this.walkingImagesCache[path] = img;
         });
     }
-    
+
 
     idle() {
-        this.loadImage();
+        let i = this.currentImg % this.idleImages.length;
+        let path = this.idleImages[i];
+        this.img = this.idleImagesCache[path];
+        this.currentImg++;
     };
 
-    attack(){
+    attack() {
 
     };
 
-    takeDamage(){
+    takeDamage() {
 
     };
 

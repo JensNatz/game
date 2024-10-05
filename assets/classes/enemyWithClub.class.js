@@ -14,16 +14,16 @@ class EnemyWithClub extends Character {
         '../assets/img/enemyWithClub/Walk/Walk_11.png',
         '../assets/img/enemyWithClub/Walk/Walk_12.png',
         '../assets/img/enemyWithClub/Walk/Walk_13.png'
-    ]
+    ];
+    speed = 5;
+    posY = 150;
+    width = 650;
+    height = 650;
 
     constructor(){
         super().loadImage('../assets/img/enemyWithClub/Idle/Idle_00.png');
         this.loadWalkingImages(this.walkingImages)
         this.posX = 300 + Math.random() * 500;
-        this.posY = 150;
-        this.width = 650;
-        this.height = 650;
-        this.speed = 2.5;
         this.animate(); 
     }
 

@@ -1,6 +1,4 @@
 class World {
-    canvas;
-    ctx;
     hero = new Hero();
     enemies = [
         new EnemyWithClub(),
@@ -9,12 +7,21 @@ class World {
     foregrounds = [
         new Foreground('../assets/img/backgrounds/7.png', 0, 0),
         new Foreground('../assets/img/backgrounds/8.png', -4, 660)
-    ]
+    ];
+    canvas;
+    keyboard;
+    ctx;
 
-    constructor(canvas){
+    constructor(canvas, keyboard){
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
+        this.keyboard = keyboard;
         this.draw();
+        this.setWorld();
+    }
+
+    setWorld() {
+       this.hero.world = this;        
     }
 
     drawObject(object){
@@ -32,9 +39,6 @@ class World {
         this.foregrounds.forEach(foreground =>{
             this.drawObject(foreground);
         })
-
-        
-
 
 
         let self = this;

@@ -8,45 +8,38 @@ window.addEventListener('keyup', handleKeyUpEvent);
 
 function init() {
     canvas = document.getElementById('canvas');
-    world = new World(canvas);
     keyboard = new Keyboard();
+    world = new World(canvas, keyboard);
 }
 
-function handleKeyDownEvent(event){
+function handleKeyDownEvent(event) {
     switch (event.code) {
         case 'ArrowUp':
-           keyboard.UP = true;
+            keyboard.UP = true;
+            break;
         case 'ArrowDown':
             keyboard.DOWN = true;
+            break;
         case 'ArrowLeft':
             keyboard.LEFT = true;
+            break;
         case 'ArrowRight':
             keyboard.RIGHT = true;
+            break;
         case 'Space':
             keyboard.SPACE = true;
+            break;
         case 'KeyW':
             keyboard.W = true;
+            break;
     }
-
-    console.log(keyboard);
-    
 }
 
-function handleKeyUpEvent(event){
-    switch (event.code) {
-        case 'ArrowUp':
-           keyboard.UP = false;
-        case 'ArrowDown':
-            keyboard.DOWN = false;
-        case 'ArrowLeft':
-            keyboard.LEFT = false;
-        case 'ArrowRight':
-            keyboard.RIGHT = false;
-        case 'Space':
-            keyboard.SPACE = false;
-        case 'KeyW':
-            keyboard.W = false;
-    }
-
-    console.log(keyboard);
+function handleKeyUpEvent(event) {
+    keyboard.UP = false;
+    keyboard.DOWN = false;
+    keyboard.LEFT = false;
+    keyboard.RIGHT = false;
+    keyboard.SPACE = false;
+    keyboard.W = false;
 }
