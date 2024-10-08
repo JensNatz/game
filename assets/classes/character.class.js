@@ -1,43 +1,53 @@
 class Character extends MovableObject {
+    world;
     hp;
-    strength;
-
+    power;
     idleImagesCache = {};
+    walkImages;
     walkingImagesCache = {};
+    getHitImages;
+    getHitImagesCache = {};
+    dieImages;
+    dieImagesCache = {};
+    isTakingDamage = false;
 
-    loadIdleImages(array) {
-        array.forEach(path => {
-            let img = new Image();
-            img.src = path;
-            this.idleImagesCache[path] = img;
-        });
+    
+    playWalkingAnimation() {
+        this.playAnimation(this.walkImages, this.walkingImagesCache)      
     }
 
-    loadWalkingImages(array) {
-        array.forEach(path => {
-            let img = new Image();
-            img.src = path;
-            this.walkingImagesCache[path] = img;
-        });
+    playGetHitAnimation() {
+        this.playAnimation(this.getHitImages, this.getHitImagesCache)  
+        if (this.currentImg % this.getHitImages.length == this.getHitImages.length-1){
+            this.isTakingDamage = false;
+        }
     }
 
+    playIdleAnimation() {
+        this.playAnimation(this.idleImages, this.idleImagesCache)        
+    }
 
-    idle() {
-        let i = this.currentImg % this.idleImages.length;
-        let path = this.idleImages[i];
-        this.img = this.idleImagesCache[path];
+    playDieAnimation(){
+        this.playAnimation(this.dieImages, this.dieImagesCache)   
+    }
+
+    playAnimation(imageArray, cache) {
+        let i = this.currentImg % imageArray.length;
+        let path = imageArray[i];
+        this.img = cache[path];
         this.currentImg++;
-    };
+    }
+
 
     attack() {
 
     };
 
-    takeDamage() {
-
+    takeDamage(power) {
+        this.hp = this.hp - power;
     };
 
-    die() {
-
-    };
+    isDead(){
+        return this.hp <= 0;
+    }
 }

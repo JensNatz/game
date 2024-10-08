@@ -9,10 +9,11 @@ window.addEventListener('keyup', handleKeyUpEvent);
 function init() {
     canvas = document.getElementById('canvas');
     keyboard = new Keyboard();
-    world = new World(canvas, keyboard);
+    world = new World(canvas, keyboard, level1);
 }
 
 function handleKeyDownEvent(event) {
+    keyboard.KEYPRESSED = true;
     switch (event.code) {
         case 'ArrowUp':
             keyboard.UP = true;
@@ -36,10 +37,25 @@ function handleKeyDownEvent(event) {
 }
 
 function handleKeyUpEvent(event) {
-    keyboard.UP = false;
-    keyboard.DOWN = false;
-    keyboard.LEFT = false;
-    keyboard.RIGHT = false;
-    keyboard.SPACE = false;
-    keyboard.W = false;
+    keyboard.KEYPRESSED = false;
+    switch (event.code) {
+        case 'ArrowUp':
+            keyboard.UP = false;
+            break;
+        case 'ArrowDown':
+            keyboard.DOWN = false;
+            break;
+        case 'ArrowLeft':
+            keyboard.LEFT = false;
+            break;
+        case 'ArrowRight':
+            keyboard.RIGHT = false;
+            break;
+        case 'Space':
+            keyboard.SPACE = false;
+            break;
+        case 'KeyW':
+            keyboard.W = false;
+            break;
+    }
 }

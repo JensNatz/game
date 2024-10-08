@@ -1,5 +1,4 @@
 class Hero extends Character {
-    world;
     idleImages = [
         '../assets/img/hero/Idle/Idle_00.png',
         '../assets/img/hero/Idle/Idle_01.png',
@@ -42,64 +41,177 @@ class Hero extends Character {
         '../assets/img/hero/Jump/Jump_06.png',
         '../assets/img/hero/Jump/Jump_07.png',
         '../assets/img/hero/Jump/Jump_08.png',
-        '../assets/img/hero/Jump/Jump_09.png'
+        '../assets/img/hero/Jump/Jump_09.png',
+        '../assets/img/hero/Jump/Jump_10.png',
+        '../assets/img/hero/Jump/Jump_11.png',
+        '../assets/img/hero/Jump/Jump_12.png',
+        '../assets/img/hero/Jump/Jump_13.png'
     ];
-    speed = 3;
+    getHitImages = [
+        'assets/img/hero/GetHit/Get Hit_00.png',
+        'assets/img/hero/GetHit/Get Hit_01.png',
+        'assets/img/hero/GetHit/Get Hit_02.png',
+        'assets/img/hero/GetHit/Get Hit_03.png',
+        'assets/img/hero/GetHit/Get Hit_04.png',
+        'assets/img/hero/GetHit/Get Hit_05.png',
+        'assets/img/hero/GetHit/Get Hit_06.png',
+        'assets/img/hero/GetHit/Get Hit_07.png',
+        'assets/img/hero/GetHit/Get Hit_08.png',
+        'assets/img/hero/GetHit/Get Hit_09.png',
+    ];
+    dieImages = [
+        'assets/img/hero/Death/Death_00.png',
+        'assets/img/hero/Death/Death_01.png',
+        'assets/img/hero/Death/Death_02.png',
+        'assets/img/hero/Death/Death_03.png',
+        'assets/img/hero/Death/Death_04.png',
+        'assets/img/hero/Death/Death_05.png',
+        'assets/img/hero/Death/Death_06.png',
+        'assets/img/hero/Death/Death_07.png',
+        'assets/img/hero/Death/Death_08.png',
+        'assets/img/hero/Death/Death_09.png',
+        'assets/img/hero/Death/Death_10.png',
+        'assets/img/hero/Death/Death_11.png',
+        'assets/img/hero/Death/Death_12.png',
+        'assets/img/hero/Death/Death_13.png',
+        'assets/img/hero/Death/Death_14.png',
+        'assets/img/hero/Death/Death_15.png',
+        'assets/img/hero/Death/Death_16.png',
+        'assets/img/hero/Death/Death_17.png',
+        'assets/img/hero/Death/Death_18.png',
+        'assets/img/hero/Death/Death_19.png',
+        'assets/img/hero/Death/Death_20.png',
+        'assets/img/hero/Death/Death_21.png',
+        'assets/img/hero/Death/Death_22.png',
+        'assets/img/hero/Death/Death_23.png',
+        'assets/img/hero/Death/Death_24.png',
+        'assets/img/hero/Death/Death_25.png',
+        'assets/img/hero/Death/Death_26.png',
+        'assets/img/hero/Death/Death_27.png',
+        'assets/img/hero/Death/Death_28.png',
+        'assets/img/hero/Death/Death_29.png',
+        'assets/img/hero/Death/Death_30.png',
+        'assets/img/hero/Death/Death_31.png',
+        'assets/img/hero/Death/Death_32.png',
+        'assets/img/hero/Death/Death_33.png',
+        'assets/img/hero/Death/Death_34.png',
+        'assets/img/hero/Death/Death_35.png',
+        'assets/img/hero/Death/Death_36.png',
+        'assets/img/hero/Death/Death_37.png',
+        'assets/img/hero/Death/Death_38.png',
+        'assets/img/hero/Death/Death_39.png',
+        'assets/img/hero/Death/Death_40.png',
+        'assets/img/hero/Death/Death_41.png',
+        'assets/img/hero/Death/Death_42.png',
+        'assets/img/hero/Death/Death_43.png'
+    ];
+    
+    offsetY = 0;
+    speed = 15;
     jumpImagesCache = {};
+    isJumping = false;
+    soundWalking = new Audio('../assets/audio/step.wav');
+    jumpDirection = 1;
+    standardImunityTime = 30;
+    currentDamageImmunityDuration = 0;
 
     constructor() {
-        super().loadImage('../assets/img/hero/Idle/Idle_00.png');
-        this.loadIdleImages(this.idleImages);
-        this.loadWalkingImages(this.walkImages);
-        this.loadJumpImages(this.jumpImages);
-        this.posX = -100;
+        super().loadImage(this.idleImages[0]);
+        this.loadImagesInCache(this.walkImages, this.walkingImagesCache)
+        this.loadImagesInCache(this.idleImages, this.idleImagesCache)
+        this.loadImagesInCache(this.jumpImages, this.jumpImagesCache)
+        this.loadImagesInCache(this.getHitImages, this.getHitImagesCache)
+        this.loadImagesInCache(this.dieImages, this.dieImagesCache)
+        this.posX = -70;
         this.posY = 150;
         this.width = 650;
         this.height = 650;
+        this.hp = 5;
         this.animate();
     }
 
-    loadJumpImages(array) {
-        array.forEach(path => {
-            let img = new Image();
-            img.src = path;
-            this.jumpImagesCache[path] = img;
-        });
-    }
-
-
     animate() {
         setInterval(() => {
+            this.reduceDamageImmunityDuration();           
 
-            if (this.world.keyboard.RIGHT) {
-                let i = this.currentImg % this.walkImages.length;
-                let path = this.walkImages[i];
-                this.img = this.walkingImagesCache[path];
-                this.currentImg++;
-                this.moveRight();
-            }
-            else if (this.world.keyboard.LEFT) {
-                let i = this.currentImg % this.walkImages.length;
-                let path = this.walkImages[i];
-                this.img = this.walkingImagesCache[path];
-                this.currentImg++;
-                this.moveLeft();
-            }else if (this.world.keyboard.SPACE) {
-                this.jump();
+            if(this.isDead()){
+                this.playDieAnimation();
             } else {
-                this.idle();
+                if (this.isTakingDamage) {
+                    this.playGetHitAnimation();
+                }
+    
+                if (this.world.keyboard.SPACE && !this.isJumping) {
+                    this.currentImg = 0;
+                    this.isJumping = true;
+                }
+                if (this.isJumping) {
+                    this.jump();
+                }
+                if (this.world.keyboard.RIGHT && this.posX < this.world.length) {
+                    this.moveRight();
+                    this.otherDirection = false;
+                    this.world.foregrounds.forEach(foreground => {
+                        foreground.moveLeft();
+                    })
+                }
+    
+                if (this.world.keyboard.LEFT && this.posX > -72) {
+                    this.moveLeft();
+                    this.otherDirection = true;
+                    this.world.foregrounds.forEach(foreground => {
+                        foreground.moveRight();
+                    })
+                }
+    
+                if (!this.isJumping && this.world.keyboard.RIGHT || !this.isJumping && this.world.keyboard.LEFT) {
+                    this.playWalkingAnimation();
+                }
+    
+                if(!this.world.keyboard.KEYPRESSED && !this.isJumping && !this.isTakingDamage ) {
+                    this.playIdleAnimation();            
+                }
+    
             }
+
+            
+            this.setCameraOnHero();        
 
         }, 1000 / 16);
 
     }
 
+    reduceDamageImmunityDuration(){
+        if(this.currentDamageImmunityDuration > 0){
+            this.currentDamageImmunityDuration--;
+        }
+    }
+
+    setCameraOnHero(){
+        this.world.cameraX = this.posX * -1;
+    }
 
     jump() {
-        let i = this.currentImg % this.jumpImages.length;
+        this.playJumpAnimation();
+        this.offsetY = this.offsetY - this.jumpDirection*20;
+        
+        if (this.currentImg >= this.jumpImages.length -1) {
+            this.jumpDirection *= -1; 
+        }
+
+        if (this.currentImg == -1) {
+            this.isJumping = false;
+            this.currentImg = 0;
+            this.jumpDirection = 1;
+            this.offsetY = 0;
+        }
+    }
+
+    playJumpAnimation(){
+        let i = this.currentImg;
         let path = this.jumpImages[i];
         this.img = this.jumpImagesCache[path];
-        this.currentImg++;
+        this.currentImg = this.currentImg + this.jumpDirection;
     }
 
     trow() {

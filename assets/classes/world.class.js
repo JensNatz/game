@@ -1,52 +1,116 @@
 class World {
     hero = new Hero();
-    enemies = [
-        new EnemyWithClub(),
-    ];
-    background = new Background();
-    foregrounds = [
-        new Foreground('../assets/img/backgrounds/7.png', 0, 0),
-        new Foreground('../assets/img/backgrounds/8.png', -4, 660)
-    ];
+    enemies;
+    backgrounds;
+    foregrounds;
+    length;
+    
     canvas;
-    keyboard;
     ctx;
+    keyboard;
+    cameraX = 0;
 
-    constructor(canvas, keyboard){
+    constructor(canvas, keyboard, level) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
-        this.draw();
+        this.loadLevel(level);
         this.setWorld();
+        this.draw();
+        this.checkForCollissions();
+    }
+
+    loadLevel(level){
+        this.enemies = level.enemies;
+        this.backgrounds  = level.backgrounds;
+        this.foregrounds = level.foregrounds;
+        this.length = level.length;
     }
 
     setWorld() {
-       this.hero.world = this;        
+        this.hero.world = this;
+        this.enemies.forEach(enemy => {
+           enemy.world = this;
+        })
     }
 
-    drawObject(object){
+    drawObject(object) {
+        if (object.otherDirection) {
+            this.flipImage(object);
+        }
         this.ctx.drawImage(object.img, object.posX, object.posY, object.width, object.height);
+        if (object.otherDirection) {
+            this.reverseFlipImage(object);
+        }
+
+        if(object instanceof EnemyWithClub){
+            this.ctx.fillRect(object.posX+ object.width/2, object.posY+object.height/2, 20, 20);
+        }
+
+        if(object instanceof Hero){
+            this.ctx.fillRect(object.posX+ object.width/2, object.posY+object.height/2+object.offsetY, 20, 20);
+        }
     }
 
-    draw(){
+    flipImage(object) {
+        this.ctx.save();
+        this.ctx.translate(object.width, 0);
+        this.ctx.scale(-1, 1);
+        object.posX = object.posX * -1;
+    }
+
+    reverseFlipImage(object) {
+        this.ctx.restore();
+        object.posX = object.posX * -1;
+    }
+
+    draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.drawObject(this.background);
+        this.ctx.fillStyle = 'red'; // Setzt die Füllfarbe auf Rot
+        this.ctx.translate(this.cameraX, 0);
+        this.backgrounds.forEach(background => {
+            this.drawObject(background);
+        })
         this.drawObject(this.hero);
-        this.enemies.forEach(enemy =>{
+
+        this.enemies.forEach(enemy => {
             this.drawObject(enemy);
         })
 
-        this.foregrounds.forEach(foreground =>{
+        this.foregrounds.forEach(foreground => {
             this.drawObject(foreground);
         })
 
+        this.ctx.translate(this.cameraX*-1, 0);
+
 
         let self = this;
-        requestAnimationFrame(function(){
+        requestAnimationFrame(function () {
             self.draw();
-        }); 
+        });
     };
 
-    
+    checkForCollissions(){
+        setInterval(() => {
+            this.enemies.forEach(enemy => {
+                let distanceToEnemy = this.calcDistance(enemy);
+                // console.log(distanceToEnemy);
+                if(distanceToEnemy < 200 && this.hero.currentDamageImmunityDuration == 0){
+                    this.hero.isTakingDamage = true;
+                    this.hero.currentImg = 0;
+                    this.hero.takeDamage(enemy.power);
+                    this.hero.currentDamageImmunityDuration = this.hero.standardImunityTime;
+                    console.log('nehme schaden', this.hero.hp)
 
+                }
+            })    
+        }, 100);
+    }
+
+    calcDistance(obj) {
+        let dx = obj.posX - this.hero.posX;
+        let dy = obj.posY - this.hero.posY-this.hero.offsetY;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        return distance;
+    }
 }

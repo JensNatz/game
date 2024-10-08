@@ -1,4 +1,5 @@
 class Keyboard {
+   KEYPRESSED = false;
    SPACE = false;
 
    UP = false;
