@@ -4,7 +4,6 @@ class DrawableObject {
     img;
     width;
     height;
-    speed = 1;
     currentImg = 0;
     otherDirection = false;
 
@@ -19,13 +18,5 @@ class DrawableObject {
             img.src = path;
             cache[path] = img;
         });
-    }
-
-    moveRight() {
-        this.posX = this.posX + this.speed;
-    }
-
-    moveLeft() {
-        this.posX = this.posX - this.speed;
     }
 }

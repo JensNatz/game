@@ -1,6 +1,7 @@
 class World {
     hero = new Hero();
     enemies;
+    statusbar = new Statusbar();
     backgrounds;
     foregrounds;
     length;
@@ -80,6 +81,8 @@ class World {
         this.foregrounds.forEach(foreground => {
             this.drawObject(foreground);
         })
+
+        this.drawObject(this.statusbar);
 
         this.ctx.translate(this.cameraX*-1, 0);
 
