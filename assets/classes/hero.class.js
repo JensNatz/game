@@ -105,7 +105,7 @@ class Hero extends Character {
         'assets/img/hero/Death/Death_42.png',
         'assets/img/hero/Death/Death_43.png'
     ];
-    
+    hp = 100;
     offsetY = 0;
     speed = 15;
     jumpImagesCache = {};
@@ -126,7 +126,6 @@ class Hero extends Character {
         this.posY = 150;
         this.width = 650;
         this.height = 650;
-        this.hp = 5;
         this.animate();
     }
 

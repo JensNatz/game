@@ -16,6 +16,23 @@ class EnemyWithClub extends Character {
         '../assets/img/enemyWithClub/Walk/Walk_13.png'
     ];
 
+    attackImages = [
+        'assets/img/enemyWithClub/Hit/Hit_00.png',
+        'assets/img/enemyWithClub/Hit/Hit_01.png',
+        'assets/img/enemyWithClub/Hit/Hit_02.png',
+        'assets/img/enemyWithClub/Hit/Hit_03.png',
+        'assets/img/enemyWithClub/Hit/Hit_04.png',
+        'assets/img/enemyWithClub/Hit/Hit_05.png',
+        'assets/img/enemyWithClub/Hit/Hit_06.png',
+        'assets/img/enemyWithClub/Hit/Hit_07.png',
+        'assets/img/enemyWithClub/Hit/Hit_08.png',
+        'assets/img/enemyWithClub/Hit/Hit_09.png',
+        'assets/img/enemyWithClub/Hit/Hit_10.png',
+        'assets/img/enemyWithClub/Hit/Hit_11.png',
+        'assets/img/enemyWithClub/Hit/Hit_12.png',
+        'assets/img/enemyWithClub/Hit/Hit_13.png',
+    ];
+
     dieImages = [
         '../assets/img/enemyWithClub/Death/Death_00.png',
         '../assets/img/enemyWithClub/Death/Death_01.png',
@@ -46,14 +63,17 @@ class EnemyWithClub extends Character {
     posY = 150;
     width = 650;
     height = 650;
-    speed = 10;
-    power = 5;
-    hp = 0;
+    speed = 5;
+    power = 10;
+    hp = 10;
+    minAttackingDistance = 200;
+    isAttacking = false;
 
     constructor(){
         super().loadImage(this.walkImages[0]);
         this.loadImagesInCache(this.walkImages, this.walkingImagesCache);
         this.loadImagesInCache(this.dieImages, this.dieImagesCache);
+        this.loadImagesInCache(this.attackImages, this.attackImagesCache);
         this.posX = 300 + Math.random() * 500;
         this.animate(); 
     }
@@ -63,8 +83,14 @@ class EnemyWithClub extends Character {
             if(this.isDead()){
                 this.playDieAnimation();
             } else {
-                this.playWalkingAnimation();   
-                this.moveTowardsHero()
+                if (this.isAttacking){
+                    this.playAttackingAnimation();
+                } else
+                {
+                    this.playWalkingAnimation();   
+                    this.moveTowardsHero()
+                }
+                
             }
         }, 1000/16); 
     } 

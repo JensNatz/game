@@ -82,9 +82,9 @@ class World {
             this.drawObject(foreground);
         })
 
-        this.drawObject(this.statusbar);
 
         this.ctx.translate(this.cameraX*-1, 0);
+        this.drawObject(this.statusbar);
 
 
         let self = this;
@@ -98,14 +98,20 @@ class World {
             this.enemies.forEach(enemy => {
                 let distanceToEnemy = this.calcDistance(enemy);
                 // console.log(distanceToEnemy);
-                if(distanceToEnemy < 200 && this.hero.currentDamageImmunityDuration == 0){
-                    this.hero.isTakingDamage = true;
-                    this.hero.currentImg = 0;
-                    this.hero.takeDamage(enemy.power);
-                    this.hero.currentDamageImmunityDuration = this.hero.standardImunityTime;
-                    console.log('nehme schaden', this.hero.hp)
-
-                }
+                if(distanceToEnemy < enemy.minAttackingDistance){
+                    enemy.isAttacking = true;
+                    
+                    if(this.hero.currentDamageImmunityDuration == 0){
+                        this.hero.isTakingDamage = true;
+                        this.hero.currentImg = 0;
+                        this.hero.takeDamage(enemy.power);
+                        this.statusbar.updateStatus(this.hero.hp);
+                        this.hero.currentDamageImmunityDuration = this.hero.standardImunityTime;
+                        console.log('nehme schaden', this.hero.hp)
+                    }
+                } else {
+                    enemy.isAttacking = false;
+                 }
             })    
         }, 100);
     }

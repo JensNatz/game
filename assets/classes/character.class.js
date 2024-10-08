@@ -9,6 +9,8 @@ class Character extends MovableObject {
     getHitImagesCache = {};
     dieImages;
     dieImagesCache = {};
+    attackImages;
+    attackImagesCache = {};
     isTakingDamage = false;
 
     
@@ -29,6 +31,10 @@ class Character extends MovableObject {
 
     playDieAnimation(){
         this.playAnimation(this.dieImages, this.dieImagesCache)   
+    }
+
+    playAttackingAnimation(){
+        this.playAnimation(this.attackImages, this.attackImagesCache)  
     }
 
     playAnimation(imageArray, cache) {
