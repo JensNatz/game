@@ -101,20 +101,22 @@ class World {
     checkForCollissions(){
         setInterval(() => {
             this.enemies.forEach(enemy => {
-                if(this.hero.isAttacking && this.isHitByLaserbeam(enemy)){
-                    console.log('treffer')
+                if(this.hero.isAttacking && this.isHitByLaserbeam(enemy) && enemy.isVulnerable()){
+                    enemy.isLasered = true;
+                    enemy.setImmunityToDamageTimer();
+                    enemy.takeDamage(this.laserbeam.power);
+                    console.log('treffer', enemy.hp)
                 }
 
                 let distanceToEnemy = this.calcDistance(enemy);
                 if(distanceToEnemy < enemy.minAttackingDistance){
                     enemy.isAttacking = true;
-                    
-                    if(this.hero.currentDamageImmunityDuration == 0){
+                    if(this.hero.isVulnerable()){
                         this.hero.isTakingDamage = true;
                         this.hero.currentImg = 0;
                         this.hero.takeDamage(enemy.power);
                         this.statusbar.updateStatus(this.hero.hp);
-                        this.hero.currentDamageImmunityDuration = this.hero.standardImunityTime;
+                        this.hero.setImmunityToDamageTimer();
                         console.log('nehme schaden', this.hero.hp)
                     }
                 } else {

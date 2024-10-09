@@ -1,5 +1,5 @@
 class Laserbeam extends MovableObject {
-    power = 10;
+    power = 5;
     laserbeamImages = [
         'assets/img/laserbeam/skeleton-animation_0.png',
         'assets/img/laserbeam/skeleton-animation_1.png',

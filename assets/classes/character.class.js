@@ -2,6 +2,8 @@ class Character extends MovableObject {
     world;
     hp;
     power;
+    standardImunityTime = 0;
+    currentDamageImmunityDuration = 0;
     idleImagesCache = {};
     walkImages;
     walkingImagesCache = {};
@@ -11,7 +13,10 @@ class Character extends MovableObject {
     dieImagesCache = {};
     attackImages;
     attackImagesCache = {};
+    getLaseredImages;
+    getLaseredImagesCache = {};
     isTakingDamage = false;
+    isLasered = false;
     isAttacking = false;
 
     
@@ -38,6 +43,16 @@ class Character extends MovableObject {
         this.playAnimation(this.attackImages, this.attackImagesCache)  
     }
 
+    playLaseredAnimation(){
+        this.playAnimation(this.getLaseredImages, this.getLaseredImagesCache)  
+    }
+
+    reduceDamageImmunityDuration(){
+        if(this.currentDamageImmunityDuration > 0){
+            this.currentDamageImmunityDuration--;
+        }
+    }
+
     attack() {
 
     };
@@ -48,5 +63,13 @@ class Character extends MovableObject {
 
     isDead(){
         return this.hp <= 0;
+    }
+
+    setImmunityToDamageTimer(){
+        this.currentDamageImmunityDuration = this.standardImunityTime;
+    }
+
+    isVulnerable(){
+        return this.currentDamageImmunityDuration == 0;
     }
 }

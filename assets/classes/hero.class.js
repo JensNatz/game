@@ -112,9 +112,8 @@ class Hero extends Character {
     isJumping = false;
     soundWalking = new Audio('../assets/audio/step.wav');
     jumpDirection = 1;
-    standardImunityTime = 30;
-    currentDamageImmunityDuration = 0;
     timeToNextShot = 0;
+    standardImunityTime = 20;
 
     constructor() {
         super().loadImage(this.idleImages[0]);
@@ -133,8 +132,7 @@ class Hero extends Character {
     animate() {
         setInterval(() => {
             this.reduceDamageImmunityDuration();
-            this.timeToNextShot--;
-                    
+            this.reduceTimeToNextShot();                   
 
             if(this.isDead()){
                 this.playDieAnimation();
@@ -144,10 +142,10 @@ class Hero extends Character {
                 }
 
                 if(this.timeToNextShot <= 10 && this.timeToNextShot > 0 && this.isAttacking ){
-                    athis.isAttacking = false;
+                    this.isAttacking = false;
                  }
 
-                if(this.world.keyboard.A && !this.isJumping && !this.isTakingDamage && this.timeToNextShot <= 0){
+                if(this.world.keyboard.A && !this.isJumping && !this.isTakingDamage && this.timeToNextShot == 0){
                    this.isAttacking = true;
                    this.timeToNextShot = 20;
                 }
@@ -191,11 +189,11 @@ class Hero extends Character {
 
         }, 1000 / 16);
 
-    }
+    } 
 
-    reduceDamageImmunityDuration(){
-        if(this.currentDamageImmunityDuration > 0){
-            this.currentDamageImmunityDuration--;
+    reduceTimeToNextShot(){
+        if(this.timeToNextShot > 0){
+            this.timeToNextShot--;
         }
     }
 

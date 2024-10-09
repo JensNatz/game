@@ -73,6 +73,12 @@ class EnemyWithClub extends Character {
         'assets/img/enemyWithClub/Get Hit/Get Hit_09.png',
     ];
 
+    getLaseredImages = [
+        'assets/img/enemyWithClub/Get Electric/Get Electric_0.png',
+        'assets/img/enemyWithClub/Get Electric/Get Electric_1.png',
+        'assets/img/enemyWithClub/Get Electric/Get Electric_2.png',
+    ]
+
     
     posY = 150;
     width = 650;
@@ -80,6 +86,7 @@ class EnemyWithClub extends Character {
     speed = 5;
     power = 10;
     hp = 10;
+    standardImunityTime = 40;
     minAttackingDistance = 200;
 
     constructor(){
@@ -87,25 +94,31 @@ class EnemyWithClub extends Character {
         this.loadImagesInCache(this.walkImages, this.walkingImagesCache);
         this.loadImagesInCache(this.dieImages, this.dieImagesCache);
         this.loadImagesInCache(this.attackImages, this.attackImagesCache);
-        this.loadImagesInCache(this.getHitImages, this.getHitImagesCache)
+        this.loadImagesInCache(this.getHitImages, this.getHitImagesCache);
+        this.loadImagesInCache(this.getLaseredImages, this.getLaseredImagesCache);
         this.posX = 600 + Math.random() * 500;
         this.animate(); 
     }
 
     animate() {
         setInterval(() => {
+            
             if(this.isDead()){
                 this.playDieAnimation();
             } else {
+                this.reduceDamageImmunityDuration();
                 if(this.isTakingDamage){
                     this.playGetHitAnimation();
+                }
+                else if (this.isLasered){
+                    this.playLaseredAnimation();
                 }
                 else if (this.isAttacking){
                     this.playAttackingAnimation();
                 } else
                 {
-                    this.playWalkingAnimation();   
-                   // this.moveTowardsHero()
+                   this.playWalkingAnimation();   
+                  // this.moveTowardsHero()
                 }
                 
             }
