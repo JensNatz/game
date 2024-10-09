@@ -19,4 +19,11 @@ class DrawableObject {
             cache[path] = img;
         });
     }
+
+    playAnimation(imageArray, cache) {
+        let i = this.currentImg % imageArray.length;
+        let path = imageArray[i];
+        this.img = cache[path];
+        this.currentImg++;
+    }
 }

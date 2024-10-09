@@ -59,6 +59,20 @@ class EnemyWithClub extends Character {
         '../assets/img/enemyWithClub/Death/Death_22.png',
         '../assets/img/enemyWithClub/Death/Death_23.png'
     ];
+
+    getHitImages = [
+        'assets/img/enemyWithClub/Get Hit/Get Hit_00.png',
+        'assets/img/enemyWithClub/Get Hit/Get Hit_01.png',
+        'assets/img/enemyWithClub/Get Hit/Get Hit_02.png',
+        'assets/img/enemyWithClub/Get Hit/Get Hit_03.png',
+        'assets/img/enemyWithClub/Get Hit/Get Hit_04.png',
+        'assets/img/enemyWithClub/Get Hit/Get Hit_05.png',
+        'assets/img/enemyWithClub/Get Hit/Get Hit_06.png',
+        'assets/img/enemyWithClub/Get Hit/Get Hit_07.png',
+        'assets/img/enemyWithClub/Get Hit/Get Hit_08.png',
+        'assets/img/enemyWithClub/Get Hit/Get Hit_09.png',
+    ];
+
     
     posY = 150;
     width = 650;
@@ -67,14 +81,14 @@ class EnemyWithClub extends Character {
     power = 10;
     hp = 10;
     minAttackingDistance = 200;
-    isAttacking = false;
 
     constructor(){
         super().loadImage(this.walkImages[0]);
         this.loadImagesInCache(this.walkImages, this.walkingImagesCache);
         this.loadImagesInCache(this.dieImages, this.dieImagesCache);
         this.loadImagesInCache(this.attackImages, this.attackImagesCache);
-        this.posX = 300 + Math.random() * 500;
+        this.loadImagesInCache(this.getHitImages, this.getHitImagesCache)
+        this.posX = 600 + Math.random() * 500;
         this.animate(); 
     }
 
@@ -83,12 +97,15 @@ class EnemyWithClub extends Character {
             if(this.isDead()){
                 this.playDieAnimation();
             } else {
-                if (this.isAttacking){
+                if(this.isTakingDamage){
+                    this.playGetHitAnimation();
+                }
+                else if (this.isAttacking){
                     this.playAttackingAnimation();
                 } else
                 {
                     this.playWalkingAnimation();   
-                    this.moveTowardsHero()
+                   // this.moveTowardsHero()
                 }
                 
             }

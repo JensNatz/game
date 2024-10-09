@@ -33,6 +33,9 @@ function handleKeyDownEvent(event) {
         case 'KeyW':
             keyboard.W = true;
             break;
+        case 'KeyA':
+            keyboard.A = true;
+            break;
     }
 }
 
@@ -56,6 +59,9 @@ function handleKeyUpEvent(event) {
             break;
         case 'KeyW':
             keyboard.W = false;
+            break;
+        case 'KeyA':
+            keyboard.A = false;
             break;
     }
 }

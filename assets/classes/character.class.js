@@ -12,6 +12,7 @@ class Character extends MovableObject {
     attackImages;
     attackImagesCache = {};
     isTakingDamage = false;
+    isAttacking = false;
 
     
     playWalkingAnimation() {
@@ -36,14 +37,6 @@ class Character extends MovableObject {
     playAttackingAnimation(){
         this.playAnimation(this.attackImages, this.attackImagesCache)  
     }
-
-    playAnimation(imageArray, cache) {
-        let i = this.currentImg % imageArray.length;
-        let path = imageArray[i];
-        this.img = cache[path];
-        this.currentImg++;
-    }
-
 
     attack() {
 

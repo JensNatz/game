@@ -1,5 +1,6 @@
 class World {
     hero = new Hero();
+    laserbeam = new Laserbeam();
     enemies;
     statusbar = new Statusbar();
     backgrounds;
@@ -78,12 +79,16 @@ class World {
             this.drawObject(enemy);
         })
 
+        if(this.hero.isAttacking){
+            this.drawObject(this.laserbeam);
+        }
+
         this.foregrounds.forEach(foreground => {
             this.drawObject(foreground);
         })
 
-
         this.ctx.translate(this.cameraX*-1, 0);
+        
         this.drawObject(this.statusbar);
 
 
@@ -96,8 +101,11 @@ class World {
     checkForCollissions(){
         setInterval(() => {
             this.enemies.forEach(enemy => {
+                if(this.hero.isAttacking && this.isHitByLaserbeam(enemy)){
+                    console.log('treffer')
+                }
+
                 let distanceToEnemy = this.calcDistance(enemy);
-                // console.log(distanceToEnemy);
                 if(distanceToEnemy < enemy.minAttackingDistance){
                     enemy.isAttacking = true;
                     
@@ -111,7 +119,7 @@ class World {
                     }
                 } else {
                     enemy.isAttacking = false;
-                 }
+                }
             })    
         }, 100);
     }
@@ -121,5 +129,19 @@ class World {
         let dy = obj.posY - this.hero.posY-this.hero.offsetY;
         let distance = Math.sqrt(dx * dx + dy * dy);
         return distance;
+    }
+
+    isHitByLaserbeam(enemy){
+        let enemyOffsetX = 260;  // Horizontaler Leerraum (links und rechts)
+        let enemyOffsetY = 240;  // Vertikaler Leerraum (oben und unten)
+
+        if (this.laserbeam.posX < enemy.posX + enemy.width - enemyOffsetX &&
+            this.laserbeam.posX + this.laserbeam.width > enemy.posX + enemyOffsetX &&
+            this.laserbeam.posY < enemy.posY + enemy.height - enemyOffsetY &&
+            this.laserbeam.posY + this.laserbeam.height > enemy.posY + enemyOffsetY) {
+           return true;
+        } else {
+            return false;
+        }
     }
 }

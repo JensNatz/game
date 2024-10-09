@@ -114,6 +114,7 @@ class Hero extends Character {
     jumpDirection = 1;
     standardImunityTime = 30;
     currentDamageImmunityDuration = 0;
+    timeToNextShot = 0;
 
     constructor() {
         super().loadImage(this.idleImages[0]);
@@ -131,7 +132,9 @@ class Hero extends Character {
 
     animate() {
         setInterval(() => {
-            this.reduceDamageImmunityDuration();           
+            this.reduceDamageImmunityDuration();
+            this.timeToNextShot--;
+                    
 
             if(this.isDead()){
                 this.playDieAnimation();
@@ -139,9 +142,18 @@ class Hero extends Character {
                 if (this.isTakingDamage) {
                     this.playGetHitAnimation();
                 }
+
+                if(this.timeToNextShot <= 10 && this.timeToNextShot > 0 && this.isAttacking ){
+                    athis.isAttacking = false;
+                 }
+
+                if(this.world.keyboard.A && !this.isJumping && !this.isTakingDamage && this.timeToNextShot <= 0){
+                   this.isAttacking = true;
+                   this.timeToNextShot = 20;
+                }
     
                 if (this.world.keyboard.SPACE && !this.isJumping) {
-                    this.currentImg = 0;
+                    this.currenatImg = 0;
                     this.isJumping = true;
                 }
                 if (this.isJumping) {
@@ -150,6 +162,8 @@ class Hero extends Character {
                 if (this.world.keyboard.RIGHT && this.posX < this.world.length) {
                     this.moveRight();
                     this.otherDirection = false;
+                    this.world.laserbeam.faceRight();
+                    this.world.laserbeam.moveRight();
                     this.world.foregrounds.forEach(foreground => {
                         foreground.moveLeft();
                     })
@@ -158,6 +172,8 @@ class Hero extends Character {
                 if (this.world.keyboard.LEFT && this.posX > -72) {
                     this.moveLeft();
                     this.otherDirection = true;
+                    this.world.laserbeam.moveLeft();
+                    this.world.laserbeam.faceLeft();
                     this.world.foregrounds.forEach(foreground => {
                         foreground.moveRight();
                     })
@@ -169,11 +185,8 @@ class Hero extends Character {
     
                 if(!this.world.keyboard.KEYPRESSED && !this.isJumping && !this.isTakingDamage ) {
                     this.playIdleAnimation();            
-                }
-    
-            }
-
-            
+                }                
+            }            
             this.setCameraOnHero();        
 
         }, 1000 / 16);
