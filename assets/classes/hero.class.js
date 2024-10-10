@@ -107,10 +107,10 @@ class Hero extends Character {
     ];
 
     attackImages = [
-        'assets/img/hero/ShootFX1/Shoot FX 1_0.png',
-        'assets/img/hero/ShootFX1/Shoot FX 1_1.png',
-        'assets/img/hero/ShootFX1/Shoot FX 1_2.png',
-        'assets/img/hero/ShootFX1/Shoot FX 1_3.png',
+        'assets/img/hero/ShootFX1/Shoot_FX_1_0.png',
+        'assets/img/hero/ShootFX1/Shoot_FX_1_1.png',
+        'assets/img/hero/ShootFX1/Shoot_FX_1_2.png',
+        'assets/img/hero/ShootFX1/Shoot_FX_1_3.png',
     ];
     hp = 100;
     offsetY = 0;

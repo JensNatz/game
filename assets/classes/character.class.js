@@ -20,9 +20,9 @@ class Character extends MovableObject {
     playGetHitAnimation() {
         this.ensureAnimationStartsAtBeginning(this.getHitImages);    
         this.playAnimation(this.getHitImages)  
-        // if (this.currentImg % this.getHitImages.length == this.getHitImages.length-1){
-        //     this.isTakingDamage = false;
-        // }
+        if (this.currentImg % this.getHitImages.length == this.getHitImages.length-1){
+            this.isTakingDamage = false;
+        }
     }
 
     playIdleAnimation() {

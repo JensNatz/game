@@ -61,22 +61,22 @@ class EnemyWithClub extends Character {
     ];
 
     getHitImages = [
-        'assets/img/enemyWithClub/Get Hit/Get Hit_00.png',
-        'assets/img/enemyWithClub/Get Hit/Get Hit_01.png',
-        'assets/img/enemyWithClub/Get Hit/Get Hit_02.png',
-        'assets/img/enemyWithClub/Get Hit/Get Hit_03.png',
-        'assets/img/enemyWithClub/Get Hit/Get Hit_04.png',
-        'assets/img/enemyWithClub/Get Hit/Get Hit_05.png',
-        'assets/img/enemyWithClub/Get Hit/Get Hit_06.png',
-        'assets/img/enemyWithClub/Get Hit/Get Hit_07.png',
-        'assets/img/enemyWithClub/Get Hit/Get Hit_08.png',
-        'assets/img/enemyWithClub/Get Hit/Get Hit_09.png',
+        'assets/img/enemyWithClub/GetHit/Get_Hit_00.png',
+        'assets/img/enemyWithClub/GetHit/Get_Hit_01.png',
+        'assets/img/enemyWithClub/GetHit/Get_Hit_02.png',
+        'assets/img/enemyWithClub/GetHit/Get_Hit_03.png',
+        'assets/img/enemyWithClub/GetHit/Get_Hit_04.png',
+        'assets/img/enemyWithClub/GetHit/Get_Hit_05.png',
+        'assets/img/enemyWithClub/GetHit/Get_Hit_06.png',
+        'assets/img/enemyWithClub/GetHit/Get_Hit_07.png',
+        'assets/img/enemyWithClub/GetHit/Get_Hit_08.png',
+        'assets/img/enemyWithClub/GetHit/Get_Hit_09.png',
     ];
 
     getLaseredImages = [
-        'assets/img/enemyWithClub/Get Electric/Get Electric_0.png',
-        'assets/img/enemyWithClub/Get Electric/Get Electric_1.png',
-        'assets/img/enemyWithClub/Get Electric/Get Electric_2.png',
+        'assets/img/enemyWithClub/GetElectric/Get_Electric_0.png',
+        'assets/img/enemyWithClub/GetElectric/Get_Electric_1.png',
+        'assets/img/enemyWithClub/GetElectric/Get_Electric_2.png',
     ]
 
     posY = 150;
