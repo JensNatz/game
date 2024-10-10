@@ -4,52 +4,55 @@ class Character extends MovableObject {
     power;
     standardImunityTime = 0;
     currentDamageImmunityDuration = 0;
-    idleImagesCache = {};
     walkImages;
-    walkingImagesCache = {};
     getHitImages;
-    getHitImagesCache = {};
     dieImages;
-    dieImagesCache = {};
     attackImages;
-    attackImagesCache = {};
     getLaseredImages;
-    getLaseredImagesCache = {};
     isTakingDamage = false;
-    isLasered = false;
+    laserHitDuration = 0;
     isAttacking = false;
-
     
     playWalkingAnimation() {
-        this.playAnimation(this.walkImages, this.walkingImagesCache)      
+        this.playAnimation(this.walkImages)      
     }
 
     playGetHitAnimation() {
-        this.playAnimation(this.getHitImages, this.getHitImagesCache)  
-        if (this.currentImg % this.getHitImages.length == this.getHitImages.length-1){
-            this.isTakingDamage = false;
-        }
+        this.ensureAnimationStartsAtBeginning(this.getHitImages);    
+        this.playAnimation(this.getHitImages)  
+        // if (this.currentImg % this.getHitImages.length == this.getHitImages.length-1){
+        //     this.isTakingDamage = false;
+        // }
     }
 
     playIdleAnimation() {
-        this.playAnimation(this.idleImages, this.idleImagesCache)        
+        this.playAnimation(this.idleImages)        
     }
 
-    playDieAnimation(){
-        this.playAnimation(this.dieImages, this.dieImagesCache)   
+    playDieAnimation(){ 
+        this.ensureAnimationStartsAtBeginning(this.dieImages);    
+        if (this.currentImg % this.dieImages.length != this.dieImages.length-1){
+            this.playAnimation(this.dieImages) 
+        } 
     }
 
     playAttackingAnimation(){
-        this.playAnimation(this.attackImages, this.attackImagesCache)  
+        this.playAnimation(this.attackImages)  
     }
 
     playLaseredAnimation(){
-        this.playAnimation(this.getLaseredImages, this.getLaseredImagesCache)  
+        this.playAnimation(this.getLaseredImages)  
     }
 
     reduceDamageImmunityDuration(){
         if(this.currentDamageImmunityDuration > 0){
             this.currentDamageImmunityDuration--;
+        }
+    }
+
+    reduceLaserHitDuration(){
+        if(this.laserHitDuration > 0){
+            this.laserHitDuration--;
         }
     }
 
@@ -71,5 +74,9 @@ class Character extends MovableObject {
 
     isVulnerable(){
         return this.currentDamageImmunityDuration == 0;
+    }
+
+    isBeingLasered(){
+        return this.laserHitDuration > 0;
     }
 }

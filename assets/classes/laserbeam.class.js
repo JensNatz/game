@@ -7,7 +7,6 @@ class Laserbeam extends MovableObject {
         'assets/img/laserbeam/skeleton-animation_3.png',
         'assets/img/laserbeam/skeleton-animation_4.png',
     ]
-    laserbeamImagesCache = {};
     posX = 395;
     posY = 490;
     width = 521;
@@ -16,12 +15,12 @@ class Laserbeam extends MovableObject {
     
     constructor() {
         super().loadImage(this.laserbeamImages[0]);
-        this.loadImagesInCache(this.laserbeamImages, this.laserbeamImagesCache);
+        this.loadImagesInCache(this.laserbeamImages);
         this.animate();
     }
 
     playLaserbeamAnimation() {
-        this.playAnimation(this.laserbeamImages, this.laserbeamImagesCache)
+        this.playAnimation(this.laserbeamImages)
     }
 
     animate() {
@@ -30,13 +29,17 @@ class Laserbeam extends MovableObject {
         }, 1000/16); 
     } 
 
-    faceRight(){
-        this.otherDirection = false;
-        //this.posX = this.posX + 450;  
+    faceRight(heroPosX){
+        if(this.otherDirection == true){
+            this.otherDirection = false;
+            this.posX = heroPosX + 450;  
+        }       
     }
 
-    faceLeft(){
-        this.otherDirection = true;
-        //this.posX = this.posX -335;        
+    faceLeft(heroPosX){
+        if(this.otherDirection == false){
+            this.otherDirection = true;
+            this.posX = heroPosX - 330;    
+        }      
     }
 }

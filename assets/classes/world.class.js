@@ -6,7 +6,7 @@ class World {
     backgrounds;
     foregrounds;
     length;
-    
+
     canvas;
     ctx;
     keyboard;
@@ -22,9 +22,9 @@ class World {
         this.checkForCollissions();
     }
 
-    loadLevel(level){
+    loadLevel(level) {
         this.enemies = level.enemies;
-        this.backgrounds  = level.backgrounds;
+        this.backgrounds = level.backgrounds;
         this.foregrounds = level.foregrounds;
         this.length = level.length;
     }
@@ -32,7 +32,7 @@ class World {
     setWorld() {
         this.hero.world = this;
         this.enemies.forEach(enemy => {
-           enemy.world = this;
+            enemy.world = this;
         })
     }
 
@@ -45,9 +45,9 @@ class World {
             this.reverseFlipImage(object);
         }
 
-        if(object instanceof EnemyWithClub){
-            this.ctx.fillRect(object.posX+ object.width/2, object.posY+object.height/2, 20, 20);
-        }
+        // if(object instanceof EnemyWithClub){
+        //     this.ctx.fillRect(object.posX+ object.width/2, object.posY+object.height/2, 20, 20);
+        // }
 
         if(object instanceof Hero){
             this.ctx.fillRect(object.posX+ object.width/2, object.posY+object.height/2+object.offsetY, 20, 20);
@@ -79,7 +79,7 @@ class World {
             this.drawObject(enemy);
         })
 
-        if(this.hero.isAttacking){
+        if (this.hero.isAttacking) {
             this.drawObject(this.laserbeam);
         }
 
@@ -87,8 +87,8 @@ class World {
             this.drawObject(foreground);
         })
 
-        this.ctx.translate(this.cameraX*-1, 0);
-        
+        this.ctx.translate(this.cameraX * -1, 0);
+
         this.drawObject(this.statusbar);
 
 
@@ -98,42 +98,43 @@ class World {
         });
     };
 
-    checkForCollissions(){
+    checkForCollissions() {
         setInterval(() => {
             this.enemies.forEach(enemy => {
-                if(this.hero.isAttacking && this.isHitByLaserbeam(enemy) && enemy.isVulnerable()){
-                    enemy.isLasered = true;
-                    enemy.setImmunityToDamageTimer();
-                    enemy.takeDamage(this.laserbeam.power);
-                    console.log('treffer', enemy.hp)
-                }
-
-                let distanceToEnemy = this.calcDistance(enemy);
-                if(distanceToEnemy < enemy.minAttackingDistance){
-                    enemy.isAttacking = true;
-                    if(this.hero.isVulnerable()){
-                        this.hero.isTakingDamage = true;
-                        this.hero.currentImg = 0;
-                        this.hero.takeDamage(enemy.power);
-                        this.statusbar.updateStatus(this.hero.hp);
-                        this.hero.setImmunityToDamageTimer();
-                        console.log('nehme schaden', this.hero.hp)
+                if (!enemy.isDead()) {
+                    if (this.hero.isAttacking && this.isHitByLaserbeam(enemy) && enemy.isVulnerable() && !enemy.isBeingLasered()) {
+                        enemy.laserHitDuration = 10;
+                        enemy.setImmunityToDamageTimer();
+                        enemy.takeDamage(this.laserbeam.power);
+                        console.log('treffer', enemy.hp)
                     }
-                } else {
-                    enemy.isAttacking = false;
+
+                    let distanceToEnemy = this.calcDistance(enemy);
+                    if (distanceToEnemy < enemy.attackingDistance) {
+                        enemy.isAttacking = true;
+                        if (this.hero.isVulnerable()) {
+                            this.hero.isTakingDamage = true;
+                            this.hero.takeDamage(enemy.power);
+                            this.statusbar.updateStatus(this.hero.hp);
+                            this.hero.setImmunityToDamageTimer();
+                            console.log('nehme schaden', this.hero.hp)
+                        }
+                    } else {
+                        enemy.isAttacking = false;
+                    }2
                 }
-            })    
+            })
         }, 100);
     }
 
     calcDistance(obj) {
         let dx = obj.posX - this.hero.posX;
-        let dy = obj.posY - this.hero.posY-this.hero.offsetY;
+        let dy = obj.posY - this.hero.posY - this.hero.offsetY;
         let distance = Math.sqrt(dx * dx + dy * dy);
         return distance;
     }
 
-    isHitByLaserbeam(enemy){
+    isHitByLaserbeam(enemy) {
         let enemyOffsetX = 260;  // Horizontaler Leerraum (links und rechts)
         let enemyOffsetY = 240;  // Vertikaler Leerraum (oben und unten)
 
@@ -141,7 +142,7 @@ class World {
             this.laserbeam.posX + this.laserbeam.width > enemy.posX + enemyOffsetX &&
             this.laserbeam.posY < enemy.posY + enemy.height - enemyOffsetY &&
             this.laserbeam.posY + this.laserbeam.height > enemy.posY + enemyOffsetY) {
-           return true;
+            return true;
         } else {
             return false;
         }
