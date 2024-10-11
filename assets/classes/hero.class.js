@@ -112,13 +112,42 @@ class Hero extends Character {
         'assets/img/hero/ShootFX1/Shoot_FX_1_2.png',
         'assets/img/hero/ShootFX1/Shoot_FX_1_3.png',
     ];
-    hp = 100;
+
+    trowImages = [
+        'assets/img/hero/Throw/Throw_bomb_00.png',
+        'assets/img/hero/Throw/Throw_bomb_01.png',
+        'assets/img/hero/Throw/Throw_bomb_02.png',
+        'assets/img/hero/Throw/Throw_bomb_03.png',
+        'assets/img/hero/Throw/Throw_bomb_04.png',
+        'assets/img/hero/Throw/Throw_bomb_05.png',
+        'assets/img/hero/Throw/Throw_bomb_06.png',
+        'assets/img/hero/Throw/Throw_bomb_07.png',
+        'assets/img/hero/Throw/Throw_bomb_08.png',
+        'assets/img/hero/Throw/Throw_bomb_09.png',
+        'assets/img/hero/Throw/Throw_bomb_10.png',
+        'assets/img/hero/Throw/Throw_bomb_11.png',
+        'assets/img/hero/Throw/Throw_bomb_12.png',
+        'assets/img/hero/Throw/Throw_bomb_13.png',
+        'assets/img/hero/Throw/Throw_bomb_14.png',
+        'assets/img/hero/Throw/Throw_bomb_15.png',
+        'assets/img/hero/Throw/Throw_bomb_16.png',
+        'assets/img/hero/Throw/Throw_bomb_17.png',
+        'assets/img/hero/Throw/Throw_bomb_18.png',
+        'assets/img/hero/Throw/Throw_bomb_19.png'
+    ];
+    soundWalking = new Audio('../assets/audio/step.wav');
+    posX = -70;
+    posY = 150;
+    width = 650;
+    height = 650;
     offsetY = 0;
     speed = 15;
-    soundWalking = new Audio('../assets/audio/step.wav');
+    hp = 100;
     jumpDirection = 1;
     timeToNextShot = 0;
+    isTrowing = false;
     standardImunityTime = 20;
+    numberOfBombs = 10;
 
     constructor() {
         super().loadImage(this.idleImages[0]);
@@ -128,10 +157,7 @@ class Hero extends Character {
         this.loadImagesInCache(this.getHitImages);
         this.loadImagesInCache(this.dieImages);
         this.loadImagesInCache(this.attackImages);
-        this.posX = -70;
-        this.posY = 150;
-        this.width = 650;
-        this.height = 650;
+        this.loadImagesInCache(this.trowImages);
         this.animate();
     }
 
@@ -158,6 +184,14 @@ class Hero extends Character {
                 if (this.world.keyboard.A && !this.isJumping() && !this.isTakingDamage && this.timeToNextShot == 0) {
                     this.isAttacking = true;
                     this.timeToNextShot = 20;
+                }
+
+                if (this.world.keyboard.W && this.numberOfBombs > 0 && !this.isTrowing) {
+                    this.initTrow();
+                }
+
+                if(this.isTrowing){                    
+                    this.playTrowAnimation();
                 }
 
                 if (this.world.keyboard.SPACE && !this.isJumping()) {
@@ -190,7 +224,7 @@ class Hero extends Character {
                     this.playWalkingAnimation();
                 }
 
-                if (!this.world.keyboard.KEYPRESSED && !this.isJumping() && !this.isTakingDamage && !this.isAttacking) {
+                if (!this.world.keyboard.KEYPRESSED && !this.isJumping() && !this.isTakingDamage && !this.isAttacking && !this.isTrowing) {
                     this.playIdleAnimation();
                 }
             }
@@ -211,6 +245,16 @@ class Hero extends Character {
     initJump() {
         this.currentImg = 0;
         this.offsetY = -50;
+    }
+
+    playTrowAnimation(){
+        this.ensureAnimationStartsAtBeginning(this.trowImages);  
+        if (this.currentImg % this.trowImages.length != this.trowImages.length-1){
+            this.playAnimation(this.trowImages);
+        } else {
+            this.isTrowing = false;
+        }
+
     }
 
     playJumpAnimation() {
@@ -236,7 +280,10 @@ class Hero extends Character {
         return this.offsetY < 0;
     }
 
-    trow() {
-
+    initTrow() {
+        this.isTrowing = true;
+        let newBomb = new Bomb(this.posX+this.width/2, this.posY+this.height/2)
+        this.world.bombs.push(newBomb);
+        //this.numberOfBombs--;
     }
 }

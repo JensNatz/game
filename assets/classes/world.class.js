@@ -1,6 +1,7 @@
 class World {
     hero = new Hero();
     laserbeam = new Laserbeam();
+    bombs = [];
     enemies;
     statusbar = new Statusbar();
     backgrounds;
@@ -19,7 +20,7 @@ class World {
         this.loadLevel(level);
         this.setWorld();
         this.draw();
-        this.checkForCollissions();
+        this.runGame();
     }
 
     loadLevel(level) {
@@ -79,9 +80,14 @@ class World {
             this.drawObject(enemy);
         })
 
+        this.bombs.forEach(bomb => {
+            this.drawObject(bomb);
+        })
+
         if (this.hero.isAttacking) {
             this.drawObject(this.laserbeam);
         }
+
 
         this.foregrounds.forEach(foreground => {
             this.drawObject(foreground);
@@ -98,8 +104,10 @@ class World {
         });
     };
 
-    checkForCollissions() {
+    runGame() {
         setInterval(() => {
+            this.bombs = this.bombs.filter(bomb => !bomb.isExploded);
+
             this.enemies.forEach(enemy => {
                 if (!enemy.isDead()) {
                     if (this.hero.isAttacking && this.isHitByLaserbeam(enemy) && enemy.isVulnerable() && !enemy.isBeingLasered()) {
@@ -109,7 +117,7 @@ class World {
                         console.log('treffer', enemy.hp)
                     }
 
-                    let distanceToEnemy = this.calcDistance(enemy);
+                    let distanceToEnemy = this.calcDistance(enemy, this.hero);
                     if (distanceToEnemy < enemy.attackingDistance) {
                         enemy.isAttacking = true;
                         if (this.hero.isVulnerable()) {
@@ -121,19 +129,32 @@ class World {
                         }
                     } else {
                         enemy.isAttacking = false;
-                    }2
+                    }
+
+                    this.bombs.forEach(bomb => {
+                        let distanceBombToEnemy = this.calcDistance(enemy, bomb);
+                        if(distanceBombToEnemy < bomb.range && bomb.isExploding == false){
+                            bomb.isExploding = true;
+                            enemy.isTakingDamage = true;
+                            enemy.takeDamage(bomb.power);
+                        }                        
+                    });
                 }
             })
         }, 100);
     }
 
-    calcDistance(obj) {
-        let dx = obj.posX - this.hero.posX;
-        let dy = obj.posY - this.hero.posY - this.hero.offsetY;
+
+    calcDistance(obj, obj2) {
+        let dx = (obj.posX + obj.width / 2) - (obj2.posX + obj2.width / 2);
+        let dy = (obj.posY + obj.height / 2) - (obj2.posY + obj2.height / 2);
+        if (obj2 instanceof Hero) {
+            dy = dy - obj2.offsetY;
+        }
         let distance = Math.sqrt(dx * dx + dy * dy);
         return distance;
     }
-
+    
     isHitByLaserbeam(enemy) {
         let enemyOffsetX = 260;  // Horizontaler Leerraum (links und rechts)
         let enemyOffsetY = 240;  // Vertikaler Leerraum (oben und unten)

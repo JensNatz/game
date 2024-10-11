@@ -14,6 +14,7 @@ class Character extends MovableObject {
     isAttacking = false;
     
     playWalkingAnimation() {
+        this.ensureAnimationStartsAtBeginning(this.walkImages);    
         this.playAnimation(this.walkImages)      
     }
 
@@ -26,6 +27,7 @@ class Character extends MovableObject {
     }
 
     playIdleAnimation() {
+        this.ensureAnimationStartsAtBeginning(this.idleImages);    
         this.playAnimation(this.idleImages)        
     }
 
@@ -37,10 +39,12 @@ class Character extends MovableObject {
     }
 
     playAttackingAnimation(){
+        this.ensureAnimationStartsAtBeginning(this.attackImages);  
         this.playAnimation(this.attackImages)  
     }
 
     playLaseredAnimation(){
+        this.ensureAnimationStartsAtBeginning(this.getLaseredImages);  
         this.playAnimation(this.getLaseredImages)  
     }
 

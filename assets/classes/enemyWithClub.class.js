@@ -120,7 +120,7 @@ class EnemyWithClub extends Character {
                 } else
                 {
                    this.playWalkingAnimation();   
-                   //this.moveTowardsHero()
+                 //  this.moveTowardsHero()
                 }
                 
             }
@@ -130,8 +130,10 @@ class EnemyWithClub extends Character {
     moveTowardsHero(){
         if(this.posX + this.width/2 > this.world.hero.posX + this.world.hero.width/2){
             this.moveLeft();
+            this.otherDirection = false;
         } else {
             this.moveRight();
+            this.otherDirection = true;
         }
     }
 

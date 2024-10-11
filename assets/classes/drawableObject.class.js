@@ -33,8 +33,6 @@ class DrawableObject {
         const relevantPath = this.img.src.slice(assetsIndex); 
         if(!imageArray.includes(relevantPath)){
             this.currentImg = 0;            
-        }
-        console.log(relevantPath);
-                 
+        }                 
     }
 }
