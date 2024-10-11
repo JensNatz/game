@@ -102,7 +102,7 @@ class EnemyWithClub extends Character {
     animate() {
         setInterval(() => {
             
-            if(this.isDead() && !this.isBeingLasered()){
+            if(this.isDead() && !this.isBeingLasered() && !this.isTakingDamage){
                 this.playDieAnimation();
             } else {
                 
@@ -120,9 +120,8 @@ class EnemyWithClub extends Character {
                 } else
                 {
                    this.playWalkingAnimation();   
-                 //  this.moveTowardsHero()
+                    this.moveTowardsHero()
                 }
-                
             }
         }, 1000/16); 
     } 

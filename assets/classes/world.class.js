@@ -1,6 +1,9 @@
 class World {
     hero = new Hero();
     laserbeam = new Laserbeam();
+    tokens = [
+        new BombToken(500)
+    ]
     bombs = [];
     enemies;
     statusbar = new Statusbar();
@@ -84,6 +87,10 @@ class World {
             this.drawObject(bomb);
         })
 
+        this.tokens.forEach(token => {
+            this.drawObject(token);
+        })
+
         if (this.hero.isAttacking) {
             this.drawObject(this.laserbeam);
         }
@@ -107,6 +114,24 @@ class World {
     runGame() {
         setInterval(() => {
             this.bombs = this.bombs.filter(bomb => !bomb.isExploded);
+            console.log(this.hero.numberOfBombs)
+
+            for (let i = this.tokens.length - 1; i >= 0; i--) {
+                const token = this.tokens[i];
+                let distanceTokenToHero = this.calcDistance(token, this.hero);
+                if (distanceTokenToHero < 50) {
+                    this.hero.numberOfBombs++;
+                    this.tokens.splice(i, 1);  
+                }
+            }
+            
+            this.tokens.forEach(token => {
+                let distanceTokenToHero = this.calcDistance(token, this.hero);
+                if(distanceTokenToHero < 50){
+                    this.hero.numberOfBombs++;
+
+                }                        
+            });
 
             this.enemies.forEach(enemy => {
                 if (!enemy.isDead()) {

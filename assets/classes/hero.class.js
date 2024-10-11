@@ -147,7 +147,7 @@ class Hero extends Character {
     timeToNextShot = 0;
     isTrowing = false;
     standardImunityTime = 20;
-    numberOfBombs = 10;
+    numberOfBombs = 0;
 
     constructor() {
         super().loadImage(this.idleImages[0]);
@@ -284,6 +284,6 @@ class Hero extends Character {
         this.isTrowing = true;
         let newBomb = new Bomb(this.posX+this.width/2, this.posY+this.height/2)
         this.world.bombs.push(newBomb);
-        //this.numberOfBombs--;
+        this.numberOfBombs--;
     }
 }
