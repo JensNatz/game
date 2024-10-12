@@ -282,8 +282,15 @@ class Hero extends Character {
 
     initTrow() {
         this.isTrowing = true;
-        let newBomb = new Bomb(this.posX+this.width/2, this.posY+this.height/2)
+        let trowingSpeed;
+        if (this.otherDirection == false) {
+            trowingSpeed = 20
+        } else {
+            trowingSpeed = -20
+        }
+        let newBomb = new Bomb(this.posX+this.width/2, this.posY+this.height/2, trowingSpeed)
         this.world.bombs.push(newBomb);
+        this.world.bombSymbols.pop();
         this.numberOfBombs--;
     }
 }

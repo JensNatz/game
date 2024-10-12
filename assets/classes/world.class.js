@@ -2,9 +2,11 @@ class World {
     hero = new Hero();
     laserbeam = new Laserbeam();
     tokens = [
-        new BombToken(500)
+        new BombToken(500),
+        new BombToken(700),
     ]
     bombs = [];
+    bombSymbols = [];
     enemies;
     statusbar = new Statusbar();
     backgrounds;
@@ -95,7 +97,6 @@ class World {
             this.drawObject(this.laserbeam);
         }
 
-
         this.foregrounds.forEach(foreground => {
             this.drawObject(foreground);
         })
@@ -103,7 +104,10 @@ class World {
         this.ctx.translate(this.cameraX * -1, 0);
 
         this.drawObject(this.statusbar);
-
+        
+        this.bombSymbols.forEach(symbol => {
+            this.drawObject(symbol);
+        })
 
         let self = this;
         requestAnimationFrame(function () {
@@ -114,24 +118,18 @@ class World {
     runGame() {
         setInterval(() => {
             this.bombs = this.bombs.filter(bomb => !bomb.isExploded);
-            console.log(this.hero.numberOfBombs)
 
             for (let i = this.tokens.length - 1; i >= 0; i--) {
                 const token = this.tokens[i];
                 let distanceTokenToHero = this.calcDistance(token, this.hero);
                 if (distanceTokenToHero < 50) {
                     this.hero.numberOfBombs++;
-                    this.tokens.splice(i, 1);  
+                    this.tokens.splice(i, 1);
+                    let offsetX = (this.hero.numberOfBombs-1)*50
+                    let bombSymbol = new BombSymbol(offsetX);
+                    this.bombSymbols.push(bombSymbol);
                 }
             }
-            
-            this.tokens.forEach(token => {
-                let distanceTokenToHero = this.calcDistance(token, this.hero);
-                if(distanceTokenToHero < 50){
-                    this.hero.numberOfBombs++;
-
-                }                        
-            });
 
             this.enemies.forEach(enemy => {
                 if (!enemy.isDead()) {

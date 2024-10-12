@@ -120,7 +120,7 @@ class EnemyWithClub extends Character {
                 } else
                 {
                    this.playWalkingAnimation();   
-                    this.moveTowardsHero()
+                   // this.moveTowardsHero()
                 }
             }
         }, 1000/16); 

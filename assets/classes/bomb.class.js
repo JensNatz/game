@@ -24,16 +24,16 @@ class Bomb extends MovableObject {
     height = 185;
     power = 15;
     range = 200;
-    speed = 20;
     speedY = 50;
     isExploding = false;
     isExploded = false;
 
-    constructor(posX, posY){
+    constructor(posX, posY, speed){
         super().loadImage(this.image);
         this.loadImagesInCache(this.explodeImages);
         this.posX = posX;
         this.posY = posY;
+        this.speed = speed;
         this.animate();
     }
 
