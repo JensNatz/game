@@ -4,8 +4,10 @@ class World {
     tokens = [
         new BombToken(500),
         new BombToken(700),
+        new HealthpackToken(800)
     ]
     bombs = [];
+    bullets = []
     bombSymbols = [];
     enemies;
     statusbar = new Statusbar();
@@ -50,14 +52,6 @@ class World {
         if (object.otherDirection) {
             this.reverseFlipImage(object);
         }
-
-        // if(object instanceof EnemyWithClub){
-        //     this.ctx.fillRect(object.posX+ object.width/2, object.posY+object.height/2, 20, 20);
-        // }
-
-        if(object instanceof Hero){
-            this.ctx.fillRect(object.posX+ object.width/2, object.posY+object.height/2+object.offsetY, 20, 20);
-        }
     }
 
     flipImage(object) {
@@ -74,7 +68,6 @@ class World {
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.fillStyle = 'red'; // Setzt die Füllfarbe auf Rot
         this.ctx.translate(this.cameraX, 0);
         this.backgrounds.forEach(background => {
             this.drawObject(background);
@@ -87,6 +80,10 @@ class World {
 
         this.bombs.forEach(bomb => {
             this.drawObject(bomb);
+        })
+
+        this.bullets.forEach(bullet => {
+            this.drawObject(bullet);
         })
 
         this.tokens.forEach(token => {
@@ -104,7 +101,7 @@ class World {
         this.ctx.translate(this.cameraX * -1, 0);
 
         this.drawObject(this.statusbar);
-        
+
         this.bombSymbols.forEach(symbol => {
             this.drawObject(symbol);
         })
@@ -118,16 +115,22 @@ class World {
     runGame() {
         setInterval(() => {
             this.bombs = this.bombs.filter(bomb => !bomb.isExploded);
+            this.statusbar.updateStatus(this.hero.hp);
 
             for (let i = this.tokens.length - 1; i >= 0; i--) {
                 const token = this.tokens[i];
                 let distanceTokenToHero = this.calcDistance(token, this.hero);
                 if (distanceTokenToHero < 50) {
-                    this.hero.numberOfBombs++;
                     this.tokens.splice(i, 1);
-                    let offsetX = (this.hero.numberOfBombs-1)*50
-                    let bombSymbol = new BombSymbol(offsetX);
-                    this.bombSymbols.push(bombSymbol);
+                    if (token instanceof BombToken) {
+                        this.hero.numberOfBombs++;
+                        let offsetX = (this.hero.numberOfBombs - 1) * 50
+                        let bombSymbol = new BombSymbol(offsetX);
+                        this.bombSymbols.push(bombSymbol);
+                    }
+                    if (token instanceof HealthpackToken) {
+                        this.hero.hp = Math.min(this.hero.hp + token.addHp, 100);
+                    }
                 }
             }
 
@@ -141,29 +144,51 @@ class World {
                     }
 
                     let distanceToEnemy = this.calcDistance(enemy, this.hero);
-                    if (distanceToEnemy < enemy.attackingDistance) {
-                        enemy.isAttacking = true;
-                        if (this.hero.isVulnerable()) {
-                            this.hero.isTakingDamage = true;
-                            this.hero.takeDamage(enemy.power);
-                            this.statusbar.updateStatus(this.hero.hp);
-                            this.hero.setImmunityToDamageTimer();
-                            console.log('nehme schaden', this.hero.hp)
-                        }
-                    } else {
-                        enemy.isAttacking = false;
+                    if(distanceToEnemy <= enemy.detectionRange){
+                        enemy.hasDetectedHero = true;
                     }
+
+                    if(enemy instanceof EnemyWithClub){
+                        if (distanceToEnemy < enemy.attackingDistance) {
+                            enemy.isAttacking = true;
+                            if (this.hero.isVulnerable()) {
+                                this.hero.isTakingDamage = true;
+                                this.hero.takeDamage(enemy.power);
+                                this.hero.setImmunityToDamageTimer();
+                                console.log('nehme schaden', this.hero.hp)
+                            }
+                        } else {
+                            enemy.isAttacking = false;
+                        }
+                    }
+                   
 
                     this.bombs.forEach(bomb => {
                         let distanceBombToEnemy = this.calcDistance(enemy, bomb);
-                        if(distanceBombToEnemy < bomb.range && bomb.isExploding == false){
+                        if (distanceBombToEnemy < bomb.range && bomb.isExploding == false) {
                             bomb.isExploding = true;
                             enemy.isTakingDamage = true;
                             enemy.takeDamage(bomb.power);
-                        }                        
+                        }
                     });
                 }
             })
+
+
+            for (let i = this.bullets.length - 1; i >= 0; i--) {
+                const bullet = this.bullets[i];
+                let distanceBulletToHero = this.calcDistance(bullet, this.hero);
+                
+                if (distanceBulletToHero < 100) {
+                    if (this.hero.isVulnerable()) {
+                        this.hero.isTakingDamage = true;
+                        this.hero.takeDamage(bullet.power);
+                        this.hero.setImmunityToDamageTimer();
+                        console.log('Held durch kugel getroffen', this.hero.hp)
+                    }
+                    this.bullets.splice(i, 1);
+                }
+            }
         }, 100);
     }
 
@@ -177,7 +202,7 @@ class World {
         let distance = Math.sqrt(dx * dx + dy * dy);
         return distance;
     }
-    
+
     isHitByLaserbeam(enemy) {
         let enemyOffsetX = 260;  // Horizontaler Leerraum (links und rechts)
         let enemyOffsetY = 240;  // Vertikaler Leerraum (oben und unten)

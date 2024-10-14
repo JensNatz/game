@@ -1,6 +1,7 @@
 const level1 = new Level(
     [
-        new EnemyWithClub(),
+        //new EnemyWithClub(),
+        new EnemyWithGun(),
     ],
     [
         new Background('../assets/img/backgrounds/5.png', -150),

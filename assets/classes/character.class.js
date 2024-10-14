@@ -7,6 +7,7 @@ class Character extends MovableObject {
     walkImages;
     getHitImages;
     dieImages;
+    idleImages
     attackImages;
     getLaseredImages;
     isTakingDamage = false;

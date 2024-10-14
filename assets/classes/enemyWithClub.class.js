@@ -1,4 +1,20 @@
 class EnemyWithClub extends Character {
+    idleImages = [
+        'assets/img/enemyWithClub/Idle/Idle_00.png',
+        'assets/img/enemyWithClub/Idle/Idle_01.png',
+        'assets/img/enemyWithClub/Idle/Idle_02.png',
+        'assets/img/enemyWithClub/Idle/Idle_03.png',
+        'assets/img/enemyWithClub/Idle/Idle_04.png',
+        'assets/img/enemyWithClub/Idle/Idle_05.png',
+        'assets/img/enemyWithClub/Idle/Idle_06.png',
+        'assets/img/enemyWithClub/Idle/Idle_07.png',
+        'assets/img/enemyWithClub/Idle/Idle_08.png',
+        'assets/img/enemyWithClub/Idle/Idle_09.png',
+        'assets/img/enemyWithClub/Idle/Idle_10.png',
+        'assets/img/enemyWithClub/Idle/Idle_11.png',
+        'assets/img/enemyWithClub/Idle/Idle_12.png',
+        'assets/img/enemyWithClub/Idle/Idle_13.png',
+    ]
     walkImages = [
         'assets/img/enemyWithClub/Walk/Walk_00.png',
         'assets/img/enemyWithClub/Walk/Walk_01.png',
@@ -86,10 +102,14 @@ class EnemyWithClub extends Character {
     power = 10;
     hp = 10;
     standardImunityTime = 20;
+    detectionRange = 500;
+    hasDetectedHero = false;
     attackingDistance = 200;
+
 
     constructor(){
         super().loadImage(this.walkImages[0]);
+        this.loadImagesInCache(this.idleImages);
         this.loadImagesInCache(this.walkImages);
         this.loadImagesInCache(this.dieImages);
         this.loadImagesInCache(this.attackImages);
@@ -105,7 +125,6 @@ class EnemyWithClub extends Character {
             if(this.isDead() && !this.isBeingLasered() && !this.isTakingDamage){
                 this.playDieAnimation();
             } else {
-                
                 this.reduceLaserHitDuration();
                 this.reduceDamageImmunityDuration();
 
@@ -117,10 +136,12 @@ class EnemyWithClub extends Character {
                 }
                 else if (this.isAttacking){
                     this.playAttackingAnimation();
-                } else
+                } else if ((this.hasDetectedHero))
                 {
                    this.playWalkingAnimation();   
-                   // this.moveTowardsHero()
+                   this.moveTowardsHero()
+                } else {
+                    this.playIdleAnimation();
                 }
             }
         }, 1000/16); 

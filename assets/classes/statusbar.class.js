@@ -21,31 +21,32 @@ class Statusbar extends DrawableObject {
 
      constructor(){
         super().loadImage(this.statusImages[10]);
+        this.loadImagesInCache(this.statusImages);
     }
 
     updateStatus(hp) {
         if (hp <= 0) {
-            this.loadImage(this.statusImages[0]);
+            this.img = this.imageCache[this.statusImages[0]];
         }else if (hp <= 10) {
-            this.loadImage(this.statusImages[1]);
+            this.img = this.imageCache[this.statusImages[1]];
         } else if (hp <= 20) {
-            this.loadImage(this.statusImages[2]);
+            this.img = this.imageCache[this.statusImages[2]];
         } else if (hp <= 30) {
-            this.loadImage(this.statusImages[3]);
+            this.img = this.imageCache[this.statusImages[3]];
         } else if (hp <= 40) {
-            this.loadImage(this.statusImages[4]);
+            this.img = this.imageCache[this.statusImages[4]];
         } else if (hp <= 50) {
-            this.loadImage(this.statusImages[5]);
+            this.img = this.imageCache[this.statusImages[5]];
         } else if (hp <= 60) {
-            this.loadImage(this.statusImages[6]);
+            this.img = this.imageCache[this.statusImages[6]];
         } else if (hp <= 70) {
-            this.loadImage(this.statusImages[7]);
+            this.img = this.imageCache[this.statusImages[7]];
         } else if (hp <= 80) {
-            this.loadImage(this.statusImages[8]);
+            this.img = this.imageCache[this.statusImages[8]];
         } else if (hp <= 90) {
-            this.loadImage(this.statusImages[9]);
+            this.img = this.imageCache[this.statusImages[9]];
         } else if (hp <= 100) {
-            this.loadImage(this.statusImages[10]);
+            this.img = this.imageCache[this.statusImages[10]];
         }
     }
 }
