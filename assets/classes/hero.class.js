@@ -136,6 +136,7 @@ class Hero extends Character {
         'assets/img/hero/Throw/Throw_bomb_19.png'
     ];
     soundWalking = new Audio('../assets/audio/step.wav');
+    soundLaserbeam = new Audio('assets/audio/laserbeam.wav');
     posX = -70;
     posY = 150;
     width = 650;
@@ -184,6 +185,7 @@ class Hero extends Character {
                 if (this.world.keyboard.A && !this.isJumping() && !this.isTakingDamage && this.timeToNextShot == 0) {
                     this.isAttacking = true;
                     this.timeToNextShot = 20;
+                    this.soundLaserbeam.play();
                 }
 
                 if (this.world.keyboard.W && this.numberOfBombs > 0 && !this.isTrowing) {
@@ -200,6 +202,7 @@ class Hero extends Character {
                 if (this.isJumping()) {
                     this.playJumpAnimation();
                 }
+
                 if (this.world.keyboard.RIGHT && this.posX < this.world.length) {
                     this.moveRight();
                     this.otherDirection = false;
@@ -222,6 +225,7 @@ class Hero extends Character {
 
                 if (!this.isJumping() && this.world.keyboard.RIGHT || !this.isJumping() && this.world.keyboard.LEFT) {
                     this.playWalkingAnimation();
+                    this.soundWalking.play();
                 }
 
                 if (!this.world.keyboard.KEYPRESSED && !this.isJumping() && !this.isTakingDamage && !this.isAttacking && !this.isTrowing) {

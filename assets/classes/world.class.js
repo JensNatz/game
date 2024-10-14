@@ -1,4 +1,5 @@
 class World {
+    soundThememusic = new Audio('assets/audio/soundtrack.mp3');
     hero = new Hero();
     laserbeam = new Laserbeam();
     tokens = [
@@ -113,6 +114,8 @@ class World {
     };
 
     runGame() {
+        this.soundThememusic.play();
+
         setInterval(() => {
             this.bombs = this.bombs.filter(bomb => !bomb.isExploded);
             this.statusbar.updateStatus(this.hero.hp);

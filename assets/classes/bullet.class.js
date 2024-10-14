@@ -4,7 +4,7 @@ class Bullet extends MovableObject {
     height = 23;
     power = 15;
     speed = 30;
-    posY = 525;
+    posY = 520;
 
     constructor(posX){
         super().loadImage(this.image);
@@ -14,7 +14,11 @@ class Bullet extends MovableObject {
 
     animate() {
         setInterval(() => {
-           this.moveLeft()
+            if(this.otherDirection){
+                this.moveRight()
+            } else {
+                this.moveLeft()
+            }
         }, 1000 / 16);
     }
 

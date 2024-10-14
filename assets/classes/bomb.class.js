@@ -20,6 +20,7 @@ class Bomb extends MovableObject {
         'assets/img/bomb/explosion/skeleton-Fx2_17.png'
     ];
     image = 'assets/img/bomb/bomb.png'
+    soundExplosion = new Audio('assets/audio/explosion.wav');
     width = 199;
     height = 185;
     power = 15;
@@ -43,6 +44,7 @@ class Bomb extends MovableObject {
                 this.isExploded = true;
             }
             if(this.isExploding){
+                this.soundExplosion.play();
                 this.playExplodeAnimation()
             } else {
                 this.fly();
@@ -61,6 +63,7 @@ class Bomb extends MovableObject {
         this.playAnimation(this.explodeImages)  
         if (this.currentImg % this.explodeImages.length == this.explodeImages.length-1){
            this.isExploded = true;
+           this.isExploding = false;
         }
     }
 }

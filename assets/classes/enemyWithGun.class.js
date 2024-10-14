@@ -87,6 +87,9 @@ class EnemyWithGun extends Character {
         'assets/img/enemyWithGun/GetElectric/Get_Electric_2.png',
     ]
 
+    soundShooting = new Audio('assets/audio/shoot.wav');
+    soundTakeDamage = new Audio('assets/audio/pain1.wav');
+    soundDie = new Audio('assets/audio/death1.wav')
     posY = 150;
     width = 650;
     height = 650;
@@ -116,18 +119,21 @@ class EnemyWithGun extends Character {
 
             if (this.isDead() && !this.isBeingLasered() && !this.isTakingDamage) {
                 this.playDieAnimation();
+                if(!this.dieAnimationEnded){
+                    this.soundDie.play();
+                }
             } else {
-                console.log(this.isAttacking);
-
                 this.reduceLaserHitDuration();
                 this.reduceDamageImmunityDuration();
                 this.reduceTimeToNextShot();
 
                 if (this.isTakingDamage) {
                     this.playGetHitAnimation();
+                    this.soundTakeDamage.play();
                 }
                 else if (this.isBeingLasered()) {
                     this.playLaseredAnimation();
+                    this.soundTakeDamage.play();
                 }
                 else if ((this.hasDetectedHero)) {
                     
@@ -136,9 +142,14 @@ class EnemyWithGun extends Character {
                         this.timeToNextShot = this.intervalBetweenShots;
                         this.isAttacking = true;
                         let bullet = new Bullet(this.posX);
+                        if(this.otherDirection){
+                            bullet.posX = this.posX+this.width-100;
+                            bullet.otherDirection = true;
+                        }
                         this.world.bullets.push(bullet);
                     }
                     if(this.isAttacking){
+                        this.soundShooting.play();
                         this.playShootAnimation()
                     } else {
                         this.playIdleAnimation();

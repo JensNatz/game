@@ -6,11 +6,17 @@ window.addEventListener('load', init);
 window.addEventListener('keydown', handleKeyDownEvent);
 window.addEventListener('keyup', handleKeyUpEvent);
 
+
 function init() {
+    document.getElementById('button').addEventListener('click', startGame)
+    
+}
+
+function startGame(){
     canvas = document.getElementById('canvas');
     keyboard = new Keyboard();
     world = new World(canvas, keyboard, level1);
-}
+};
 
 function handleKeyDownEvent(event) {
     keyboard.KEYPRESSED = true;
