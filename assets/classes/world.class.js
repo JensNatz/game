@@ -114,7 +114,7 @@ class World {
     };
 
     runGame() {
-        this.soundThememusic.play();
+       // this.soundThememusic.play();
 
         setInterval(() => {
             this.bombs = this.bombs.filter(bomb => !bomb.isExploded);

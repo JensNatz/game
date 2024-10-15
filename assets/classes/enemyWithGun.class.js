@@ -119,8 +119,9 @@ class EnemyWithGun extends Character {
 
             if (this.isDead() && !this.isBeingLasered() && !this.isTakingDamage) {
                 this.playDieAnimation();
-                if(!this.dieAnimationEnded){
+                if(!this.dieSoundPlayed){
                     this.soundDie.play();
+                    this.dieSoundPlayed = true;
                 }
             } else {
                 this.reduceLaserHitDuration();

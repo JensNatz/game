@@ -137,6 +137,10 @@ class Hero extends Character {
     ];
     soundWalking = new Audio('../assets/audio/step.wav');
     soundLaserbeam = new Audio('assets/audio/laserbeam.wav');
+    soundJumping = new Audio('assets/audio/hero_jump.wav');
+    soundHurt = new Audio('assets/audio/hero_pain.wav');
+    soundDie = new Audio('assets/audio/hero_die.wav');
+    soundTrow = new Audio('assets/audio/hero_trow.wav');
     posX = -70;
     posY = 150;
     width = 650;
@@ -170,7 +174,8 @@ class Hero extends Character {
             if (this.isDead()) {
                 this.playDieAnimation();
             } else {
-                if (this.isTakingDamage) {                  
+                if (this.isTakingDamage) {  
+                    this.soundHurt.play();                
                     this.playGetHitAnimation();
                 }
 
@@ -190,6 +195,7 @@ class Hero extends Character {
 
                 if (this.world.keyboard.W && this.numberOfBombs > 0 && !this.isTrowing) {
                     this.initTrow();
+                    this.soundTrow.play();
                 }
 
                 if(this.isTrowing){                    
@@ -198,6 +204,7 @@ class Hero extends Character {
 
                 if (this.world.keyboard.SPACE && !this.isJumping()) {
                     this.initJump();
+                    this.soundJumping.play();
                 }
                 if (this.isJumping()) {
                     this.playJumpAnimation();

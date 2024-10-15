@@ -13,7 +13,7 @@ class Character extends MovableObject {
     isTakingDamage = false;
     laserHitDuration = 0;
     isAttacking = false;
-    dieAnimationEnded = false;
+    dieSoundPlayed = false;
     
     playWalkingAnimation() {
         this.ensureAnimationStartsAtBeginning(this.walkImages);    
@@ -37,9 +37,7 @@ class Character extends MovableObject {
         this.ensureAnimationStartsAtBeginning(this.dieImages);    
         if (this.currentImg % this.dieImages.length != this.dieImages.length-1){
             this.playAnimation(this.dieImages) 
-        } else {
-            this.dieAnimationEnded = true;
-        }
+        } 
     }
 
     playAttackingAnimation(){
