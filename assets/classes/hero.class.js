@@ -173,18 +173,31 @@ class Hero extends Character {
 
             if (this.isDead()) {
                 this.playDieAnimation();
+                if(!this.dieSoundPlayed){
+                    this.soundDie.play();
+                    this.dieSoundPlayed = true;
+                }
             } else {
-                if (this.isTakingDamage) {  
-                    this.soundHurt.play();                
-                    this.playGetHitAnimation();
+
+                if (this.isJumping()) {
+                    this.playJumpAnimation();
+                }
+
+                if(this.isTrowing){                    
+                    this.playTrowAnimation();
+                }
+
+                if (this.timeToNextShot <= 10 && this.timeToNextShot > 0 && this.isAttacking) {
+                    this.isAttacking = false;
                 }
 
                 if (this.isAttacking) {
                     this.playAttackingAnimation();
                 }
 
-                if (this.timeToNextShot <= 10 && this.timeToNextShot > 0 && this.isAttacking) {
-                    this.isAttacking = false;
+                if (this.isTakingDamage) {  
+                    this.soundHurt.play();  
+                    this.playGetHitAnimation();
                 }
 
                 if (this.world.keyboard.A && !this.isJumping() && !this.isTakingDamage && this.timeToNextShot == 0) {
@@ -193,21 +206,15 @@ class Hero extends Character {
                     this.soundLaserbeam.play();
                 }
 
-                if (this.world.keyboard.W && this.numberOfBombs > 0 && !this.isTrowing) {
+                if (this.world.keyboard.W && this.numberOfBombs > 0 && !this.isTrowing && !this.isJumping()) {
                     this.initTrow();
                     this.soundTrow.play();
                 }
 
-                if(this.isTrowing){                    
-                    this.playTrowAnimation();
-                }
 
                 if (this.world.keyboard.SPACE && !this.isJumping()) {
                     this.initJump();
                     this.soundJumping.play();
-                }
-                if (this.isJumping()) {
-                    this.playJumpAnimation();
                 }
 
                 if (this.world.keyboard.RIGHT && this.posX < this.world.length) {

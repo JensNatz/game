@@ -13,6 +13,7 @@ class Character extends MovableObject {
     isTakingDamage = false;
     laserHitDuration = 0;
     isAttacking = false;
+    currentState = 'idle';
     dieSoundPlayed = false;
     
     playWalkingAnimation() {

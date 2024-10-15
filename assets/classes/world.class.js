@@ -182,7 +182,7 @@ class World {
                 const bullet = this.bullets[i];
                 let distanceBulletToHero = this.calcDistance(bullet, this.hero);
                 
-                if (distanceBulletToHero < 100) {
+                if (distanceBulletToHero < 300) {
                     if (this.hero.isVulnerable()) {
                         this.hero.isTakingDamage = true;
                         this.hero.takeDamage(bullet.power);
