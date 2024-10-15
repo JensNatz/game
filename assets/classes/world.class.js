@@ -91,7 +91,7 @@ class World {
             this.drawObject(token);
         })
 
-        if (this.hero.isAttacking) {
+        if (this.hero.currentState == 'attacking') {
             this.drawObject(this.laserbeam);
         }
 
@@ -143,7 +143,6 @@ class World {
                         enemy.laserHitDuration = 10;
                         enemy.setImmunityToDamageTimer();
                         enemy.takeDamage(this.laserbeam.power);
-                        console.log('treffer', enemy.hp)
                     }
 
                     let distanceToEnemy = this.calcDistance(enemy, this.hero);
@@ -155,10 +154,9 @@ class World {
                         if (distanceToEnemy < enemy.attackingDistance) {
                             enemy.isAttacking = true;
                             if (this.hero.isVulnerable()) {
-                                this.hero.isTakingDamage = true;
                                 this.hero.takeDamage(enemy.power);
+                                this.hero.currentState = 'hurting';
                                 this.hero.setImmunityToDamageTimer();
-                                console.log('nehme schaden', this.hero.hp)
                             }
                         } else {
                             enemy.isAttacking = false;
@@ -182,12 +180,11 @@ class World {
                 const bullet = this.bullets[i];
                 let distanceBulletToHero = this.calcDistance(bullet, this.hero);
                 
-                if (distanceBulletToHero < 300) {
+                if (distanceBulletToHero < 100) {
                     if (this.hero.isVulnerable()) {
-                        this.hero.isTakingDamage = true;
                         this.hero.takeDamage(bullet.power);
+                        this.hero.currentState = 'hurting';
                         this.hero.setImmunityToDamageTimer();
-                        console.log('Held durch kugel getroffen', this.hero.hp)
                     }
                     this.bullets.splice(i, 1);
                 }

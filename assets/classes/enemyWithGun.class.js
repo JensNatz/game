@@ -99,7 +99,7 @@ class EnemyWithGun extends Character {
     standardImunityTime = 20;
     intervalBetweenShots = 30;
     timeToNextShot = 0;
-    detectionRange = 800;
+    detectionRange = 700;
     hasDetectedHero = false;
 
     constructor() {

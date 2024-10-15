@@ -25,7 +25,7 @@ class Character extends MovableObject {
         this.ensureAnimationStartsAtBeginning(this.getHitImages);    
         this.playAnimation(this.getHitImages)  
         if (this.currentImg % this.getHitImages.length == this.getHitImages.length-1){
-            this.isTakingDamage = false;
+            this.currentState = 'idle';
         }
     }
 
