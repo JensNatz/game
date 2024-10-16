@@ -114,63 +114,51 @@ class World {
     };
 
     runGame() {
-       // this.soundThememusic.play();
+        // this.soundThememusic.play();
 
         setInterval(() => {
-            this.bombs = this.bombs.filter(bomb => !bomb.isExploded);
-            this.statusbar.updateStatus(this.hero.hp);
+            this.removeExplodedBombsFromWorld();
+            this.updateStatusbar();
 
             for (let i = this.tokens.length - 1; i >= 0; i--) {
                 const token = this.tokens[i];
                 let distanceTokenToHero = this.calcDistance(token, this.hero);
                 if (distanceTokenToHero < 50) {
-                    this.tokens.splice(i, 1);
+                    this.removeTokenFromWorld(i);
                     if (token instanceof BombToken) {
-                        this.hero.numberOfBombs++;
-                        let offsetX = (this.hero.numberOfBombs - 1) * 50
-                        let bombSymbol = new BombSymbol(offsetX);
-                        this.bombSymbols.push(bombSymbol);
+                        this.hero.addBombToInventory();
+                        this.addBombSymbolToStatusbar();
                     }
                     if (token instanceof HealthpackToken) {
-                        this.hero.hp = Math.min(this.hero.hp + token.addHp, 100);
+                        this.hero.applyHealthPack(token.addHp)
                     }
                 }
             }
 
             this.enemies.forEach(enemy => {
                 if (enemy.currentState != 'dead') {
-                    if (this.hero.currentState == 'attacking' && this.isHitByLaserbeam(enemy) && enemy.isVulnerable() && !enemy.isBeingLasered()) {
-                        enemy.takeDamage(this.laserbeam.power);
-                        enemy.currentState = 'lasered'
-                        enemy.laserHitDuration = 10;
-                        enemy.setImmunityToDamageTimer();
-                    }
-
                     let distanceToEnemy = this.calcDistance(enemy, this.hero);
-                    if(distanceToEnemy <= enemy.detectionRange){
-                        enemy.hasDetectedHero = true;
+
+                    if (enemy instanceof EnemyWithClub) {
+                        enemy.actBasedOnDistance(distanceToEnemy, this.hero);
                     }
 
-                    if(enemy instanceof EnemyWithClub && enemy.hasDetectedHero && !enemy.isBeingLasered()){
-                        if (distanceToEnemy < enemy.attackingDistance) {
-                            enemy.currentState = 'attacking';
-                            if (this.hero.isVulnerable()) {
-                                this.hero.takeDamage(enemy.power);
-                                this.hero.currentState = 'hurting';
-                                this.hero.setImmunityToDamageTimer();
-                            }
-                        } else {
-                            enemy.currentState = 'walking';
-                        }
+                    if (enemy instanceof EnemyWithGun) {
+                        enemy.shootAtHeroIfDeteced();
                     }
-                   
+
+                    if (this.hero.currentState == 'attacking' && this.isHitByLaserbeam(enemy)) {
+                        enemy.reactToLaserbeam(this.laserbeam.power);
+                    }
+
+                    if (distanceToEnemy <= enemy.detectionRange) {
+                        enemy.detectHero();
+                    }
 
                     this.bombs.forEach(bomb => {
                         let distanceBombToEnemy = this.calcDistance(enemy, bomb);
-                        if (distanceBombToEnemy < bomb.range && bomb.isExploding == false) {
-                            bomb.isExploding = true;
-                            enemy.isTakingDamage = true;
-                            enemy.takeDamage(bomb.power);
+                        if (distanceBombToEnemy < bomb.range) {
+                            bomb.explode(enemy);
                         }
                     });
                 }
@@ -180,14 +168,12 @@ class World {
             for (let i = this.bullets.length - 1; i >= 0; i--) {
                 const bullet = this.bullets[i];
                 let distanceBulletToHero = this.calcDistance(bullet, this.hero);
-                
+
                 if (distanceBulletToHero < 100) {
                     if (this.hero.isVulnerable()) {
                         this.hero.takeDamage(bullet.power);
-                        this.hero.currentState = 'hurting';
-                        this.hero.setImmunityToDamageTimer();
                     }
-                    this.bullets.splice(i, 1);
+                    this.removeBulletFromWorld(i);
                 }
             }
         }, 100);
@@ -212,11 +198,33 @@ class World {
             this.laserbeam.posX + this.laserbeam.width > enemy.posX + enemyOffsetX &&
             this.laserbeam.posY < enemy.posY + enemy.height - enemyOffsetY &&
             this.laserbeam.posY + this.laserbeam.height > enemy.posY + enemyOffsetY) {
-                console.log('gelaser');
-                
+            console.log('gelaser');
+
             return true;
         } else {
             return false;
         }
+    }
+
+    addBombSymbolToStatusbar() {
+        let offsetX = (this.hero.numberOfBombs - 1) * 50
+        let bombSymbol = new BombSymbol(offsetX);
+        this.bombSymbols.push(bombSymbol);
+    }
+
+    removeTokenFromWorld(index) {
+        this.tokens.splice(index, 1);
+    }
+
+    removeBulletFromWorld(index) {
+        this.bullets.splice(index, 1);
+    }
+
+    removeExplodedBombsFromWorld() {
+        this.bombs = this.bombs.filter(bomb => !bomb.isExploded);
+    }
+
+    updateStatusbar() {
+        this.statusbar.updateStatus(this.hero.hp);
     }
 }

@@ -105,7 +105,7 @@ class EnemyWithClub extends Character {
     power = 10;
     hp = 10;
     standardImunityTime = 20;
-    detectionRange = 100;
+    detectionRange = 800;
     hasDetectedHero = false;
     attackingDistance = 200;
 
@@ -130,33 +130,25 @@ class EnemyWithClub extends Character {
 
             if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
                 this.currentState = 'dead';
-            } else {
-                if (!this.isBeingLasered()) {
-                    this.currentState = 'idle';
-                }
-
-                if (this.hasDetectedHero && (this.currentState != 'lasered' || this.currentState != 'attacking' || this.currentState != 'hurting')) {
-                   this.currentState = 'walking'
-                }
-            }
+            } 
         }, 1000 / 16);
     }
 
 
     animate() {
         setInterval(() => {
-            console.log(this.currentState, this.hasDetectedHero)
-            if ( this.currentState == 'walking') {
-                this.playWalkingAnimation();
-                this.moveTowardsHero()
-            }
-
+            
             if (this.currentState == 'dead') {
                 this.playDieAnimation();
                 if (!this.dieSoundPlayed) {
                     this.soundDie.play();
                     this.dieSoundPlayed = true;
                 }
+            }
+
+            if ( this.currentState == 'walking') {
+                this.playWalkingAnimation();
+                this.moveTowardsHero()
             }
 
             if (this.currentState == 'hurting') {
@@ -182,6 +174,7 @@ class EnemyWithClub extends Character {
     }
 
     moveTowardsHero() {
+        this.currentState = 'walking';
         if (this.posX + this.width / 2 > this.world.hero.posX + this.world.hero.width / 2) {
             this.moveLeft();
             this.otherDirection = false;
@@ -191,5 +184,21 @@ class EnemyWithClub extends Character {
         }
     }
 
+    actBasedOnDistance(distanceToHero, hero) {
+        if (this.hasDetectedHero && !this.isBeingLasered()) {
+            if (distanceToHero < this.attackingDistance) {
+                this.attackHero(hero);
+            } else {
+                this.moveTowardsHero();
+            }
+        }
+    }
+
+    attackHero(hero) {
+        this.currentState = 'attacking';
+        if (hero.isVulnerable()) {
+            hero.takeDamage(this.power);
+        }
+    }
 }
 

@@ -312,7 +312,6 @@ class Hero extends Character {
         }
     }
 
-
     trow() {
         let trowingSpeed;
         if (this.otherDirection == false) {
@@ -324,5 +323,13 @@ class Hero extends Character {
         this.world.bombs.push(newBomb);
         this.world.bombSymbols.pop();
         this.numberOfBombs--;
+    }
+
+    addBombToInventory(){
+        this.numberOfBombs++;
+    }
+
+    applyHealthPack(hp){
+        this.hp = Math.min(this.hp + hp, 100);
     }
 }

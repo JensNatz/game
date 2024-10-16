@@ -100,7 +100,7 @@ class EnemyWithGun extends Character {
     intervalBetweenShots = 30;
     timeToNextShot = 0;
     detectionRange = 700;
-    hasDetectedHero = false;
+
 
     constructor() {
         super().loadImage(this.walkImages[0]);
@@ -120,24 +120,9 @@ class EnemyWithGun extends Character {
             this.reduceLaserHitDuration();
             this.reduceDamageImmunityDuration();
             this.reduceTimeToNextShot();
-            if (this.hp <= 0  && this.currentState != 'lasered' && this.currentState != 'hurting') {
-                this.currentState = 'dead';
-            } else {
-                if(!this.isBeingLasered()){
-                    this.currentState = 'idle';
-                }
 
-                if (this.hasDetectedHero && this.timeToNextShot == 0) {
-                    this.currentState = 'attacking'
-                    this.timeToNextShot = this.intervalBetweenShots;
-    
-                    let bullet = new Bullet(this.posX);
-                    if (this.otherDirection) {
-                        bullet.posX = this.posX + this.width - 100;
-                        bullet.otherDirection = true;
-                    }
-                    this.world.bullets.push(bullet);
-                }
+            if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
+                this.currentState = 'dead';
             }
         }, 1000 / 16);
 
@@ -187,11 +172,30 @@ class EnemyWithGun extends Character {
         }
     }
 
+    shootAtHeroIfDeteced() {
+        if (this.hasDetectedHero && !this.isBeingLasered()) {
+            if(this.timeToNextShot == 0){
+                this.currentState = 'attacking'
+                this.shootBullet()
+            }
+        }
+    }
+
+    shootBullet() {
+        let bullet = new Bullet(this.posX);
+        if (this.otherDirection) {
+            bullet.posX = this.posX + this.width - 100;
+            bullet.otherDirection = true;
+        }
+        this.world.bullets.push(bullet);
+        this.timeToNextShot = this.intervalBetweenShots;
+    }
+
     playShootAnimation() {
         this.ensureAnimationStartsAtBeginning(this.shootImages);
         this.playAnimation(this.shootImages);
         if (this.currentImg % this.shootImages.length == this.shootImages.length - 1) {
-             this.currentState = "idle"
+            this.currentState = "idle"
         }
     }
 

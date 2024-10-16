@@ -10,9 +10,8 @@ class Character extends MovableObject {
     idleImages
     attackImages;
     getLaseredImages;
-    isTakingDamage = false;
+    hasDetectedHero = false;
     laserHitDuration = 0;
-    isAttacking = false;
     currentState = 'idle';
     dieSoundPlayed = false;
     
@@ -65,7 +64,23 @@ class Character extends MovableObject {
 
     takeDamage(power) {
         this.hp = this.hp - power;
+        this.currentState = 'hurting';
+        this.setImmunityToDamageTimer();
     };
+    
+    reactToLaserbeam(power){
+        if(this.isVulnerable() && !this.isBeingLasered()){
+            this.takeLaserDamage(power)
+        }
+    }
+    
+    takeLaserDamage(power) {
+        this.hp = this.hp - power;
+        this.laserHitDuration = 10;
+        this.currentState = 'lasered';
+        this.setImmunityToDamageTimer();
+    };
+
 
     setImmunityToDamageTimer(){
         this.currentDamageImmunityDuration = this.standardImunityTime;
@@ -77,5 +92,9 @@ class Character extends MovableObject {
 
     isBeingLasered(){
         return this.laserHitDuration > 0;
+    }
+
+    detectHero(){
+        this.hasDetectedHero = true;
     }
 }
