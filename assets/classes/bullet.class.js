@@ -2,7 +2,7 @@ class Bullet extends MovableObject {
     image = 'assets/img/projectile/yellow_bullet.png'
     width = 136;
     height = 23;
-    power = 15;
+    power = 10;
     speed = 30;
     posY = 520;
 

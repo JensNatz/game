@@ -10,9 +10,8 @@ class Character extends MovableObject {
     idleImages
     attackImages;
     getLaseredImages;
-    isTakingDamage = false;
+    hasDetectedHero = false;
     laserHitDuration = 0;
-    isAttacking = false;
     currentState = 'idle';
     dieSoundPlayed = false;
     
@@ -25,7 +24,7 @@ class Character extends MovableObject {
         this.ensureAnimationStartsAtBeginning(this.getHitImages);    
         this.playAnimation(this.getHitImages)  
         if (this.currentImg % this.getHitImages.length == this.getHitImages.length-1){
-            this.isTakingDamage = false;
+            this.currentState = 'idle';
         }
     }
 
@@ -48,7 +47,7 @@ class Character extends MovableObject {
 
     playLaseredAnimation(){
         this.ensureAnimationStartsAtBeginning(this.getLaseredImages);  
-        this.playAnimation(this.getLaseredImages)  
+        this.playAnimation(this.getLaseredImages)
     }
 
     reduceDamageImmunityDuration(){
@@ -63,17 +62,29 @@ class Character extends MovableObject {
         }
     }
 
-    attack() {
-
-    };
-
     takeDamage(power) {
         this.hp = this.hp - power;
+        this.setImmunityToDamageTimer();
+        if(this.currentState != 'jumping'){
+            this.currentState = 'hurting';
+        }
+        this.soundHurt.play();
+    };
+    
+    reactToLaserbeam(power){
+        if(this.isVulnerable() && !this.isBeingLasered()){
+            this.takeLaserDamage(power)
+        }
+    }
+    
+    takeLaserDamage(power) {
+        this.hp = this.hp - power;
+        this.laserHitDuration = 10;
+        this.currentState = 'lasered';
+        this.setImmunityToDamageTimer();
+        this.soundTakeDamage.play();
     };
 
-    isDead(){
-        return this.hp <= 0;
-    }
 
     setImmunityToDamageTimer(){
         this.currentDamageImmunityDuration = this.standardImunityTime;
@@ -85,5 +96,9 @@ class Character extends MovableObject {
 
     isBeingLasered(){
         return this.laserHitDuration > 0;
+    }
+
+    detectHero(){
+        this.hasDetectedHero = true;
     }
 }

@@ -58,6 +58,13 @@ class Bomb extends MovableObject {
         this.speedY = this.speedY-4;
     }
 
+    explode(target){
+        if(this.isExploding == false){
+            this.isExploding = true;
+            target.takeDamage(this.power);
+        }
+    }
+
     playExplodeAnimation(){
         this.ensureAnimationStartsAtBeginning(this.explodeImages);  
         this.playAnimation(this.explodeImages)  

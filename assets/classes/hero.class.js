@@ -146,11 +146,10 @@ class Hero extends Character {
     width = 650;
     height = 650;
     offsetY = 0;
-    speed = 15;
+    speed = 150;
     hp = 100;
     jumpDirection = 1;
     timeToNextShot = 0;
-    isTrowing = false;
     standardImunityTime = 20;
     numberOfBombs = 0;
 
@@ -163,90 +162,112 @@ class Hero extends Character {
         this.loadImagesInCache(this.dieImages);
         this.loadImagesInCache(this.attackImages);
         this.loadImagesInCache(this.trowImages);
+        this.run();
         this.animate();
     }
 
-    animate() {
+    run() {
         setInterval(() => {
             this.reduceDamageImmunityDuration();
             this.reduceTimeToNextShot();
 
-            if (this.isDead()) {
+            if(this.hp <= 0){
+                this.currentState = 'dead';
+            }
+
+            if (this.currentState == 'walking' && !this.world.keyboard.KEYPRESSED) {
+                this.currentState = 'idle';
+             }
+
+            if (this.currentState == 'attacking' && this.timeToNextShot <= 10) {
+               this.currentState = 'idle';
+            }
+
+            if (this.world.keyboard.A  &&  this.timeToNextShot == 0 && (this.currentState == 'idle' || this.currentState == 'walking')) {
+                this.currentState = 'attacking'
+                this.timeToNextShot = 20;
+                this.soundLaserbeam.play();
+            }
+
+            if (this.world.keyboard.W && this.numberOfBombs > 0 && this.currentState == 'idle') {
+                this.currentState = 'trowing'
+                this.trow();
+                this.soundTrow.play();
+            }
+
+            if(this.world.keyboard.LEFT || this.world.keyboard.RIGHT){
+                if(this.currentState == 'idle'){
+                     this.currentState = 'walking';
+                }
+            }
+
+            if (this.world.keyboard.SPACE && (this.currentState == 'idle' || this.currentState == 'walking')) {
+                this.currentState = 'jumping'
+                this.soundJumping.play();
+            }
+
+            if (this.world.keyboard.RIGHT && this.posX < this.world.length && (this.currentState == 'jumping' || this.currentState == 'walking')) {
+                this.moveRight();
+                this.otherDirection = false;
+                this.world.laserbeam.faceRight(this.posX);
+                this.world.laserbeam.moveRight();
+                this.world.foregrounds.forEach(foreground => {
+                    foreground.moveLeft();
+                })
+            }
+
+            if (this.world.keyboard.LEFT && this.posX > -72 && (this.currentState == 'jumping' || this.currentState == 'walking')) {
+                this.moveLeft();
+                this.otherDirection = true;
+                this.world.laserbeam.moveLeft();
+                this.world.laserbeam.faceLeft(this.posX);
+                this.world.foregrounds.forEach(foreground => {
+                    foreground.moveRight();
+                })
+            }
+
+            this.setCameraOnHero();
+
+        }, 1000 / 16);
+
+    }
+
+    animate() {
+        setInterval(() => {
+
+            if (this.currentState == "dead") {
                 this.playDieAnimation();
-                if(!this.dieSoundPlayed){
+                if (!this.dieSoundPlayed) {
                     this.soundDie.play();
                     this.dieSoundPlayed = true;
                 }
-            } else {
-
-                if (this.isJumping()) {
-                    this.playJumpAnimation();
-                }
-
-                if(this.isTrowing){                    
-                    this.playTrowAnimation();
-                }
-
-                if (this.timeToNextShot <= 10 && this.timeToNextShot > 0 && this.isAttacking) {
-                    this.isAttacking = false;
-                }
-
-                if (this.isAttacking) {
-                    this.playAttackingAnimation();
-                }
-
-                if (this.isTakingDamage) {  
-                    this.soundHurt.play();  
-                    this.playGetHitAnimation();
-                }
-
-                if (this.world.keyboard.A && !this.isJumping() && !this.isTakingDamage && this.timeToNextShot == 0) {
-                    this.isAttacking = true;
-                    this.timeToNextShot = 20;
-                    this.soundLaserbeam.play();
-                }
-
-                if (this.world.keyboard.W && this.numberOfBombs > 0 && !this.isTrowing && !this.isJumping()) {
-                    this.initTrow();
-                    this.soundTrow.play();
-                }
-
-
-                if (this.world.keyboard.SPACE && !this.isJumping()) {
-                    this.initJump();
-                    this.soundJumping.play();
-                }
-
-                if (this.world.keyboard.RIGHT && this.posX < this.world.length) {
-                    this.moveRight();
-                    this.otherDirection = false;
-                    this.world.laserbeam.faceRight(this.posX);
-                    this.world.laserbeam.moveRight();
-                    this.world.foregrounds.forEach(foreground => {
-                        foreground.moveLeft();
-                    })
-                }
-
-                if (this.world.keyboard.LEFT && this.posX > -72) {
-                    this.moveLeft();
-                    this.otherDirection = true;
-                    this.world.laserbeam.moveLeft();
-                    this.world.laserbeam.faceLeft(this.posX);
-                    this.world.foregrounds.forEach(foreground => {
-                        foreground.moveRight();
-                    })
-                }
-
-                if (!this.isJumping() && this.world.keyboard.RIGHT || !this.isJumping() && this.world.keyboard.LEFT) {
-                    this.playWalkingAnimation();
-                    this.soundWalking.play();
-                }
-
-                if (!this.world.keyboard.KEYPRESSED && !this.isJumping() && !this.isTakingDamage && !this.isAttacking && !this.isTrowing) {
-                    this.playIdleAnimation();
-                }
             }
-            this.setCameraOnHero();
+
+            if (this.currentState == "jumping") {
+                this.playJumpAnimation();
+            }
+
+            if (this.currentState == "trowing") {
+                this.playTrowAnimation();
+            }
+
+            if (this.currentState == "attacking") {
+                this.playAttackingAnimation();
+            }
+
+            if (this.currentState == "hurting") {
+                this.playGetHitAnimation();
+            }
+
+            if (this.currentState == "walking") {
+                this.playWalkingAnimation();
+                this.soundWalking.play();
+            }
+
+            if (this.currentState == "idle") {
+                this.playIdleAnimation();
+            }
+            
         }, 1000 / 16);
     }
 
@@ -260,22 +281,17 @@ class Hero extends Character {
         this.world.cameraX = this.posX * -1;
     }
 
-    initJump() {
-        this.currentImg = 0;
-        this.offsetY = -50;
-    }
-
-    playTrowAnimation(){
-        this.ensureAnimationStartsAtBeginning(this.trowImages);  
-        if (this.currentImg % this.trowImages.length != this.trowImages.length-1){
+    playTrowAnimation() {
+        this.ensureAnimationStartsAtBeginning(this.trowImages);
+        if (this.currentImg % this.trowImages.length != this.trowImages.length - 1) {
             this.playAnimation(this.trowImages);
         } else {
-            this.isTrowing = false;
+            this.currentState = "idle";
         }
-
     }
 
-    playJumpAnimation() {
+    playJumpAnimation() {    
+        this.ensureAnimationStartsAtBeginning(this.jumpImages);    
         this.offsetY = this.offsetY - this.jumpDirection * 50;
 
         let i = this.currentImg;
@@ -291,24 +307,29 @@ class Hero extends Character {
             this.currentImg = 0;
             this.jumpDirection = 1;
             this.offsetY = 0;
+            this.currentState = 'idle';
         }
     }
 
-    isJumping() {
-        return this.offsetY < 0;
-    }
-
-    initTrow() {
-        this.isTrowing = true;
+    trow() {
         let trowingSpeed;
         if (this.otherDirection == false) {
             trowingSpeed = 20
         } else {
             trowingSpeed = -20
         }
-        let newBomb = new Bomb(this.posX+this.width/2, this.posY+this.height/2, trowingSpeed)
+        let newBomb = new Bomb(this.posX + this.width / 2, this.posY + this.height / 2, trowingSpeed)
         this.world.bombs.push(newBomb);
         this.world.bombSymbols.pop();
         this.numberOfBombs--;
+    }
+
+    addBombToInventory(){
+        this.numberOfBombs++;
+    }
+
+    applyHealthPack(healthpack){
+        this.hp = Math.min(this.hp + healthpack.hp, 100);
+        healthpack.soundPickup.play();
     }
 }

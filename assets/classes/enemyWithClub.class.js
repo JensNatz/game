@@ -93,7 +93,10 @@ class EnemyWithClub extends Character {
         'assets/img/enemyWithClub/GetElectric/Get_Electric_0.png',
         'assets/img/enemyWithClub/GetElectric/Get_Electric_1.png',
         'assets/img/enemyWithClub/GetElectric/Get_Electric_2.png',
-    ]
+    ];
+    soundAttacking = new Audio('assets/audio/hitWithClub.flac');
+    soundTakeDamage = new Audio('assets/audio/pain2.wav');
+    soundDie = new Audio('assets/audio/death2.wav')
 
     posY = 150;
     width = 650;
@@ -102,12 +105,12 @@ class EnemyWithClub extends Character {
     power = 10;
     hp = 10;
     standardImunityTime = 20;
-    detectionRange = 500;
+    detectionRange = 100;
     hasDetectedHero = false;
     attackingDistance = 200;
 
 
-    constructor(){
+    constructor() {
         super().loadImage(this.walkImages[0]);
         this.loadImagesInCache(this.idleImages);
         this.loadImagesInCache(this.walkImages);
@@ -116,39 +119,64 @@ class EnemyWithClub extends Character {
         this.loadImagesInCache(this.getHitImages);
         this.loadImagesInCache(this.getLaseredImages);
         this.posX = 600 + Math.random() * 500;
-        this.animate(); 
+        this.run();
+        this.animate();
     }
+
+    run() {
+        setInterval(() => {
+            this.reduceLaserHitDuration();
+            this.reduceDamageImmunityDuration();
+
+            if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
+                this.currentState = 'dead';
+                if (!this.dieSoundPlayed) {
+                    this.soundDie.play();
+                    this.dieSoundPlayed = true;
+                }
+            } 
+            if (this.currentState == 'lasered' && !this.isBeingLasered()){
+                this.currentState = 'idle';
+            }
+            
+        }, 1000 / 16);
+    }
+
 
     animate() {
         setInterval(() => {
             
-            if(this.isDead() && !this.isBeingLasered() && !this.isTakingDamage){
+            if (this.currentState == 'dead') {
                 this.playDieAnimation();
-            } else {
-                this.reduceLaserHitDuration();
-                this.reduceDamageImmunityDuration();
-
-                if(this.isTakingDamage){
-                    this.playGetHitAnimation();
-                }
-                else if (this.isBeingLasered()){
-                    this.playLaseredAnimation();
-                }
-                else if (this.isAttacking){
-                    this.playAttackingAnimation();
-                } else if ((this.hasDetectedHero))
-                {
-                   this.playWalkingAnimation();   
-                   this.moveTowardsHero()
-                } else {
-                    this.playIdleAnimation();
-                }
             }
-        }, 1000/16); 
-    } 
 
-    moveTowardsHero(){
-        if(this.posX + this.width/2 > this.world.hero.posX + this.world.hero.width/2){
+            if ( this.currentState == 'walking') {
+                this.playWalkingAnimation();
+                this.moveTowardsHero()
+            }
+
+            if (this.currentState == 'hurting') {
+                this.playGetHitAnimation();
+            }
+
+            if (this.currentState == 'lasered') {
+                this.playLaseredAnimation();
+            }
+
+            if (this.currentState == 'attacking') {
+                this.playAttackingAnimation()
+            }
+
+            if (this.currentState == "idle") {
+                this.playIdleAnimation();
+            }
+
+        }, 1000 / 16);
+    }
+
+    moveTowardsHero() {
+        this.currentState = 'walking';
+        if (this.posX + this.width / 2 > this.world.hero.posX + this.world.hero.width / 2) {
             this.moveLeft();
             this.otherDirection = false;
         } else {
@@ -157,5 +185,22 @@ class EnemyWithClub extends Character {
         }
     }
 
+    actBasedOnDistance(distanceToHero, hero) {
+        if (this.hasDetectedHero && !this.isBeingLasered()) {
+            if (distanceToHero < this.attackingDistance) {
+                this.attackHero(hero);
+            } else {
+                this.moveTowardsHero();
+            }
+        }
+    }
+
+    attackHero(hero) {
+        this.currentState = 'attacking';
+        if (hero.isVulnerable()) {
+            hero.takeDamage(this.power);
+        }
+        this.soundAttacking.play();
+    }
 }
 
