@@ -146,7 +146,7 @@ class Hero extends Character {
     width = 650;
     height = 650;
     offsetY = 0;
-    speed = 15;
+    speed = 150;
     hp = 100;
     jumpDirection = 1;
     timeToNextShot = 0;
@@ -256,7 +256,6 @@ class Hero extends Character {
             }
 
             if (this.currentState == "hurting") {
-                this.soundHurt.play();
                 this.playGetHitAnimation();
             }
 
@@ -329,7 +328,8 @@ class Hero extends Character {
         this.numberOfBombs++;
     }
 
-    applyHealthPack(hp){
-        this.hp = Math.min(this.hp + hp, 100);
+    applyHealthPack(healthpack){
+        this.hp = Math.min(this.hp + healthpack.hp, 100);
+        healthpack.soundPickup.play();
     }
 }

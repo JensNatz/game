@@ -105,7 +105,7 @@ class EnemyWithClub extends Character {
     power = 10;
     hp = 10;
     standardImunityTime = 20;
-    detectionRange = 800;
+    detectionRange = 100;
     hasDetectedHero = false;
     attackingDistance = 200;
 
@@ -130,7 +130,15 @@ class EnemyWithClub extends Character {
 
             if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
                 this.currentState = 'dead';
+                if (!this.dieSoundPlayed) {
+                    this.soundDie.play();
+                    this.dieSoundPlayed = true;
+                }
             } 
+            if (this.currentState == 'lasered' && !this.isBeingLasered()){
+                this.currentState = 'idle';
+            }
+            
         }, 1000 / 16);
     }
 
@@ -140,10 +148,6 @@ class EnemyWithClub extends Character {
             
             if (this.currentState == 'dead') {
                 this.playDieAnimation();
-                if (!this.dieSoundPlayed) {
-                    this.soundDie.play();
-                    this.dieSoundPlayed = true;
-                }
             }
 
             if ( this.currentState == 'walking') {
@@ -153,16 +157,13 @@ class EnemyWithClub extends Character {
 
             if (this.currentState == 'hurting') {
                 this.playGetHitAnimation();
-                this.soundTakeDamage.play();
             }
 
             if (this.currentState == 'lasered') {
                 this.playLaseredAnimation();
-                this.soundTakeDamage.play();
             }
 
             if (this.currentState == 'attacking') {
-                this.soundAttacking.play();
                 this.playAttackingAnimation()
             }
 
@@ -199,6 +200,7 @@ class EnemyWithClub extends Character {
         if (hero.isVulnerable()) {
             hero.takeDamage(this.power);
         }
+        this.soundAttacking.play();
     }
 }
 

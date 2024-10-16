@@ -123,7 +123,16 @@ class EnemyWithGun extends Character {
 
             if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
                 this.currentState = 'dead';
+                if (!this.dieSoundPlayed) {
+                    this.soundDie.play();
+                    this.dieSoundPlayed = true;
+                }
             }
+
+            if (this.currentState == 'lasered' && !this.isBeingLasered()){
+                this.currentState = 'idle';
+            }
+            
         }, 1000 / 16);
 
     }
@@ -136,24 +145,17 @@ class EnemyWithGun extends Character {
 
             if (this.currentState == 'dead') {
                 this.playDieAnimation();
-                if (!this.dieSoundPlayed) {
-                    this.soundDie.play();
-                    this.dieSoundPlayed = true;
-                }
             }
 
             if (this.currentState == 'hurting') {
                 this.playGetHitAnimation();
-                this.soundTakeDamage.play();
             }
 
             if (this.currentState == 'lasered') {
                 this.playLaseredAnimation();
-                this.soundTakeDamage.play();
             }
 
             if (this.currentState == 'attacking') {
-                this.soundShooting.play();
                 this.playShootAnimation()
             }
 
@@ -175,8 +177,9 @@ class EnemyWithGun extends Character {
     shootAtHeroIfDeteced() {
         if (this.hasDetectedHero && !this.isBeingLasered()) {
             if(this.timeToNextShot == 0){
-                this.currentState = 'attacking'
-                this.shootBullet()
+                this.currentState = 'attacking';
+                this.shootBullet();
+                this.soundShooting.play();
             }
         }
     }

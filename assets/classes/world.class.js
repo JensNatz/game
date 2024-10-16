@@ -127,10 +127,11 @@ class World {
                     this.removeTokenFromWorld(i);
                     if (token instanceof BombToken) {
                         this.hero.addBombToInventory();
+                        token.soundPickup.play();
                         this.addBombSymbolToStatusbar();
                     }
                     if (token instanceof HealthpackToken) {
-                        this.hero.applyHealthPack(token.addHp)
+                        this.hero.applyHealthPack(token)
                     }
                 }
             }
@@ -164,12 +165,11 @@ class World {
                 }
             })
 
-
             for (let i = this.bullets.length - 1; i >= 0; i--) {
                 const bullet = this.bullets[i];
                 let distanceBulletToHero = this.calcDistance(bullet, this.hero);
 
-                if (distanceBulletToHero < 100) {
+                if (distanceBulletToHero < 150) {
                     if (this.hero.isVulnerable()) {
                         this.hero.takeDamage(bullet.power);
                     }
@@ -178,7 +178,6 @@ class World {
             }
         }, 100);
     }
-
 
     calcDistance(obj, obj2) {
         let dx = (obj.posX + obj.width / 2) - (obj2.posX + obj2.width / 2);
@@ -198,8 +197,6 @@ class World {
             this.laserbeam.posX + this.laserbeam.width > enemy.posX + enemyOffsetX &&
             this.laserbeam.posY < enemy.posY + enemy.height - enemyOffsetY &&
             this.laserbeam.posY + this.laserbeam.height > enemy.posY + enemyOffsetY) {
-            console.log('gelaser');
-
             return true;
         } else {
             return false;

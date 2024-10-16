@@ -64,8 +64,11 @@ class Character extends MovableObject {
 
     takeDamage(power) {
         this.hp = this.hp - power;
-        this.currentState = 'hurting';
         this.setImmunityToDamageTimer();
+        if(this.currentState != 'jumping'){
+            this.currentState = 'hurting';
+        }
+        this.soundHurt.play();
     };
     
     reactToLaserbeam(power){
@@ -79,6 +82,7 @@ class Character extends MovableObject {
         this.laserHitDuration = 10;
         this.currentState = 'lasered';
         this.setImmunityToDamageTimer();
+        this.soundTakeDamage.play();
     };
 
 
