@@ -48,7 +48,7 @@ class Character extends MovableObject {
 
     playLaseredAnimation(){
         this.ensureAnimationStartsAtBeginning(this.getLaseredImages);  
-        this.playAnimation(this.getLaseredImages)  
+        this.playAnimation(this.getLaseredImages)
     }
 
     reduceDamageImmunityDuration(){
@@ -63,17 +63,9 @@ class Character extends MovableObject {
         }
     }
 
-    attack() {
-
-    };
-
     takeDamage(power) {
         this.hp = this.hp - power;
     };
-
-    isDead(){
-        return this.hp <= 0;
-    }
 
     setImmunityToDamageTimer(){
         this.currentDamageImmunityDuration = this.standardImunityTime;

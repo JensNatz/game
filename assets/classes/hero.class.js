@@ -171,8 +171,6 @@ class Hero extends Character {
             this.reduceDamageImmunityDuration();
             this.reduceTimeToNextShot();
 
-            console.log(this.currentState);
-
             if(this.hp <= 0){
                 this.currentState = 'dead';
             }

@@ -138,11 +138,12 @@ class World {
             }
 
             this.enemies.forEach(enemy => {
-                if (!enemy.isDead()) {
-                    if (this.hero.isAttacking && this.isHitByLaserbeam(enemy) && enemy.isVulnerable() && !enemy.isBeingLasered()) {
+                if (enemy.currentState != 'dead') {
+                    if (this.hero.currentState == 'attacking' && this.isHitByLaserbeam(enemy) && enemy.isVulnerable() && !enemy.isBeingLasered()) {
+                        enemy.takeDamage(this.laserbeam.power);
+                        enemy.currentState = 'lasered'
                         enemy.laserHitDuration = 10;
                         enemy.setImmunityToDamageTimer();
-                        enemy.takeDamage(this.laserbeam.power);
                     }
 
                     let distanceToEnemy = this.calcDistance(enemy, this.hero);
@@ -150,16 +151,16 @@ class World {
                         enemy.hasDetectedHero = true;
                     }
 
-                    if(enemy instanceof EnemyWithClub){
+                    if(enemy instanceof EnemyWithClub && enemy.hasDetectedHero && !enemy.isBeingLasered()){
                         if (distanceToEnemy < enemy.attackingDistance) {
-                            enemy.isAttacking = true;
+                            enemy.currentState = 'attacking';
                             if (this.hero.isVulnerable()) {
                                 this.hero.takeDamage(enemy.power);
                                 this.hero.currentState = 'hurting';
                                 this.hero.setImmunityToDamageTimer();
                             }
                         } else {
-                            enemy.isAttacking = false;
+                            enemy.currentState = 'walking';
                         }
                     }
                    
@@ -211,6 +212,8 @@ class World {
             this.laserbeam.posX + this.laserbeam.width > enemy.posX + enemyOffsetX &&
             this.laserbeam.posY < enemy.posY + enemy.height - enemyOffsetY &&
             this.laserbeam.posY + this.laserbeam.height > enemy.posY + enemyOffsetY) {
+                console.log('gelaser');
+                
             return true;
         } else {
             return false;

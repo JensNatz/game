@@ -85,7 +85,7 @@ class EnemyWithGun extends Character {
         'assets/img/enemyWithGun/GetElectric/Get_Electric_0.png',
         'assets/img/enemyWithGun/GetElectric/Get_Electric_1.png',
         'assets/img/enemyWithGun/GetElectric/Get_Electric_2.png',
-    ]
+    ];
 
     soundShooting = new Audio('assets/audio/shoot.wav');
     soundTakeDamage = new Audio('assets/audio/pain1.wav');
@@ -111,55 +111,71 @@ class EnemyWithGun extends Character {
         this.loadImagesInCache(this.shootImages);
         this.loadImagesInCache(this.getLaseredImages);
         this.posX = 600 + Math.random() * 500;
+        this.run()
         this.animate();
+    }
+
+    run() {
+        setInterval(() => {
+            this.reduceLaserHitDuration();
+            this.reduceDamageImmunityDuration();
+            this.reduceTimeToNextShot();
+            if (this.hp <= 0  && this.currentState != 'lasered' && this.currentState != 'hurting') {
+                this.currentState = 'dead';
+            } else {
+                if(!this.isBeingLasered()){
+                    this.currentState = 'idle';
+                }
+
+                if (this.hasDetectedHero && this.timeToNextShot == 0) {
+                    this.currentState = 'attacking'
+                    this.timeToNextShot = this.intervalBetweenShots;
+    
+                    let bullet = new Bullet(this.posX);
+                    if (this.otherDirection) {
+                        bullet.posX = this.posX + this.width - 100;
+                        bullet.otherDirection = true;
+                    }
+                    this.world.bullets.push(bullet);
+                }
+            }
+        }, 1000 / 16);
+
     }
 
     animate() {
         setInterval(() => {
+            if ((this.hasDetectedHero)) {
+                this.lookAtHero()
+            }
 
-            if (this.isDead() && !this.isBeingLasered() && !this.isTakingDamage) {
+            if (this.currentState == 'dead') {
                 this.playDieAnimation();
-                if(!this.dieSoundPlayed){
+                if (!this.dieSoundPlayed) {
                     this.soundDie.play();
                     this.dieSoundPlayed = true;
                 }
-            } else {
-                this.reduceLaserHitDuration();
-                this.reduceDamageImmunityDuration();
-                this.reduceTimeToNextShot();
-
-                if (this.isTakingDamage) {
-                    this.playGetHitAnimation();
-                    this.soundTakeDamage.play();
-                }
-                else if (this.isBeingLasered()) {
-                    this.playLaseredAnimation();
-                    this.soundTakeDamage.play();
-                }
-                else if ((this.hasDetectedHero)) {
-                    
-                    this.lookAtHero()
-                    if(this.timeToNextShot == 0){
-                        this.timeToNextShot = this.intervalBetweenShots;
-                        this.isAttacking = true;
-                        let bullet = new Bullet(this.posX);
-                        if(this.otherDirection){
-                            bullet.posX = this.posX+this.width-100;
-                            bullet.otherDirection = true;
-                        }
-                        this.world.bullets.push(bullet);
-                    }
-                    if(this.isAttacking){
-                        this.soundShooting.play();
-                        this.playShootAnimation()
-                    } else {
-                        this.playIdleAnimation();
-                    }
-                    
-                } else {
-                    this.playIdleAnimation();
-                }
             }
+
+            if (this.currentState == 'hurting') {
+                this.playGetHitAnimation();
+                this.soundTakeDamage.play();
+            }
+
+            if (this.currentState == 'lasered') {
+                this.playLaseredAnimation();
+                this.soundTakeDamage.play();
+            }
+
+            if (this.currentState == 'attacking') {
+                this.soundShooting.play();
+                this.playShootAnimation()
+            }
+
+            if (this.currentState == "idle") {
+                this.playIdleAnimation();
+            }
+
         }, 1000 / 16);
     }
 
@@ -174,13 +190,13 @@ class EnemyWithGun extends Character {
     playShootAnimation() {
         this.ensureAnimationStartsAtBeginning(this.shootImages);
         this.playAnimation(this.shootImages);
-        if (this.currentImg % this.shootImages.length == this.shootImages.length-1){
-            this.isAttacking = false;
+        if (this.currentImg % this.shootImages.length == this.shootImages.length - 1) {
+             this.currentState = "idle"
         }
     }
 
-    reduceTimeToNextShot(){
-        if(this.timeToNextShot > 0){
+    reduceTimeToNextShot() {
+        if (this.timeToNextShot > 0) {
             this.timeToNextShot--;
         }
     }
