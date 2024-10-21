@@ -105,20 +105,20 @@ class EnemyWithClub extends Character {
     power = 10;
     hp = 10;
     standardImunityTime = 20;
-    detectionRange = 100;
+    detectionRange = 800;
     hasDetectedHero = false;
     attackingDistance = 200;
 
 
-    constructor() {
+    constructor(posX) {
         super().loadImage(this.walkImages[0]);
+        this.posX = posX;
         this.loadImagesInCache(this.idleImages);
         this.loadImagesInCache(this.walkImages);
         this.loadImagesInCache(this.dieImages);
         this.loadImagesInCache(this.attackImages);
         this.loadImagesInCache(this.getHitImages);
         this.loadImagesInCache(this.getLaseredImages);
-        this.posX = 600 + Math.random() * 500;
         this.run();
         this.animate();
     }

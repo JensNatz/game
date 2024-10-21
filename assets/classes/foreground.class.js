@@ -1,11 +1,10 @@
 class Foreground extends MovableObject {
-   width = 3255;
-   height = 151;
-   speed = 2;
-
-   constructor(path, posX, posY){
+   
+   constructor(path, posX, posY, width, height){
     super().loadImage(path) 
     this.posX = posX;
     this.posY = posY; 
+    this.width = width;
+    this.height = height;
    }
 }

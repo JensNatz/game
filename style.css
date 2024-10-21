@@ -10,8 +10,22 @@ body {
     align-items: center;
     height: 100vh;;
     background-color: black;
+    flex-direction: column;
 }
 
 canvas {
-    background-color: #a0a0a0;
+    display: block;
+    background-color: blue;
 }
+
+@media only screen and (max-width: 1400px) {
+    canvas {
+      width: 100vw;
+    }
+  }
+
+@media only screen and (max-height: 768px) {
+    canvas {
+      height: 100vh;
+    }
+  }

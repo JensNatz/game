@@ -146,7 +146,7 @@ class Hero extends Character {
     width = 650;
     height = 650;
     offsetY = 0;
-    speed = 150;
+    speed = 15;
     hp = 100;
     jumpDirection = 1;
     timeToNextShot = 0;

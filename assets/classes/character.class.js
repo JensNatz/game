@@ -14,6 +14,7 @@ class Character extends MovableObject {
     laserHitDuration = 0;
     currentState = 'idle';
     dieSoundPlayed = false;
+
     
     playWalkingAnimation() {
         this.ensureAnimationStartsAtBeginning(this.walkImages);    
@@ -23,7 +24,7 @@ class Character extends MovableObject {
     playGetHitAnimation() {
         this.ensureAnimationStartsAtBeginning(this.getHitImages);    
         this.playAnimation(this.getHitImages)  
-        if (this.currentImg % this.getHitImages.length == this.getHitImages.length-1){
+        if (this.currentImg == this.getHitImages.length){
             this.currentState = 'idle';
         }
     }
@@ -35,7 +36,7 @@ class Character extends MovableObject {
 
     playDieAnimation(){ 
         this.ensureAnimationStartsAtBeginning(this.dieImages);    
-        if (this.currentImg % this.dieImages.length != this.dieImages.length-1){
+        if (this.currentImg != this.dieImages.length){
             this.playAnimation(this.dieImages) 
         } 
     }

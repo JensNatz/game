@@ -102,15 +102,15 @@ class EnemyWithGun extends Character {
     detectionRange = 700;
 
 
-    constructor() {
+    constructor(posX) {
         super().loadImage(this.walkImages[0]);
+        this.posX = posX;
         this.loadImagesInCache(this.idleImages);
         this.loadImagesInCache(this.walkImages);
         this.loadImagesInCache(this.dieImages);
         this.loadImagesInCache(this.getHitImages);
         this.loadImagesInCache(this.shootImages);
         this.loadImagesInCache(this.getLaseredImages);
-        this.posX = 600 + Math.random() * 500;
         this.run()
         this.animate();
     }
@@ -139,12 +139,12 @@ class EnemyWithGun extends Character {
 
     animate() {
         setInterval(() => {
-            if ((this.hasDetectedHero)) {
-                this.lookAtHero()
-            }
-
             if (this.currentState == 'dead') {
                 this.playDieAnimation();
+            }
+
+            if (this.hasDetectedHero && this.currentState != 'dead') {
+                this.lookAtHero()
             }
 
             if (this.currentState == 'hurting') {
@@ -190,7 +190,7 @@ class EnemyWithGun extends Character {
             bullet.posX = this.posX + this.width - 100;
             bullet.otherDirection = true;
         }
-        this.world.bullets.push(bullet);
+        this.world.projectiles.push(bullet);
         this.timeToNextShot = this.intervalBetweenShots;
     }
 

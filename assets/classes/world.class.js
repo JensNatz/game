@@ -2,13 +2,9 @@ class World {
     soundThememusic = new Audio('assets/audio/soundtrack.mp3');
     hero = new Hero();
     laserbeam = new Laserbeam();
-    tokens = [
-        new BombToken(500),
-        new BombToken(700),
-        new HealthpackToken(800)
-    ]
+    tokens = [];
     bombs = [];
-    bullets = []
+    projectiles = []
     bombSymbols = [];
     enemies;
     statusbar = new Statusbar();
@@ -33,6 +29,7 @@ class World {
 
     loadLevel(level) {
         this.enemies = level.enemies;
+        this.tokens = level.tokens;
         this.backgrounds = level.backgrounds;
         this.foregrounds = level.foregrounds;
         this.length = level.length;
@@ -83,8 +80,8 @@ class World {
             this.drawObject(bomb);
         })
 
-        this.bullets.forEach(bullet => {
-            this.drawObject(bullet);
+        this.projectiles.forEach(projectile => {
+            this.drawObject(projectile);
         })
 
         this.tokens.forEach(token => {
@@ -114,10 +111,10 @@ class World {
     };
 
     runGame() {
-        // this.soundThememusic.play();
+        this.soundThememusic.play();
 
         setInterval(() => {
-            this.removeExplodedBombsFromWorld();
+            this.removeExplodedRpojectilesFromWorld();
             this.updateStatusbar();
 
             for (let i = this.tokens.length - 1; i >= 0; i--) {
@@ -144,7 +141,7 @@ class World {
                         enemy.actBasedOnDistance(distanceToEnemy, this.hero);
                     }
 
-                    if (enemy instanceof EnemyWithGun) {
+                    if (enemy instanceof EnemyWithGun || enemy instanceof Drone) {
                         enemy.shootAtHeroIfDeteced();
                     }
 
@@ -165,15 +162,23 @@ class World {
                 }
             })
 
-            for (let i = this.bullets.length - 1; i >= 0; i--) {
-                const bullet = this.bullets[i];
-                let distanceBulletToHero = this.calcDistance(bullet, this.hero);
+            for (let i = this.projectiles.length - 1; i >= 0; i--) {
+                const projectile = this.projectiles[i];
+                let distanceBulletToHero = this.calcDistance(projectile, this.hero);
 
                 if (distanceBulletToHero < 150) {
                     if (this.hero.isVulnerable()) {
-                        this.hero.takeDamage(bullet.power);
+
+                        if(projectile instanceof Bullet){
+                            this.hero.takeDamage(projectile.power);
+                            this.removeProjectileFromWorld(i);
+                        }
+
+                        if(projectile instanceof Rocket){
+                            projectile.explode(this.hero);
+                        }
+
                     }
-                    this.removeBulletFromWorld(i);
                 }
             }
         }, 100);
@@ -213,12 +218,13 @@ class World {
         this.tokens.splice(index, 1);
     }
 
-    removeBulletFromWorld(index) {
-        this.bullets.splice(index, 1);
+    removeProjectileFromWorld(index) {
+        this.projectiles.splice(index, 1);
     }
 
-    removeExplodedBombsFromWorld() {
+    removeExplodedRpojectilesFromWorld() {
         this.bombs = this.bombs.filter(bomb => !bomb.isExploded);
+        this.projectiles = this.projectiles.filter(projectile => !projectile.isExploded);
     }
 
     updateStatusbar() {

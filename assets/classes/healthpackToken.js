@@ -3,7 +3,7 @@ class HealthpackToken extends DrawableObject {
     width = 93;
     height = 100;
     posY = 450;
-    addHp = 10;
+    hp = 15;
     soundPickup = new Audio('assets/audio/pickup_healthpack.flac');
 
     constructor(posX){

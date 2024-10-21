@@ -9,7 +9,6 @@ window.addEventListener('keyup', handleKeyUpEvent);
 
 function init() {
     document.getElementById('button').addEventListener('click', startGame)
-    
 }
 
 function startGame(){
