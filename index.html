@@ -32,14 +32,52 @@
 </head>
 
 <body>
-    <div class="wrapper">
+    <div id="wrapper" class="wrapper">
         <div class="controls-wrapper">
-            <div class="controls">
+            <div id="controls" class="controls">
                 <img class="control-btn" id="btn_start" src="assets/img/gui/btn_startgame.png" alt="">
                 <img class="control-btn" id="btn_instructions" src="assets/img/gui/btn_instructions.png" alt="">
+                <img class="control-btn" id="btn_imprint" src="assets/img/gui/btn_imprint.png" alt="">
             </div>
         </div>
-        <canvas id="canvas" width="1400" height="768"></canvas>
+        <div id="instructions" class="content d-none">
+            <img id="btn_instructions_back" class="control-btn-back" src="assets/img/gui/btn_back.png" alt="">
+            <img src="assets/img/gui/instructions.png" alt="">
+        </div>
+        <div id="imprint" class="content d-none">
+            <img id="btn_imprint_back" class="control-btn-back" src="assets/img/gui/btn_back.png" alt="">
+            <div class="imprint">
+                <h1>Impressum</h1>
+                <p>Angaben gemäß § 5 DDG</p>
+                <p>Jens Natzschka <br>
+                    Johannes-Scharrer-Straße 1<br>
+                    80686 München <br>
+                </p>
+                <p> <strong>Vertreten durch: </strong><br>
+                    Jens Natzschka<br>
+                </p>
+                <p><strong>Kontakt:</strong> <br>
+                    Telefon: 0176-4556643<br>
+                    E-Mail: <a href='mailto:jens.natzschka@web.de'>jens.natzschka@web.de</a></br></p>
+                <p><strong>Haftungsausschluss: </strong><br><br><strong>Haftung für Inhalte</strong><br><br>
+                    Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit,
+                    Vollständigkeit
+                    und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir
+                    gemäß
+                    § 7 Abs.1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich.
+                    Nach §§
+                    8 bis 10 DDG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte
+                    fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige
+                    Tätigkeit
+                    hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den
+                    allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem
+                    Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von
+                    entsprechenden
+                    Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p><br>
+                Website Impressum von <a href="https://www.impressum-generator.de">impressum-generator.de</a>
+            </div>
+        </div>
+        <canvas id="canvas" width="1400" height="768" class="d-none"></canvas>
         <div class="mobile-controls-wrapper">
             <div class="mobile-controls">
                 <div class="mobile-controls-area">
@@ -54,9 +92,7 @@
             </div>
         </div>
     </div>
-    <a href="#">Imprint</a>
 
-    <button id="button">Start Game</button>
     <button id="mute">Mute</button>
 </body>
 

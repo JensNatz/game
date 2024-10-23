@@ -5,7 +5,7 @@
 }
 
 .d-none {
-    display: none;
+    display: none !important
 }
 
 body {
@@ -14,24 +14,56 @@ body {
     align-items: center;
     height: 100vh;;
     background-color: black;
-    background-image: url('assets/img/backgrounds/page_background.jpg');
+    background-image: url('assets/img/gui/page_background.jpg');
     background-size: cover;
     background-position: center;
     flex-direction: column;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+}
+
+p {
+    margin: 10px 0;
+}
+
+a, a:visited, a:hover {
+    text-decoration: none;
+    color: #ffffff;
 }
 
 .wrapper {
     position: relative;
-    background-image: url('assets/img/backgrounds/cover.jpg');
+    background-image: url('assets/img/gui/cover.jpg');
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: contain;
     background-position: center;
     width: 1400px;
     height: 768px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: red;
 }
 
-canvas {
-    display: none;
+.bg-grey {
+    background-image: url('assets/img/gui/background.jpg');
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imprint {
+    width: 1000px;
+    height: 500px;
+    padding: 20px;
+    overflow-y: auto;
 }
 
 .controls-wrapper{
@@ -48,6 +80,14 @@ canvas {
 
 .control-btn {
     cursor: pointer;
+}
+
+.control-btn-back {
+    cursor: pointer;
+    position: absolute;
+    top: 80px;
+    right: 80px;
+    width: 140px;
 }
 
 .mobile-controls-wrapper {
@@ -80,13 +120,13 @@ canvas {
 }
 
 @media only screen and (max-width: 1400px) {
-    canvas {
+    canvas, .wrapper {
       width: 100vw;
     }
   }
 
 @media only screen and (max-height: 768px) {
-    canvas {
+    canvas, .wrapper{
       height: 100vh;
     }
   }
@@ -95,10 +135,19 @@ canvas {
     .mobile-controls-wrapper.show {
         display: block;
     }
+
+    .control-btn {
+        width: 180px;
+    }
+    
 }
 
 @media only screen and (max-width: 480px) {
     .mobile-control-btn {
         width: 44px;
     } 
+
+    .control-btn {
+        width: 120px;
+    }
 }
