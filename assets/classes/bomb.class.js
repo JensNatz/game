@@ -20,7 +20,9 @@ class Bomb extends MovableObject {
         'assets/img/bomb/explosion/skeleton-Fx2_17.png'
     ];
     image = 'assets/img/bomb/bomb.png'
-    soundExplosion = new Audio('assets/audio/explosion.wav');
+    sounds = {
+        explosion: new Audio('assets/audio/explosion.wav')
+    }
     width = 199;
     height = 185;
     power = 15;
@@ -44,7 +46,9 @@ class Bomb extends MovableObject {
                 this.isExploded = true;
             }
             if(this.isExploding){
-                this.soundExplosion.play();
+                if(!this.isMuted){
+                    this.sounds.explosion.play();
+                }
                 this.playExplodeAnimation()
             } else {
                 this.fly();

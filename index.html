@@ -32,9 +32,32 @@
 </head>
 
 <body>
-    <canvas id="canvas" width="1400" height="768"></canvas>
+    <div class="wrapper">
+        <div class="controls-wrapper">
+            <div class="controls">
+                <img class="control-btn" id="btn_start" src="assets/img/gui/btn_startgame.png" alt="">
+                <img class="control-btn" id="btn_instructions" src="assets/img/gui/btn_instructions.png" alt="">
+            </div>
+        </div>
+        <canvas id="canvas" width="1400" height="768"></canvas>
+        <div class="mobile-controls-wrapper">
+            <div class="mobile-controls">
+                <div class="mobile-controls-area">
+                    <img class="mobile-control-btn" id="btn_left" src="assets/img/gui/btn_left.png" alt="">
+                    <img class="mobile-control-btn" id="btn_right" src="assets/img/gui/btn_right.png" alt="">
+                </div>
+                <div class="mobile-controls-area">
+                    <img class="mobile-control-btn" id="btn_bomb" src="assets/img/gui/btn_bomb.png" alt="">
+                    <img class="mobile-control-btn" id="btn_laser" src="assets/img/gui/btn_laser.png" alt="">
+                    <img class="mobile-control-btn" id="btn_jump" src="assets/img/gui/btn_jump.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#">Imprint</a>
 
     <button id="button">Start Game</button>
+    <button id="mute">Mute</button>
 </body>
 
 </html>

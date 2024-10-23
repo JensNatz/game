@@ -94,16 +94,17 @@ class EnemyWithClub extends Character {
         'assets/img/enemyWithClub/GetElectric/Get_Electric_1.png',
         'assets/img/enemyWithClub/GetElectric/Get_Electric_2.png',
     ];
-    soundAttacking = new Audio('assets/audio/hitWithClub.flac');
-    soundTakeDamage = new Audio('assets/audio/pain2.wav');
-    soundDie = new Audio('assets/audio/death2.wav')
-
+    sounds = {
+        attacking: new Audio('assets/audio/hitWithClub.flac'),
+        takeDamage: new Audio('assets/audio/pain2.wav'),
+        die: new Audio('assets/audio/death2.wav')
+    };
     posY = 150;
     width = 650;
     height = 650;
-    speed = 5;
+    speed = 8;
     power = 10;
-    hp = 10;
+    hp = 15;
     standardImunityTime = 20;
     detectionRange = 800;
     hasDetectedHero = false;
@@ -131,7 +132,9 @@ class EnemyWithClub extends Character {
             if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
                 this.currentState = 'dead';
                 if (!this.dieSoundPlayed) {
-                    this.soundDie.play();
+                    if(!this.isMuted){
+                        this.sounds.die.play();
+                    }
                     this.dieSoundPlayed = true;
                 }
             } 
@@ -200,7 +203,9 @@ class EnemyWithClub extends Character {
         if (hero.isVulnerable()) {
             hero.takeDamage(this.power);
         }
-        this.soundAttacking.play();
+        if(!this.isMuted){
+            this.sounds.attacking.play();
+        }
     }
 }
 

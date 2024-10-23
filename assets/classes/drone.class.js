@@ -54,19 +54,23 @@ class Drone extends Character {
         'assets/img/drone/GetElectric/Get_Electric_2.png'
     ];
 
-    soundShooting = new Audio('assets/audio/flaunch.wav');
-    soundTakeDamage = new Audio('assets/audio/drone_damage.wav');
-    soundDie = new Audio('assets/audio/drone_die.wav')
+    sounds = {
+        shooting: new Audio('assets/audio/flaunch.wav'),
+        takeDamage: new Audio('assets/audio/drone_damage.wav'),
+        die: new Audio('assets/audio/drone_die.wav'),
+        detected: new Audio('assets/audio/drone_detected.wav')
+    }
     posY = 100;
     width = 650;
     height = 650;
     speed = 3;
     power = 10;
-    hp = 15;
+    hp = 25;
     standardImunityTime = 40;
     intervalBetweenShots = 50;
     timeToNextShot = 0;
     detectionRange = 700;
+    soundDetectedPlayed = false;
 
 
     constructor(posX) {
@@ -90,9 +94,18 @@ class Drone extends Character {
             if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
                 this.currentState = 'dead';
                 if (!this.dieSoundPlayed) {
-                    this.soundDie.play();
+                    if(!this.isMuted){
+                        this.sounds.die.play();
+                    }
                     this.dieSoundPlayed = true;
                 }
+            }
+
+            if ((this.hasDetectedHero && !this.soundDetectedPlayed)) {
+                if(!this.isMuted){
+                    this.sounds.detected.play();
+                }
+                this.soundDetectedPlayed = true;
             }
 
             if (this.currentState == 'lasered' && !this.isBeingLasered()){
@@ -145,7 +158,9 @@ class Drone extends Character {
             if(this.timeToNextShot == 0){
                 this.currentState = 'attacking';
                 this.shootRocket();
-                this.soundShooting.play();
+                if(!this.isMuted){
+                    this.sounds.shooting.play();
+                }
             }
         }
     }
@@ -155,6 +170,9 @@ class Drone extends Character {
         if (this.otherDirection) {
             rocket.posX = this.posX + this.width - 100;
             rocket.otherDirection = true;
+        }
+        if(this.isMuted){
+            rocket.isMuted = true;
         }
         this.world.projectiles.push(rocket);
         this.timeToNextShot = this.intervalBetweenShots;

@@ -4,18 +4,79 @@
     scroll-behavior: smooth;
 }
 
+.d-none {
+    display: none;
+}
+
 body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;;
     background-color: black;
+    background-image: url('assets/img/backgrounds/page_background.jpg');
+    background-size: cover;
+    background-position: center;
     flex-direction: column;
 }
 
+.wrapper {
+    position: relative;
+    background-image: url('assets/img/backgrounds/cover.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 1400px;
+    height: 768px;
+}
+
 canvas {
-    display: block;
-    background-color: blue;
+    display: none;
+}
+
+.controls-wrapper{
+    position: absolute;
+    width: 100%;
+    bottom: 40px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+}
+
+.control-btn {
+    cursor: pointer;
+}
+
+.mobile-controls-wrapper {
+    display: none;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    padding: 0 20px 20px 20px;
+}
+
+.mobile-controls-wrapper.show {
+    display: none;
+}
+
+.mobile-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mobile-controls-area {
+    display: flex;
+    gap: 16px;
+}
+
+.mobile-control-btn {
+    cursor: pointer;
+    width: 60px;
+    height: auto;
 }
 
 @media only screen and (max-width: 1400px) {
@@ -29,3 +90,15 @@ canvas {
       height: 100vh;
     }
   }
+
+@media only screen and (max-width: 1024px) {
+    .mobile-controls-wrapper.show {
+        display: block;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .mobile-control-btn {
+        width: 44px;
+    } 
+}

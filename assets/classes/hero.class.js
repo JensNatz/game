@@ -135,12 +135,14 @@ class Hero extends Character {
         'assets/img/hero/Throw/Throw_bomb_18.png',
         'assets/img/hero/Throw/Throw_bomb_19.png'
     ];
-    soundWalking = new Audio('../assets/audio/step.wav');
-    soundLaserbeam = new Audio('assets/audio/laserbeam.wav');
-    soundJumping = new Audio('assets/audio/hero_jump.wav');
-    soundHurt = new Audio('assets/audio/hero_pain.wav');
-    soundDie = new Audio('assets/audio/hero_die.wav');
-    soundTrow = new Audio('assets/audio/hero_trow.wav');
+    sounds = {
+        walking: new Audio('../assets/audio/step.wav'),
+        laserbeam: new Audio('assets/audio/laserbeam.wav'),
+        jumping: new Audio('assets/audio/hero_jump.wav'),
+        hurt: new Audio('assets/audio/hero_pain.wav'),
+        die: new Audio('assets/audio/hero_die.wav'),
+        trow: new Audio('assets/audio/hero_trow.wav')
+    }
     posX = -70;
     posY = 150;
     width = 650;
@@ -171,39 +173,45 @@ class Hero extends Character {
             this.reduceDamageImmunityDuration();
             this.reduceTimeToNextShot();
 
-            if(this.hp <= 0){
+            if (this.hp <= 0) {
                 this.currentState = 'dead';
             }
 
             if (this.currentState == 'walking' && !this.world.keyboard.KEYPRESSED) {
                 this.currentState = 'idle';
-             }
-
-            if (this.currentState == 'attacking' && this.timeToNextShot <= 10) {
-               this.currentState = 'idle';
             }
 
-            if (this.world.keyboard.A  &&  this.timeToNextShot == 0 && (this.currentState == 'idle' || this.currentState == 'walking')) {
+            if (this.currentState == 'attacking' && this.timeToNextShot <= 10) {
+                this.currentState = 'idle';
+            }
+
+            if (this.world.keyboard.A && this.timeToNextShot == 0 && (this.currentState == 'idle' || this.currentState == 'walking')) {
                 this.currentState = 'attacking'
                 this.timeToNextShot = 20;
-                this.soundLaserbeam.play();
+                if(!this.isMuted){
+                    this.sounds.laserbeam.play();
+                }
             }
 
             if (this.world.keyboard.W && this.numberOfBombs > 0 && this.currentState == 'idle') {
                 this.currentState = 'trowing'
                 this.trow();
-                this.soundTrow.play();
+                if(!this.isMuted){
+                    this.sounds.trow.play();
+                }
             }
 
-            if(this.world.keyboard.LEFT || this.world.keyboard.RIGHT){
-                if(this.currentState == 'idle'){
-                     this.currentState = 'walking';
+            if (this.world.keyboard.LEFT || this.world.keyboard.RIGHT) {
+                if (this.currentState == 'idle') {
+                    this.currentState = 'walking';
                 }
             }
 
             if (this.world.keyboard.SPACE && (this.currentState == 'idle' || this.currentState == 'walking')) {
                 this.currentState = 'jumping'
-                this.soundJumping.play();
+                if(!this.isMuted){
+                    this.sounds.jumping.play();
+                }
             }
 
             if (this.world.keyboard.RIGHT && this.posX < this.world.length && (this.currentState == 'jumping' || this.currentState == 'walking')) {
@@ -238,7 +246,9 @@ class Hero extends Character {
             if (this.currentState == "dead") {
                 this.playDieAnimation();
                 if (!this.dieSoundPlayed) {
-                    this.soundDie.play();
+                    if(!this.isMuted){
+                        this.sounds.die.play();
+                    }
                     this.dieSoundPlayed = true;
                 }
             }
@@ -261,13 +271,15 @@ class Hero extends Character {
 
             if (this.currentState == "walking") {
                 this.playWalkingAnimation();
-                this.soundWalking.play();
+                if(!this.isMuted){
+                    this.sounds.walking.play();
+                }
             }
 
             if (this.currentState == "idle") {
                 this.playIdleAnimation();
             }
-            
+
         }, 1000 / 16);
     }
 
@@ -278,7 +290,9 @@ class Hero extends Character {
     }
 
     setCameraOnHero() {
-        this.world.cameraX = this.posX * -1;
+        if (this.posX > 100) {
+            this.world.cameraX = (this.posX - 100) * -1;
+        }
     }
 
     playTrowAnimation() {
@@ -290,8 +304,8 @@ class Hero extends Character {
         }
     }
 
-    playJumpAnimation() {    
-        this.ensureAnimationStartsAtBeginning(this.jumpImages);    
+    playJumpAnimation() {
+        this.ensureAnimationStartsAtBeginning(this.jumpImages);
         this.offsetY = this.offsetY - this.jumpDirection * 50;
 
         let i = this.currentImg;
@@ -319,17 +333,22 @@ class Hero extends Character {
             trowingSpeed = -20
         }
         let newBomb = new Bomb(this.posX + this.width / 2, this.posY + this.height / 2, trowingSpeed)
+        if(this.isMuted){
+            newBomb.isMuted = true;
+        }
         this.world.bombs.push(newBomb);
         this.world.bombSymbols.pop();
         this.numberOfBombs--;
     }
 
-    addBombToInventory(){
+    addBombToInventory() {
         this.numberOfBombs++;
     }
 
-    applyHealthPack(healthpack){
+    applyHealthPack(healthpack) {
         this.hp = Math.min(this.hp + healthpack.hp, 100);
-        healthpack.soundPickup.play();
+        if(!healthpack.isMuted){
+            healthpack.sounds.pickup.play();
+        }
     }
 }

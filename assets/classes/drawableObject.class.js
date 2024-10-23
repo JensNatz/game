@@ -7,6 +7,8 @@ class DrawableObject {
     currentImg = 0;
     imageCache = {};
     otherDirection = false;
+    sounds = {};
+    isMuted = false;
 
     loadImage(src) {
         this.img = new Image();
@@ -34,5 +36,11 @@ class DrawableObject {
         if(!imageArray.includes(relevantPath)){
             this.currentImg = 0;            
         }                 
+    }
+
+    muteSounds(){
+        if(this.isMuted){
+            Object.values(this.sounds).forEach(sound => sound.pause());
+        }
     }
 }

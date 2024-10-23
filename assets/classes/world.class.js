@@ -1,5 +1,7 @@
 class World {
-    soundThememusic = new Audio('assets/audio/soundtrack.mp3');
+    sounds = {
+        thememusic: new Audio('assets/audio/soundtrack.mp3'),
+    };
     hero = new Hero();
     laserbeam = new Laserbeam();
     tokens = [];
@@ -11,11 +13,11 @@ class World {
     backgrounds;
     foregrounds;
     length;
-
     canvas;
     ctx;
     keyboard;
     cameraX = 0;
+    isMuted = false;
 
     constructor(canvas, keyboard, level) {
         this.ctx = canvas.getContext('2d');
@@ -23,6 +25,7 @@ class World {
         this.keyboard = keyboard;
         this.loadLevel(level);
         this.setWorld();
+        this.sounds.thememusic.loop = true;
         this.draw();
         this.runGame();
     }
@@ -104,6 +107,7 @@ class World {
             this.drawObject(symbol);
         })
 
+
         let self = this;
         requestAnimationFrame(function () {
             self.draw();
@@ -111,8 +115,9 @@ class World {
     };
 
     runGame() {
-        this.soundThememusic.play();
-
+        if(!this.isMuted){
+           this.sounds.thememusic.play();
+        } 
         setInterval(() => {
             this.removeExplodedRpojectilesFromWorld();
             this.updateStatusbar();
@@ -124,7 +129,9 @@ class World {
                     this.removeTokenFromWorld(i);
                     if (token instanceof BombToken) {
                         this.hero.addBombToInventory();
-                        token.soundPickup.play();
+                        if(!this.isMuted){
+                            token.sounds.pickup.play();
+                        }
                         this.addBombSymbolToStatusbar();
                     }
                     if (token instanceof HealthpackToken) {
@@ -212,6 +219,8 @@ class World {
         let offsetX = (this.hero.numberOfBombs - 1) * 50
         let bombSymbol = new BombSymbol(offsetX);
         this.bombSymbols.push(bombSymbol);
+        console.log(offsetX);
+        
     }
 
     removeTokenFromWorld(index) {
@@ -229,5 +238,28 @@ class World {
 
     updateStatusbar() {
         this.statusbar.updateStatus(this.hero.hp);
+    }
+
+    toggleMuteAll(){
+        this.isMuted = !this.isMuted;
+        this.hero.isMuted = !this.hero.isMuted;
+        this.enemies.forEach(enemy => {
+            enemy.isMuted = !enemy.isMuted;
+        });
+        this.bombs.forEach(bomb => {
+            bomb.isMuted = !bomb.isMuted;
+        });
+        this.tokens.forEach(token => {
+            token.isMuted = !token.isMuted;
+        });
+        this.projectiles.forEach(projectile => {
+            projectile.isMuted = !projectile.isMuted;
+        });
+
+        this.muteSounds();
+    }
+
+    muteSounds(){
+        Object.values(this.sounds).forEach(sound => sound.pause());
     }
 }

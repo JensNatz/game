@@ -18,7 +18,9 @@ class Rocket extends MovableObject {
     power = 20;
     speed = 15;
     posY = 490;
-    soundExplosion = new Audio('assets/audio/explosion.wav');
+    sounds = {
+        explosion: new Audio('assets/audio/explosion.wav')
+    }
     isExploding = false;
     isExploded = false;
 
@@ -34,7 +36,9 @@ class Rocket extends MovableObject {
             console.log(this.isExploding);
             
             if(this.isExploding){
-                this.soundExplosion.play();
+                if(!this.isMuted){
+                    this.sounds.explosion.play();
+                }
                 this.playExplodeAnimation()
             } else {
                 if(this.otherDirection){

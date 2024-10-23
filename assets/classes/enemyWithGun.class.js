@@ -86,16 +86,17 @@ class EnemyWithGun extends Character {
         'assets/img/enemyWithGun/GetElectric/Get_Electric_1.png',
         'assets/img/enemyWithGun/GetElectric/Get_Electric_2.png',
     ];
-
-    soundShooting = new Audio('assets/audio/shoot.wav');
-    soundTakeDamage = new Audio('assets/audio/pain1.wav');
-    soundDie = new Audio('assets/audio/death1.wav')
+    sounds = {
+        shooting: new Audio('assets/audio/shoot.wav'),
+        takeDamage: new Audio('assets/audio/pain1.wav'),
+        die: new Audio('assets/audio/death1.wav')
+    };
     posY = 150;
     width = 650;
     height = 650;
     speed = 3;
     power = 10;
-    hp = 15;
+    hp = 10;
     standardImunityTime = 20;
     intervalBetweenShots = 30;
     timeToNextShot = 0;
@@ -124,7 +125,9 @@ class EnemyWithGun extends Character {
             if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
                 this.currentState = 'dead';
                 if (!this.dieSoundPlayed) {
-                    this.soundDie.play();
+                    if(!this.isMuted){
+                        this.sounds.die.play();
+                    }
                     this.dieSoundPlayed = true;
                 }
             }
@@ -179,7 +182,9 @@ class EnemyWithGun extends Character {
             if(this.timeToNextShot == 0){
                 this.currentState = 'attacking';
                 this.shootBullet();
-                this.soundShooting.play();
+                if(!this.isMuted){
+                    this.sounds.shooting.play();
+                }
             }
         }
     }
@@ -207,7 +212,5 @@ class EnemyWithGun extends Character {
             this.timeToNextShot--;
         }
     }
-
-
 }
 

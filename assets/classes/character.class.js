@@ -69,8 +69,10 @@ class Character extends MovableObject {
         if(this.currentState != 'jumping'){
             this.currentState = 'hurting';
         }
-        this.soundHurt.play();
-    };
+        if(!this.isMuted){
+            this.soundTakeDamage.play();
+        }
+    }
     
     reactToLaserbeam(power){
         if(this.isVulnerable() && !this.isBeingLasered()){
@@ -83,9 +85,10 @@ class Character extends MovableObject {
         this.laserHitDuration = 10;
         this.currentState = 'lasered';
         this.setImmunityToDamageTimer();
-        this.soundTakeDamage.play();
-    };
-
+        if(!this.isMuted){
+            this.soundTakeDamage.play();
+        }
+    }
 
     setImmunityToDamageTimer(){
         this.currentDamageImmunityDuration = this.standardImunityTime;
