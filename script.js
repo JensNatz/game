@@ -1,9 +1,12 @@
 let canvas;
 let world;
 let keyboard;
+let sounds = {
+  win: new Audio('assets/audio/win.wav'),
+  lose: new Audio('assets/audio/lose.wav')
+};
 
 window.addEventListener('load', init);
-
 
 function init() {
   canvas = document.getElementById('canvas');
@@ -11,19 +14,16 @@ function init() {
 
   document.getElementById('btn_start').addEventListener('click', startGame);
   document.getElementById('btn_again').addEventListener('click', startGame);
+  document.getElementById('btn_home').addEventListener('click', showHomeScreen);
+  document.getElementById('btn_instructions_back').addEventListener('click', showHomeScreen);
+  document.getElementById('btn_imprint_back').addEventListener('click', showHomeScreen);
   document.getElementById('btn_instructions').addEventListener('click', function () {
-    toggle('instructions');
-  });
-  document.getElementById('btn_instructions_back').addEventListener('click', function () {
-    toggle('instructions');
+    showSection('instructions');
   });
   document.getElementById('btn_imprint').addEventListener('click', function () {
-    toggle('imprint');
+    showSection('imprint');
   });
-  document.getElementById('btn_imprint_back').addEventListener('click', function () {
-    toggle('imprint');
-  });
-  document.getElementById('btn_mute').addEventListener('click', mutePage);
+  document.getElementById('btn_mute').addEventListener('click', mute);
 }
 
 function startGame() {
@@ -39,29 +39,42 @@ function startGame() {
   document.getElementById('controls').classList.add('d-none');
 };
 
-function toggle(section) {
-  document.getElementById(section).classList.toggle('d-none');
-  document.getElementById('controls').classList.toggle('d-none');
-  document.getElementById('wrapper').classList.toggle('bg-grey');
+function showSection(section) {
+  document.getElementById(section).classList.remove('d-none');
+  document.getElementById('controls').classList.add('d-none');
+  document.getElementById('wrapper').classList.add('bg-grey');
 }
 
-function mutePage() {
+function mute() {
   document.getElementById('btn_mute').classList.toggle('muted');
   world.toggleMuteAll();
 }
 
-function showEndScreen() {
-  let endScreen = document.getElementById('endScreen');
-  endScreen.classList.remove('d-none');
-  endScreen.classList.add('gameOver');
-  console.log('Ende');  
+function showHomeScreen() {
+  const wrapper = document.getElementById('wrapper');
+  wrapper.classList.add('bg-home');
+  wrapper.classList.remove('bg-gameWin', 'bg-gameOver', 'bg-grey');
+  document.getElementById('instructions').classList.add('d-none');
+  document.getElementById('imprint').classList.add('d-none');
+  document.getElementById('game').classList.add('d-none');
+  document.getElementById('controls').classList.remove('d-none');
+  document.getElementById('endscreen-controls').classList.add('d-none');
+}
+
+function showEndScreen(event) {
+  const wrapper = document.getElementById('wrapper');
+  if(event.detail.status == 'lose'){
+    wrapper.classList.add('bg-gameOver');
+    sounds.lose.play();
+  } else if(event.detail.status == 'win'){
+    wrapper.classList.add('bg-gameWin');
+    sounds.win.play();
+  }
+  document.getElementById('endscreen-controls').classList.remove('d-none');
+  document.getElementById('game').classList.add('d-none');
 }
 
 function hideEndScreen() {
-  let endScreen = document.getElementById('endScreen');
-  endScreen.classList.add('d-none');
-  endScreen.classList.remove('gameOver');
-  endScreen.classList.remove('gameWin');
+  document.getElementById('endscreen-controls').classList.add('d-none');
 }
-
 

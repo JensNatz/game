@@ -117,8 +117,15 @@ class World extends IntervalGenerator {
     runGame() {
         if(this.hero.dieAnimationPlayed == true){
             this.muteSounds();
-            this.stopGame();
+            this.stopGame('lose');
         }
+
+        this.enemies.forEach(enemy => {
+            if(enemy instanceof Drone && enemy.dieAnimationPlayed == true){
+                this.stopGame('win');
+            }
+        })
+
         if (!this.isMuted) {
             this.sounds.thememusic.play();
         }
@@ -192,9 +199,9 @@ class World extends IntervalGenerator {
         }
     }
 
-    stopGame(){
+    stopGame(status){
         this.stopAllIntervals();
-        this.sendGameEndEventToCanvas();
+        this.sendGameEndEventToCanvas(status);
     }
 
     stopAllIntervals(){
@@ -211,8 +218,10 @@ class World extends IntervalGenerator {
         });
     }
 
-    sendGameEndEventToCanvas(){
-        const event = new CustomEvent('gameOver');
+    sendGameEndEventToCanvas(status){
+        const event = new CustomEvent('gameOver', {
+            detail: { status: status } 
+        });
         this.canvas.dispatchEvent(event);
     }
 
@@ -284,7 +293,7 @@ class World extends IntervalGenerator {
         }
     }
 
-    muteSounds() {
+    muteSounds() {        
         Object.values(this.sounds).forEach(sound => sound.pause());
     }
 }

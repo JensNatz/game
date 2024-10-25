@@ -98,7 +98,7 @@ class EnemyWithClub extends Character {
         attacking: new Audio('assets/audio/hitWithClub.flac'),
         takeDamage: new Audio('assets/audio/pain2.wav'),
         die: new Audio('assets/audio/death2.wav')
-    };
+    }
     posY = 150;
     width = 650;
     height = 650;

@@ -34,7 +34,6 @@ a, a:visited, a:hover {
 
 .wrapper {
     position: relative;
-    background-image: url('assets/img/gui/cover.jpg');
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
@@ -45,6 +44,20 @@ a, a:visited, a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.bg-home {
+    background-image: url('assets/img/gui/cover.jpg');
+}
+
+.bg-gameOver {
+    background-image: url('assets/img/gui/lose.jpg');
+    z-index: 1;
+}
+
+.bg-gameWin {
+    background-image: url('assets/img/gui/win.jpg');
+    z-index: 1;
 }
 
 .bg-grey {
@@ -65,17 +78,6 @@ a, a:visited, a:hover {
     gap: 32px
 }
 
-.gameOver {
-    background-image: url('assets/img/gui/lose.jpg');
-    z-index: 1;
-   
-}
-
-.gameWin {
-    background-image: url('assets/img/gui/win.jpg');
-    z-index: 1;
-}
-
 .imprint {
     width: 90%;
     height: 90%;
@@ -93,6 +95,10 @@ a, a:visited, a:hover {
     display: flex;
     justify-content: center;
     gap: 32px;
+}
+
+.endscreen-controls {
+    background-color: red;
 }
 
 .control-btn {
