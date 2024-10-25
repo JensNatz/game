@@ -27,10 +27,15 @@ function init() {
 }
 
 function startGame() {
+  console.log('stare');
+  
   hideEndScreen();
   document.getElementById('game').classList.remove('d-none');
   document.getElementById('controls').classList.add('d-none');
   keyboard = new Keyboard();
+  if (world) {
+    world = null;    
+  }
   world = new World(canvas, keyboard, level1);
 };
 
