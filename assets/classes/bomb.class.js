@@ -31,50 +31,48 @@ class Bomb extends MovableObject {
     isExploding = false;
     isExploded = false;
 
-    constructor(posX, posY, speed){
+    constructor(posX, posY, speed) {
         super().loadImage(this.image);
         this.loadImagesInCache(this.explodeImages);
         this.posX = posX;
         this.posY = posY;
         this.speed = speed;
-        this.animate();
+        this.setStoppableInterval(this.animate.bind(this));
     }
 
     animate() {
-        setInterval(() => {
-            if(this.posY > 2000){
-                this.isExploded = true;
+        if (this.posY > 2000) {
+            this.isExploded = true;
+        }
+        if (this.isExploding) {
+            if (!this.isMuted) {
+                this.sounds.explosion.play();
             }
-            if(this.isExploding){
-                if(!this.isMuted){
-                    this.sounds.explosion.play();
-                }
-                this.playExplodeAnimation()
-            } else {
-                this.fly();
-            }
-        }, 1000 / 16);
+            this.playExplodeAnimation()
+        } else {
+            this.fly();
+        }
     }
 
-    fly(){
-        this.posX = this.posX+this.speed;
-        this.posY = this.posY-this.speedY;
-        this.speedY = this.speedY-4;
+    fly() {
+        this.posX = this.posX + this.speed;
+        this.posY = this.posY - this.speedY;
+        this.speedY = this.speedY - 4;
     }
 
-    explode(target){
-        if(this.isExploding == false){
+    explode(target) {
+        if (this.isExploding == false) {
             this.isExploding = true;
             target.takeDamage(this.power);
         }
     }
 
-    playExplodeAnimation(){
-        this.ensureAnimationStartsAtBeginning(this.explodeImages);  
-        this.playAnimation(this.explodeImages)  
-        if (this.currentImg % this.explodeImages.length == this.explodeImages.length-1){
-           this.isExploded = true;
-           this.isExploding = false;
+    playExplodeAnimation() {
+        this.ensureAnimationStartsAtBeginning(this.explodeImages);
+        this.playAnimation(this.explodeImages)
+        if (this.currentImg % this.explodeImages.length == this.explodeImages.length - 1) {
+            this.isExploded = true;
+            this.isExploding = false;
         }
     }
 }

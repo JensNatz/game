@@ -1,4 +1,4 @@
-class World {
+class World extends IntervalGenerator {
     sounds = {
         thememusic: new Audio('assets/audio/soundtrack.mp3'),
     };
@@ -20,6 +20,7 @@ class World {
     isMuted = false;
 
     constructor(canvas, keyboard, level) {
+        super();
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
@@ -27,7 +28,7 @@ class World {
         this.setWorld();
         this.sounds.thememusic.loop = true;
         this.draw();
-        this.runGame();
+        this.setStoppableInterval(this.runGame.bind(this));
     }
 
     loadLevel(level) {
@@ -107,7 +108,6 @@ class World {
             this.drawObject(symbol);
         })
 
-
         let self = this;
         requestAnimationFrame(function () {
             self.draw();
@@ -115,80 +115,105 @@ class World {
     };
 
     runGame() {
-        if(!this.isMuted){
-           this.sounds.thememusic.play();
-        } 
-        setInterval(() => {
-            this.removeExplodedRpojectilesFromWorld();
-            this.updateStatusbar();
+        if(this.hero.dieAnimationPlayed == true){
+            this.muteSounds();
+            this.stopGame();
+        }
+        if (!this.isMuted) {
+            this.sounds.thememusic.play();
+        }
+        this.removeExplodedRpojectilesFromWorld();
+        this.updateStatusbar();
 
-            for (let i = this.tokens.length - 1; i >= 0; i--) {
-                const token = this.tokens[i];
-                let distanceTokenToHero = this.calcDistance(token, this.hero);
-                if (distanceTokenToHero < 50) {
-                    this.removeTokenFromWorld(i);
-                    if (token instanceof BombToken) {
-                        this.hero.addBombToInventory();
-                        if(!this.isMuted){
-                            token.sounds.pickup.play();
-                        }
-                        this.addBombSymbolToStatusbar();
+        for (let i = this.tokens.length - 1; i >= 0; i--) {
+            const token = this.tokens[i];
+            let distanceTokenToHero = this.calcDistance(token, this.hero);
+            if (distanceTokenToHero < 50) {
+                this.removeTokenFromWorld(i);
+                if (token instanceof BombToken) {
+                    this.hero.addBombToInventory();
+                    if (!this.isMuted) {
+                        token.sounds.pickup.play();
                     }
-                    if (token instanceof HealthpackToken) {
-                        this.hero.applyHealthPack(token)
+                    this.addBombSymbolToStatusbar();
+                }
+                if (token instanceof HealthpackToken) {
+                    this.hero.applyHealthPack(token)
+                }
+            }
+        }
+
+        this.enemies.forEach(enemy => {
+            if (enemy.currentState != 'dead') {
+                let distanceToEnemy = this.calcDistance(enemy, this.hero);
+
+                if (enemy instanceof EnemyWithClub) {
+                    enemy.actBasedOnDistance(distanceToEnemy, this.hero);
+                }
+
+                if (enemy instanceof EnemyWithGun || enemy instanceof Drone) {
+                    enemy.shootAtHeroIfDeteced();
+                }
+
+                if (this.hero.currentState == 'attacking' && this.isHitByLaserbeam(enemy)) {
+                    enemy.reactToLaserbeam(this.laserbeam.power);
+                }
+
+                if (distanceToEnemy <= enemy.detectionRange) {
+                    enemy.detectHero();
+                }
+
+                this.bombs.forEach(bomb => {
+                    let distanceBombToEnemy = this.calcDistance(enemy, bomb);
+                    if (distanceBombToEnemy < bomb.range) {
+                        bomb.explode(enemy);
+                    }
+                });
+            }
+        })
+
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+            const projectile = this.projectiles[i];
+            let distanceBulletToHero = this.calcDistance(projectile, this.hero);
+
+            if (distanceBulletToHero < 150) {
+                if (this.hero.isVulnerable()) {
+
+                    if (projectile instanceof Bullet) {
+                        this.hero.takeDamage(projectile.power);
+                        this.removeProjectileFromWorld(i);
+                    }
+
+                    if (projectile instanceof Rocket) {
+                        projectile.explode(this.hero);
                     }
                 }
             }
+        }
+    }
 
-            this.enemies.forEach(enemy => {
-                if (enemy.currentState != 'dead') {
-                    let distanceToEnemy = this.calcDistance(enemy, this.hero);
+    stopGame(){
+        this.stopAllIntervals();
+        this.sendGameEndEventToCanvas();
+    }
 
-                    if (enemy instanceof EnemyWithClub) {
-                        enemy.actBasedOnDistance(distanceToEnemy, this.hero);
-                    }
+    stopAllIntervals(){
+        this.stopIntervals();
+        this.hero.stopIntervals();
+        this.enemies.forEach(enemy => {
+            enemy.stopIntervals();
+        });
+        this.bombs.forEach(bomb => {
+            bomb.stopIntervals();
+        });
+        this.projectiles.forEach(projectile => {
+            projectile.stopIntervals();
+        });
+    }
 
-                    if (enemy instanceof EnemyWithGun || enemy instanceof Drone) {
-                        enemy.shootAtHeroIfDeteced();
-                    }
-
-                    if (this.hero.currentState == 'attacking' && this.isHitByLaserbeam(enemy)) {
-                        enemy.reactToLaserbeam(this.laserbeam.power);
-                    }
-
-                    if (distanceToEnemy <= enemy.detectionRange) {
-                        enemy.detectHero();
-                    }
-
-                    this.bombs.forEach(bomb => {
-                        let distanceBombToEnemy = this.calcDistance(enemy, bomb);
-                        if (distanceBombToEnemy < bomb.range) {
-                            bomb.explode(enemy);
-                        }
-                    });
-                }
-            })
-
-            for (let i = this.projectiles.length - 1; i >= 0; i--) {
-                const projectile = this.projectiles[i];
-                let distanceBulletToHero = this.calcDistance(projectile, this.hero);
-
-                if (distanceBulletToHero < 150) {
-                    if (this.hero.isVulnerable()) {
-
-                        if(projectile instanceof Bullet){
-                            this.hero.takeDamage(projectile.power);
-                            this.removeProjectileFromWorld(i);
-                        }
-
-                        if(projectile instanceof Rocket){
-                            projectile.explode(this.hero);
-                        }
-
-                    }
-                }
-            }
-        }, 100);
+    sendGameEndEventToCanvas(){
+        const event = new CustomEvent('gameOver');
+        this.canvas.dispatchEvent(event);
     }
 
     calcDistance(obj, obj2) {
@@ -202,8 +227,8 @@ class World {
     }
 
     isHitByLaserbeam(enemy) {
-        let enemyOffsetX = 260;  // Horizontaler Leerraum (links und rechts)
-        let enemyOffsetY = 240;  // Vertikaler Leerraum (oben und unten)
+        let enemyOffsetX = 260;
+        let enemyOffsetY = 240;
 
         if (this.laserbeam.posX < enemy.posX + enemy.width - enemyOffsetX &&
             this.laserbeam.posX + this.laserbeam.width > enemy.posX + enemyOffsetX &&
@@ -219,8 +244,6 @@ class World {
         let offsetX = (this.hero.numberOfBombs - 1) * 50
         let bombSymbol = new BombSymbol(offsetX);
         this.bombSymbols.push(bombSymbol);
-        console.log(offsetX);
-        
     }
 
     removeTokenFromWorld(index) {
@@ -240,7 +263,7 @@ class World {
         this.statusbar.updateStatus(this.hero.hp);
     }
 
-    toggleMuteAll(){
+    toggleMuteAll() {
         this.isMuted = !this.isMuted;
         this.hero.isMuted = !this.hero.isMuted;
         this.enemies.forEach(enemy => {
@@ -256,10 +279,12 @@ class World {
             projectile.isMuted = !projectile.isMuted;
         });
 
-        this.muteSounds();
+        if (this.isMuted) {
+            this.muteSounds();
+        }
     }
 
-    muteSounds(){
+    muteSounds() {
         Object.values(this.sounds).forEach(sound => sound.pause());
     }
 }

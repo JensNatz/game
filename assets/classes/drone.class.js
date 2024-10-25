@@ -65,11 +65,11 @@ class Drone extends Character {
     height = 650;
     speed = 3;
     power = 10;
-    hp = 25;
+    hp = 45;
     standardImunityTime = 40;
     intervalBetweenShots = 50;
     timeToNextShot = 0;
-    detectionRange = 700;
+    detectionRange = 800;
     soundDetectedPlayed = false;
 
 
@@ -81,68 +81,61 @@ class Drone extends Character {
         this.loadImagesInCache(this.getHitImages);
         this.loadImagesInCache(this.shootImages);
         this.loadImagesInCache(this.getLaseredImages);
-        this.run()
-        this.animate();
+        this.setStoppableInterval(this.run.bind(this));
+        this.setStoppableInterval(this.animate.bind(this));
     }
 
     run() {
-        setInterval(() => {
-            this.reduceLaserHitDuration();
-            this.reduceDamageImmunityDuration();
-            this.reduceTimeToNextShot();
+        this.reduceLaserHitDuration();
+        this.reduceDamageImmunityDuration();
+        this.reduceTimeToNextShot();
 
-            if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
-                this.currentState = 'dead';
-                if (!this.dieSoundPlayed) {
-                    if(!this.isMuted){
-                        this.sounds.die.play();
-                    }
-                    this.dieSoundPlayed = true;
+        if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
+            this.currentState = 'dead';
+            if (!this.dieSoundPlayed) {
+                if (!this.isMuted) {
+                    this.sounds.die.play();
                 }
+                this.dieSoundPlayed = true;
             }
+        }
 
-            if ((this.hasDetectedHero && !this.soundDetectedPlayed)) {
-                if(!this.isMuted){
-                    this.sounds.detected.play();
-                }
-                this.soundDetectedPlayed = true;
+        if ((this.hasDetectedHero && !this.soundDetectedPlayed)) {
+            if (!this.isMuted) {
+                this.sounds.detected.play();
             }
+            this.soundDetectedPlayed = true;
+        }
 
-            if (this.currentState == 'lasered' && !this.isBeingLasered()){
-                this.currentState = 'idle';
-            }
-            
-        }, 1000 / 16);
-
+        if (this.currentState == 'lasered' && !this.isBeingLasered()) {
+            this.currentState = 'idle';
+        }
     }
 
     animate() {
-        setInterval(() => {
-            if ((this.hasDetectedHero)) {
-                this.lookAtHero()
-            }
+        if ((this.hasDetectedHero)) {
+            this.lookAtHero()
+        }
 
-            if (this.currentState == 'dead') {
-                this.playDieAnimation();
-            }
+        if (this.currentState == 'dead') {
+            this.playDieAnimation();
+        }
 
-            if (this.currentState == 'hurting') {
-                this.playGetHitAnimation();
-            }
+        if (this.currentState == 'hurting') {
+            this.playGetHitAnimation();
+        }
 
-            if (this.currentState == 'lasered') {
-                this.playLaseredAnimation();
-            }
+        if (this.currentState == 'lasered') {
+            this.playLaseredAnimation();
+        }
 
-            if (this.currentState == 'attacking') {
-                this.playShootAnimation()
-            }
+        if (this.currentState == 'attacking') {
+            this.playShootAnimation()
+        }
 
-            if (this.currentState == "idle") {
-                this.playIdleAnimation();
-            }
-
-        }, 1000 / 16);
+        if (this.currentState == "idle") {
+            this.playIdleAnimation();
+        }
     }
 
     lookAtHero() {
@@ -155,10 +148,10 @@ class Drone extends Character {
 
     shootAtHeroIfDeteced() {
         if (this.hasDetectedHero && !this.isBeingLasered()) {
-            if(this.timeToNextShot == 0){
+            if (this.timeToNextShot == 0) {
                 this.currentState = 'attacking';
                 this.shootRocket();
-                if(!this.isMuted){
+                if (!this.isMuted) {
                     this.sounds.shooting.play();
                 }
             }
@@ -171,7 +164,7 @@ class Drone extends Character {
             rocket.posX = this.posX + this.width - 100;
             rocket.otherDirection = true;
         }
-        if(this.isMuted){
+        if (this.isMuted) {
             rocket.isMuted = true;
         }
         this.world.projectiles.push(rocket);

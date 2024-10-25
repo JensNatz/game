@@ -120,61 +120,53 @@ class EnemyWithClub extends Character {
         this.loadImagesInCache(this.attackImages);
         this.loadImagesInCache(this.getHitImages);
         this.loadImagesInCache(this.getLaseredImages);
-        this.run();
-        this.animate();
+        this.setStoppableInterval(this.run.bind(this));
+        this.setStoppableInterval(this.animate.bind(this));
     }
 
     run() {
-        setInterval(() => {
-            this.reduceLaserHitDuration();
-            this.reduceDamageImmunityDuration();
+        this.reduceLaserHitDuration();
+        this.reduceDamageImmunityDuration();
 
-            if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
-                this.currentState = 'dead';
-                if (!this.dieSoundPlayed) {
-                    if(!this.isMuted){
-                        this.sounds.die.play();
-                    }
-                    this.dieSoundPlayed = true;
+        if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
+            this.currentState = 'dead';
+            if (!this.dieSoundPlayed) {
+                if (!this.isMuted) {
+                    this.sounds.die.play();
                 }
-            } 
-            if (this.currentState == 'lasered' && !this.isBeingLasered()){
-                this.currentState = 'idle';
+                this.dieSoundPlayed = true;
             }
-            
-        }, 1000 / 16);
+        }
+        if (this.currentState == 'lasered' && !this.isBeingLasered()) {
+            this.currentState = 'idle';
+        }
     }
 
-
     animate() {
-        setInterval(() => {
-            
-            if (this.currentState == 'dead') {
-                this.playDieAnimation();
-            }
+        if (this.currentState == 'dead') {
+            this.playDieAnimation();
+        }
 
-            if ( this.currentState == 'walking') {
-                this.playWalkingAnimation();
-                this.moveTowardsHero()
-            }
+        if (this.currentState == 'walking') {
+            this.playWalkingAnimation();
+            this.moveTowardsHero()
+        }
 
-            if (this.currentState == 'hurting') {
-                this.playGetHitAnimation();
-            }
+        if (this.currentState == 'hurting') {
+            this.playGetHitAnimation();
+        }
 
-            if (this.currentState == 'lasered') {
-                this.playLaseredAnimation();
-            }
+        if (this.currentState == 'lasered') {
+            this.playLaseredAnimation();
+        }
 
-            if (this.currentState == 'attacking') {
-                this.playAttackingAnimation()
-            }
+        if (this.currentState == 'attacking') {
+            this.playAttackingAnimation()
+        }
 
-            if (this.currentState == "idle") {
-                this.playIdleAnimation();
-            }
-
-        }, 1000 / 16);
+        if (this.currentState == "idle") {
+            this.playIdleAnimation();
+        }
     }
 
     moveTowardsHero() {
@@ -203,7 +195,7 @@ class EnemyWithClub extends Character {
         if (hero.isVulnerable()) {
             hero.takeDamage(this.power);
         }
-        if(!this.isMuted){
+        if (!this.isMuted) {
             this.sounds.attacking.play();
         }
     }

@@ -1,4 +1,4 @@
-class DrawableObject {
+class DrawableObject extends IntervalGenerator {
     posX;
     posY;
     img;
@@ -9,6 +9,10 @@ class DrawableObject {
     otherDirection = false;
     sounds = {};
     isMuted = false;
+
+    constructor(){
+        super();
+    }
 
     loadImage(src) {
         this.img = new Image();

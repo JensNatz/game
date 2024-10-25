@@ -100,7 +100,7 @@ class EnemyWithGun extends Character {
     standardImunityTime = 20;
     intervalBetweenShots = 30;
     timeToNextShot = 0;
-    detectionRange = 700;
+    detectionRange = 800;
 
 
     constructor(posX) {
@@ -112,63 +112,58 @@ class EnemyWithGun extends Character {
         this.loadImagesInCache(this.getHitImages);
         this.loadImagesInCache(this.shootImages);
         this.loadImagesInCache(this.getLaseredImages);
-        this.run()
-        this.animate();
+        this.setStoppableInterval(this.run.bind(this));
+        this.setStoppableInterval(this.animate.bind(this));
     }
 
     run() {
-        setInterval(() => {
-            this.reduceLaserHitDuration();
-            this.reduceDamageImmunityDuration();
-            this.reduceTimeToNextShot();
+        this.reduceLaserHitDuration();
+        this.reduceDamageImmunityDuration();
+        this.reduceTimeToNextShot();
 
-            if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
-                this.currentState = 'dead';
-                if (!this.dieSoundPlayed) {
-                    if(!this.isMuted){
-                        this.sounds.die.play();
-                    }
-                    this.dieSoundPlayed = true;
+        if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
+            this.currentState = 'dead';
+            if (!this.dieSoundPlayed) {
+                if (!this.isMuted) {
+                    this.sounds.die.play();
                 }
+                this.dieSoundPlayed = true;
             }
+        }
 
-            if (this.currentState == 'lasered' && !this.isBeingLasered()){
-                this.currentState = 'idle';
-            }
-            
-        }, 1000 / 16);
+        if (this.currentState == 'lasered' && !this.isBeingLasered()) {
+            this.currentState = 'idle';
+        }
 
     }
 
     animate() {
-        setInterval(() => {
-            if (this.currentState == 'dead') {
-                this.playDieAnimation();
-            }
+        if (this.currentState == 'dead') {
+            this.playDieAnimation();
+        }
 
-            if (this.hasDetectedHero && this.currentState != 'dead') {
-                this.lookAtHero()
-            }
+        if (this.hasDetectedHero && this.currentState != 'dead') {
+            this.lookAtHero()
+        }
 
-            if (this.currentState == 'hurting') {
-                this.playGetHitAnimation();
-            }
+        if (this.currentState == 'hurting') {
+            this.playGetHitAnimation();
+        }
 
-            if (this.currentState == 'lasered') {
-                this.playLaseredAnimation();
-            }
+        if (this.currentState == 'lasered') {
+            this.playLaseredAnimation();
+        }
 
-            if (this.currentState == 'attacking') {
-                this.playShootAnimation()
-            }
+        if (this.currentState == 'attacking') {
+            this.playShootAnimation()
+        }
 
-            if (this.currentState == "idle") {
-                this.playIdleAnimation();
-            }
+        if (this.currentState == "idle") {
+            this.playIdleAnimation();
+        }
 
-        }, 1000 / 16);
     }
-
+    
     lookAtHero() {
         if (this.posX + this.width / 2 > this.world.hero.posX + this.world.hero.width / 2) {
             this.otherDirection = false;
@@ -179,10 +174,10 @@ class EnemyWithGun extends Character {
 
     shootAtHeroIfDeteced() {
         if (this.hasDetectedHero && !this.isBeingLasered()) {
-            if(this.timeToNextShot == 0){
+            if (this.timeToNextShot == 0) {
                 this.currentState = 'attacking';
                 this.shootBullet();
-                if(!this.isMuted){
+                if (!this.isMuted) {
                     this.sounds.shooting.play();
                 }
             }

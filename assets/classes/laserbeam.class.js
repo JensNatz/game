@@ -12,11 +12,11 @@ class Laserbeam extends MovableObject {
     width = 521;
     height = 144;
     speed = 15;
-    
+
     constructor() {
         super().loadImage(this.laserbeamImages[0]);
         this.loadImagesInCache(this.laserbeamImages);
-        this.animate();
+        this.setStoppableInterval(this.animate.bind(this));
     }
 
     playLaserbeamAnimation() {
@@ -24,22 +24,20 @@ class Laserbeam extends MovableObject {
     }
 
     animate() {
-        setInterval(() => {
-            this.playLaserbeamAnimation();
-        }, 1000/16); 
-    } 
-
-    faceRight(heroPosX){
-        if(this.otherDirection == true){
-            this.otherDirection = false;
-            this.posX = heroPosX + 450;  
-        }       
+        this.playLaserbeamAnimation();
     }
 
-    faceLeft(heroPosX){
-        if(this.otherDirection == false){
+    faceRight(heroPosX) {
+        if (this.otherDirection == true) {
+            this.otherDirection = false;
+            this.posX = heroPosX + 450;
+        }
+    }
+
+    faceLeft(heroPosX) {
+        if (this.otherDirection == false) {
             this.otherDirection = true;
-            this.posX = heroPosX - 330;    
-        }      
+            this.posX = heroPosX - 330;
+        }
     }
 }

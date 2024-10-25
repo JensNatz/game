@@ -14,6 +14,7 @@ class Character extends MovableObject {
     laserHitDuration = 0;
     currentState = 'idle';
     dieSoundPlayed = false;
+    dieAnimationPlayed = false;
 
     
     playWalkingAnimation() {
@@ -38,7 +39,9 @@ class Character extends MovableObject {
         this.ensureAnimationStartsAtBeginning(this.dieImages);    
         if (this.currentImg != this.dieImages.length){
             this.playAnimation(this.dieImages) 
-        } 
+        } else {
+            this.dieAnimationPlayed = true;
+        }
     }
 
     playAttackingAnimation(){
@@ -70,7 +73,7 @@ class Character extends MovableObject {
             this.currentState = 'hurting';
         }
         if(!this.isMuted){
-            this.soundTakeDamage.play();
+            this.sounds.takeDamage.play();
         }
     }
     
@@ -86,7 +89,7 @@ class Character extends MovableObject {
         this.currentState = 'lasered';
         this.setImmunityToDamageTimer();
         if(!this.isMuted){
-            this.soundTakeDamage.play();
+            this.sounds.takeDamage.play();
         }
     }
 

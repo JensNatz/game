@@ -48,5 +48,5 @@ const level1 = new Level(
         new Foreground('../assets/img/backgrounds/celing.png', -150, 0, 13842, 103),
         new Foreground('../assets/img/backgrounds/floor.png', -104, 0, 13842, 784)
     ],
-    11000
+    10400
 );

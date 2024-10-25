@@ -6,20 +6,17 @@ class Bullet extends MovableObject {
     speed = 30;
     posY = 520;
 
-    constructor(posX){
+    constructor(posX) {
         super().loadImage(this.image);
         this.posX = posX;
-        this.animate();
+        this.setStoppableInterval(this.animate.bind(this));
     }
 
     animate() {
-        setInterval(() => {
-            if(this.otherDirection){
-                this.moveRight()
-            } else {
-                this.moveLeft()
-            }
-        }, 1000 / 16);
+        if (this.otherDirection) {
+            this.moveRight()
+        } else {
+            this.moveLeft()
+        }
     }
-
 }

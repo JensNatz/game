@@ -24,45 +24,41 @@ class Rocket extends MovableObject {
     isExploding = false;
     isExploded = false;
 
-    constructor(posX){
+    constructor(posX) {
         super().loadImage(this.image);
         this.loadImagesInCache(this.explodeImages);
         this.posX = posX;
-        this.animate();
+        this.setStoppableInterval(this.animate.bind(this));
     }
 
     animate() {
-        setInterval(() => {
-            console.log(this.isExploding);
-            
-            if(this.isExploding){
-                if(!this.isMuted){
-                    this.sounds.explosion.play();
-                }
-                this.playExplodeAnimation()
-            } else {
-                if(this.otherDirection){
-                    this.moveRight()
-                } else {
-                    this.moveLeft()
-                }
+        if (this.isExploding) {
+            if (!this.isMuted) {
+                this.sounds.explosion.play();
             }
-        }, 1000 / 16);
+            this.playExplodeAnimation()
+        } else {
+            if (this.otherDirection) {
+                this.moveRight()
+            } else {
+                this.moveLeft()
+            }
+        }
     }
 
-    explode(target){
-        if(this.isExploding == false){
+    explode(target) {
+        if (this.isExploding == false) {
             this.isExploding = true;
             target.takeDamage(this.power);
         }
     }
 
-    playExplodeAnimation(){        
-        this.ensureAnimationStartsAtBeginning(this.explodeImages);  
-        this.playAnimation(this.explodeImages)  
-        if (this.currentImg % this.explodeImages.length == this.explodeImages.length-1){
-           this.isExploded = true;
-           this.isExploding = false;
+    playExplodeAnimation() {
+        this.ensureAnimationStartsAtBeginning(this.explodeImages);
+        this.playAnimation(this.explodeImages)
+        if (this.currentImg % this.explodeImages.length == this.explodeImages.length - 1) {
+            this.isExploded = true;
+            this.isExploding = false;
         }
     }
 
