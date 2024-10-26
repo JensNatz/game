@@ -46,6 +46,12 @@ a, a:visited, a:hover {
     justify-content: center;
 }
 
+canvas {
+    aspect-ratio: 1400 / 768;
+    max-width: 100vw;
+    max-height: 100vh;
+}
+
 .bg-home {
     background-image: url('assets/img/gui/cover.jpg');
 }
@@ -209,13 +215,13 @@ a, a:visited, a:hover {
 }
 
 @media only screen and (max-width: 1400px) {
-    canvas, .wrapper {
+    .wrapper {
       width: 100vw;
     }
   }
 
 @media only screen and (max-height: 768px) {
-    canvas, .wrapper{
+    .wrapper{
       height: 100vh;
     }
   }
