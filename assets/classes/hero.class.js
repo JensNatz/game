@@ -180,7 +180,7 @@ class Hero extends Character {
             this.currentState = 'idle';
         }
 
-        if (this.currentState == 'attacking' && this.timeToNextShot <= 10) {
+        if (this.currentState == 'attacking' && this.timeToNextShot <= 15) {
             this.currentState = 'idle';
         }
 

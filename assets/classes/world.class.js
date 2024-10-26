@@ -68,72 +68,114 @@ class World extends IntervalGenerator {
         object.posX = object.posX * -1;
     }
 
+
     draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.translate(this.cameraX, 0);
-        this.backgrounds.forEach(background => {
-            this.drawObject(background);
-        })
+        this.resetCanvas();
+        this.drawBackgrounds();
         this.drawObject(this.hero);
-
-        this.enemies.forEach(enemy => {
-            this.drawObject(enemy);
-        })
-
-        this.bombs.forEach(bomb => {
-            this.drawObject(bomb);
-        })
-
-        this.projectiles.forEach(projectile => {
-            this.drawObject(projectile);
-        })
-
-        this.tokens.forEach(token => {
-            this.drawObject(token);
-        })
-
-        if (this.hero.currentState == 'attacking') {
-            this.drawObject(this.laserbeam);
-        }
-
-        this.foregrounds.forEach(foreground => {
-            this.drawObject(foreground);
-        })
-
+        this.drawEnemies();
+        this.drawBombs();
+        this.drawProjectiles();
+        this.drawTokens();
+        this.drawLaserbeam();
+        this.drawForegounds();
         this.ctx.translate(this.cameraX * -1, 0);
-
-        this.drawObject(this.statusbar);
-
-        this.bombSymbols.forEach(symbol => {
-            this.drawObject(symbol);
-        })
-
+        this.drawStatusbars();
         let self = this;
         requestAnimationFrame(function () {
             self.draw();
         });
     };
 
+    resetCanvas(){
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.translate(this.cameraX, 0);
+    }
+
+    drawBackgrounds(){
+        this.backgrounds.forEach(background => {
+            this.drawObject(background);
+        })
+    }
+
+    drawEnemies(){
+        this.enemies.forEach(enemy => {
+            this.drawObject(enemy);
+        })
+    }
+
+    drawBombs(){
+        this.bombs.forEach(bomb => {
+            this.drawObject(bomb);
+        })
+    }
+
+    drawProjectiles(){
+        this.projectiles.forEach(projectile => {
+            this.drawObject(projectile);
+        })
+    }
+
+    drawTokens(){
+        this.tokens.forEach(token => {
+            this.drawObject(token);
+        })
+    }
+
+    drawLaserbeam(){
+        if (this.hero.currentState == 'attacking') {
+            this.drawObject(this.laserbeam);
+        }
+    }
+
+    drawForegounds(){
+        this.foregrounds.forEach(foreground => {
+            this.drawObject(foreground);
+        })
+    }
+
+    drawStatusbars(){
+        this.drawObject(this.statusbar);
+        this.bombSymbols.forEach(symbol => {
+            this.drawObject(symbol);
+        })
+    }
+
+
     runGame() {
+        this.playThemeMusic();
+        this.endGameIfHeroDead();
+        this.endGameIfBossDead();
+        this.removeExplodedRpojectilesFromWorld();
+        this.updateStatusbar();
+        this.handleTokens();
+        this.handleEnemies();
+        this.handleProjectiles();
+    }
+
+    playThemeMusic() {
         if (!this.isMuted) {
             this.sounds.thememusic.play();
         }
+    }
 
-        if(this.hero.dieAnimationPlayed && this.hero.sounds.die.ended){
+    endGameIfHeroDead() {
+        if (this.hero.dieAnimationPlayed && this.hero.sounds.die.ended) {
             this.muteSounds();
             this.stopGame('lose');
         }
+    }
 
+    endGameIfBossDead() {
         this.enemies.forEach(enemy => {
-            if(enemy instanceof Drone && enemy.dieAnimationPlayed && enemy.sounds.die.ended){
+            if (enemy instanceof Drone && enemy.dieAnimationPlayed && enemy.sounds.die.ended) {
                 this.muteSounds();
                 this.stopGame('win');
             }
         })
+    }
 
-        this.removeExplodedRpojectilesFromWorld();
-        this.updateStatusbar();
-
+    handleTokens() {
         for (let i = this.tokens.length - 1; i >= 0; i--) {
             const token = this.tokens[i];
             let distanceTokenToHero = this.calcDistance(token, this.hero);
@@ -151,36 +193,39 @@ class World extends IntervalGenerator {
                 }
             }
         }
+    }
 
+    handleEnemies() {
         this.enemies.forEach(enemy => {
             if (enemy.currentState != 'dead') {
                 let distanceToEnemy = this.calcDistance(enemy, this.hero);
-
                 if (enemy instanceof EnemyWithClub) {
                     enemy.actBasedOnDistance(distanceToEnemy, this.hero);
                 }
-
                 if (enemy instanceof EnemyWithGun || enemy instanceof Drone) {
                     enemy.shootAtHeroIfDeteced();
                 }
-
                 if (this.hero.currentState == 'attacking' && this.isHitByLaserbeam(enemy)) {
                     enemy.reactToLaserbeam(this.laserbeam.power);
                 }
-
                 if (distanceToEnemy <= enemy.detectionRange) {
                     enemy.detectHero();
                 }
-
-                this.bombs.forEach(bomb => {
-                    let distanceBombToEnemy = this.calcDistance(enemy, bomb);
-                    if (distanceBombToEnemy < bomb.range) {
-                        bomb.explode(enemy);
-                    }
-                });
+                this.handleEnemyReactionsToBombs(enemy);
             }
         })
+    }
 
+    handleEnemyReactionsToBombs(enemy){
+        this.bombs.forEach(bomb => {
+            let distanceBombToEnemy = this.calcDistance(enemy, bomb);
+            if (distanceBombToEnemy < bomb.range) {
+                bomb.explode(enemy);
+            }
+        });
+    }
+
+    handleProjectiles() {
         for (let i = this.projectiles.length - 1; i >= 0; i--) {
             const projectile = this.projectiles[i];
             let distanceBulletToHero = this.calcDistance(projectile, this.hero);
@@ -201,12 +246,12 @@ class World extends IntervalGenerator {
         }
     }
 
-    stopGame(status){
+    stopGame(status) {
         this.stopAllIntervals();
         this.sendGameEndEventToCanvas(status);
     }
 
-    stopAllIntervals(){
+    stopAllIntervals() {
         this.stopIntervals();
         this.hero.stopIntervals();
         this.enemies.forEach(enemy => {
@@ -220,9 +265,9 @@ class World extends IntervalGenerator {
         });
     }
 
-    sendGameEndEventToCanvas(status){
+    sendGameEndEventToCanvas(status) {
         const event = new CustomEvent('gameOver', {
-            detail: { status: status } 
+            detail: { status: status }
         });
         this.canvas.dispatchEvent(event);
     }
@@ -295,7 +340,7 @@ class World extends IntervalGenerator {
         }
     }
 
-    muteSounds() {        
+    muteSounds() {
         Object.values(this.sounds).forEach(sound => sound.pause());
     }
 }
