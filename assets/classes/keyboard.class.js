@@ -60,38 +60,38 @@ class Keyboard {
    }
 
    bindButtonEvents() {
-      document.getElementById('btn_left').addEventListener('touchstart', () => {
+      document.getElementById('btn-left').addEventListener('touchstart', () => {
          this.LEFT = true;
       });
-      document.getElementById('btn_left').addEventListener('touchend', () => {
+      document.getElementById('btn-left').addEventListener('touchend', () => {
          this.LEFT = false;
       });
 
-      document.getElementById('btn_right').addEventListener('touchstart', () => {
+      document.getElementById('btn-right').addEventListener('touchstart', () => {
          this.RIGHT = true;
       });
-      document.getElementById('btn_right').addEventListener('touchend', () => {
+      document.getElementById('btn-right').addEventListener('touchend', () => {
          this.RIGHT = false;
       });
 
-      document.getElementById('btn_jump').addEventListener('touchstart', () => {
+      document.getElementById('btn-jump').addEventListener('touchstart', () => {
          this.SPACE = true;
       });
-      document.getElementById('btn_jump').addEventListener('touchend', () => {
+      document.getElementById('btn-jump').addEventListener('touchend', () => {
          this.SPACE = false;
       });
 
-      document.getElementById('btn_laser').addEventListener('touchstart', () => {
+      document.getElementById('btn-laser').addEventListener('touchstart', () => {
          this.A = true;
       });
-      document.getElementById('btn_laser').addEventListener('touchend', () => {
+      document.getElementById('btn-laser').addEventListener('touchend', () => {
          this.A = false;
       });
 
-      document.getElementById('btn_bomb').addEventListener('touchstart', () => {
+      document.getElementById('btn-bomb').addEventListener('touchstart', () => {
          this.W = true;
       });
-      document.getElementById('btn_bomb').addEventListener('touchend', () => {
+      document.getElementById('btn-bomb').addEventListener('touchend', () => {
          this.W = false;
       });
    }

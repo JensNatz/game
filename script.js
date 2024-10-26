@@ -12,18 +12,18 @@ function init() {
   canvas = document.getElementById('canvas');
   canvas.addEventListener('gameOver', showEndScreen);
 
-  document.getElementById('btn_start').addEventListener('click', startGame);
-  document.getElementById('btn_again').addEventListener('click', startGame);
-  document.getElementById('btn_home').addEventListener('click', showHomeScreen);
-  document.getElementById('btn_instructions_back').addEventListener('click', showHomeScreen);
-  document.getElementById('btn_imprint_back').addEventListener('click', showHomeScreen);
-  document.getElementById('btn_instructions').addEventListener('click', function () {
+  document.getElementById('btn-start').addEventListener('click', startGame);
+  document.getElementById('btn-again').addEventListener('click', startGame);
+  document.getElementById('btn-home').addEventListener('click', showHomeScreen);
+  document.getElementById('btn-instructions-back').addEventListener('click', showHomeScreen);
+  document.getElementById('btn-imprint-back').addEventListener('click', showHomeScreen);
+  document.getElementById('btn-instructions').addEventListener('click', function () {
     showSection('instructions');
   });
-  document.getElementById('btn_imprint').addEventListener('click', function () {
+  document.getElementById('btn-imprint').addEventListener('click', function () {
     showSection('imprint');
   });
-  document.getElementById('btn_mute').addEventListener('click', mute);
+  document.getElementById('btn-mute').addEventListener('click', mute);
 }
 
 function startGame() {
@@ -46,7 +46,7 @@ function showSection(section) {
 }
 
 function mute() {
-  document.getElementById('btn_mute').classList.toggle('muted');
+  document.getElementById('btn-mute').classList.toggle('muted');
   world.toggleMuteAll();
 }
 

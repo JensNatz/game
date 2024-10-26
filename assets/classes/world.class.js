@@ -115,6 +115,10 @@ class World extends IntervalGenerator {
     };
 
     runGame() {
+        if (!this.isMuted) {
+            this.sounds.thememusic.play();
+        }
+
         if(this.hero.dieAnimationPlayed == true){
             this.muteSounds();
             this.stopGame('lose');
@@ -122,13 +126,11 @@ class World extends IntervalGenerator {
 
         this.enemies.forEach(enemy => {
             if(enemy instanceof Drone && enemy.dieAnimationPlayed == true){
+                this.muteSounds();
                 this.stopGame('win');
             }
         })
 
-        if (!this.isMuted) {
-            this.sounds.thememusic.play();
-        }
         this.removeExplodedRpojectilesFromWorld();
         this.updateStatusbar();
 

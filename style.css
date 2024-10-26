@@ -24,7 +24,7 @@ body {
 }
 
 p {
-    margin: 10px 0;
+    margin: 20px 0;
 }
 
 a, a:visited, a:hover {
@@ -101,13 +101,39 @@ a, a:visited, a:hover {
     background-color: red;
 }
 
-.control-btn {
+.btn {
+    all: unset;
     cursor: pointer;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.btn-start {
+    background-image: url('assets/img/gui/btn_startgame.png');
+}
+
+.btn-instructions {
+    background-image: url('assets/img/gui/btn_instructions.png');
+}
+
+.btn-imprint {
+    background-image: url('assets/img/gui/btn_imprint.png');
+}
+
+.btn-again {
+    background-image: url('assets/img/gui/btn_play_again.png');
+}
+
+.btn-home {
+    background-image: url('assets/img/gui/btn_home.png');
+}
+
+.control-btn {
     width: 200px;
+    height: 69px;
 }
 
 .control-btn-back {
-    cursor: pointer;
     position: absolute;
     top: 80px;
     right: 80px;
@@ -120,10 +146,6 @@ a, a:visited, a:hover {
     width: 100%;
     bottom: 0;
     padding: 0 20px 20px 20px;
-}
-
-.mobile-controls-wrapper.show {
-    display: none;
 }
 
 .mobile-controls {
@@ -143,7 +165,7 @@ a, a:visited, a:hover {
     height: auto;
 }
 
-.btn_mute {
+.btn-mute {
     all: unset;
     cursor: pointer;
     width: 80px;
@@ -156,7 +178,7 @@ a, a:visited, a:hover {
     right: 32px;
 }
 
-.btn_mute.muted {
+.btn-mute.muted {
     background-image: url('assets/img/gui/btn_unmute.png');
 }
 
@@ -181,7 +203,7 @@ a, a:visited, a:hover {
 }
 
 @media (any-pointer: coarse) {
-    .mobile-controls-wrapper.show {
+    .mobile-controls-wrapper {
         display: block;
     }
 }
@@ -204,6 +226,10 @@ a, a:visited, a:hover {
         font-size: 16px;
     }
 
+    .controls {
+        gap: 16px;
+    }
+
     .control-btn {
         width: 180px;
     }
@@ -212,7 +238,7 @@ a, a:visited, a:hover {
         width: 100px;
     }
 
-    .btn_mute {
+    .btn-mute {
         width: 50px;
         top: 24px;
     }
