@@ -119,13 +119,13 @@ class World extends IntervalGenerator {
             this.sounds.thememusic.play();
         }
 
-        if(this.hero.dieAnimationPlayed == true){
+        if(this.hero.dieAnimationPlayed && this.hero.sounds.die.ended){
             this.muteSounds();
             this.stopGame('lose');
         }
 
         this.enemies.forEach(enemy => {
-            if(enemy instanceof Drone && enemy.dieAnimationPlayed == true){
+            if(enemy instanceof Drone && enemy.dieAnimationPlayed && enemy.sounds.die.ended){
                 this.muteSounds();
                 this.stopGame('win');
             }

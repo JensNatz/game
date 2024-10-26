@@ -149,7 +149,7 @@ class Hero extends Character {
     height = 650;
     offsetY = 0;
     speed = 15;
-    hp = 10;
+    hp = 100;
     jumpDirection = 1;
     timeToNextShot = 0;
     standardImunityTime = 20;
@@ -186,7 +186,7 @@ class Hero extends Character {
 
         if (this.world.keyboard.A && this.timeToNextShot == 0 && (this.currentState == 'idle' || this.currentState == 'walking')) {
             this.currentState = 'attacking'
-            this.timeToNextShot = 20;
+            this.timeToNextShot = 30;
             if (!this.isMuted) {
                 this.sounds.laserbeam.play();
             }

@@ -65,7 +65,7 @@ class Drone extends Character {
     height = 650;
     speed = 3;
     power = 10;
-    hp = 45;
+    hp = 15;
     standardImunityTime = 40;
     intervalBetweenShots = 50;
     timeToNextShot = 0;
@@ -94,6 +94,7 @@ class Drone extends Character {
             this.currentState = 'dead';
             if (!this.dieSoundPlayed) {
                 if (!this.isMuted) {
+                    this.sounds.takeDamage.pause();
                     this.sounds.die.play();
                 }
                 this.dieSoundPlayed = true;

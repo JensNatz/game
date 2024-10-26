@@ -5,7 +5,7 @@
 }
 
 .d-none {
-    display: none !important
+    display: none !important;
 }
 
 body {
@@ -103,15 +103,11 @@ canvas {
     gap: 32px;
 }
 
-.endscreen-controls {
-    background-color: red;
-}
-
 .btn {
     all: unset;
-    cursor: pointer;
     background-repeat: no-repeat;
     background-size: contain;
+    cursor: pointer;
 }
 
 .btn-start {
@@ -166,19 +162,14 @@ canvas {
 }
 
 .mobile-control-btn {
-    cursor: pointer;
     width: 60px;
     height: auto;
 }
 
 .btn-mute {
-    all: unset;
-    cursor: pointer;
     width: 80px;
     height: 65px;
     background-image: url('assets/img/gui/btn_mute.png');
-    background-repeat: no-repeat;
-    background-size: contain;
     position: absolute;
     top: 52px;
     right: 32px;
@@ -200,6 +191,12 @@ canvas {
     justify-content: center;
     align-items: center;
     display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .btn:hover {
+        transform: scale(1.05);
+    }
 }
 
 @media (orientation: portrait) and (any-pointer: coarse) {

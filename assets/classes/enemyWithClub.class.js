@@ -102,7 +102,7 @@ class EnemyWithClub extends Character {
     posY = 150;
     width = 650;
     height = 650;
-    speed = 8;
+    speed = 6;
     power = 10;
     hp = 15;
     standardImunityTime = 20;
