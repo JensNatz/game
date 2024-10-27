@@ -180,13 +180,15 @@ class Hero extends Character {
             this.currentState = 'idle';
         }
 
-        if (this.currentState == 'attacking' && this.timeToNextShot <= 15) {
+        if (this.currentState == 'attacking' && this.timeToNextShot <= 10) {
             this.currentState = 'idle';
+            this.sounds.laserbeam.pause();
+            this.sounds.laserbeam.currentTime = 0;
         }
 
         if (this.world.keyboard.A && this.timeToNextShot == 0 && (this.currentState == 'idle' || this.currentState == 'walking')) {
             this.currentState = 'attacking'
-            this.timeToNextShot = 30;
+            this.timeToNextShot = 20;
             if (!this.isMuted) {
                 this.sounds.laserbeam.play();
             }

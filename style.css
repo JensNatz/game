@@ -130,6 +130,27 @@ canvas {
     background-image: url('assets/img/gui/btn_home.png');
 }
 
+.btn-left {
+    background-image: url('assets/img/gui/btn_left.png');
+}
+
+.btn-right {
+    background-image: url('assets/img/gui/btn_right.png');
+}
+
+.btn-jump {
+    background-image: url('assets/img/gui/btn_jump.png');
+}
+
+.btn-laser {
+    background-image: url('assets/img/gui/btn_laser.png');
+}
+
+.btn-bomb {
+    background-image: url('assets/img/gui/btn_bomb.png');
+}
+
+
 .control-btn {
     width: 200px;
     height: 69px;
@@ -143,7 +164,7 @@ canvas {
 }
 
 .mobile-controls-wrapper {
-    display: none;
+    display: block;
     position: absolute;
     width: 100%;
     bottom: 0;
@@ -163,7 +184,7 @@ canvas {
 
 .mobile-control-btn {
     width: 60px;
-    height: auto;
+    height: 49px;
 }
 
 .btn-mute {
@@ -250,6 +271,7 @@ canvas {
 @media only screen and (max-width: 480px) {
     .mobile-control-btn {
         width: 44px;
+        height: 36px;
     } 
 
     .control-btn {

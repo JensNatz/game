@@ -104,7 +104,7 @@ class EnemyWithClub extends Character {
     height = 650;
     speed = 6;
     power = 10;
-    hp = 15;
+    hp = 10;
     standardImunityTime = 20;
     detectionRange = 800;
     hasDetectedHero = false;

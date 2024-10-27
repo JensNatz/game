@@ -65,7 +65,7 @@ class Drone extends Character {
     height = 650;
     speed = 3;
     power = 10;
-    hp = 15;
+    hp = 45;
     standardImunityTime = 40;
     intervalBetweenShots = 50;
     timeToNextShot = 0;
