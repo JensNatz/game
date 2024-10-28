@@ -55,8 +55,8 @@ function createLevel1() {
      * Array of foreground elements in the level. Each foreground includes the image source, starting position, width, and height.
      */
     const foregrounds = [
-        new Foreground('../assets/img/backgrounds/celing.png', -150, 0, 13842, 103),
-        new Foreground('../assets/img/backgrounds/floor.png', -104, 0, 13842, 784)
+        new Foreground('assets/img/backgrounds/celing.png', -150, 0, 13842, 103),
+        new Foreground('assets/img/backgrounds/floor.png', -104, 0, 13842, 784)
     ];
 
     /**

@@ -186,7 +186,7 @@ class Hero extends Character {
      * @property {Audio} trow - Sound for throwing.
      */
     sounds = {
-        walking: new Audio('../assets/audio/step.wav'),
+        walking: new Audio('assets/audio/step.wav'),
         laserbeam: new Audio('assets/audio/laserbeam.wav'),
         jumping: new Audio('assets/audio/hero_jump.wav'),
         takeDamage: new Audio('assets/audio/hero_pain.wav'),
