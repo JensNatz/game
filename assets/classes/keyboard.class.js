@@ -1,23 +1,42 @@
+/**
+ * A class to handle keyboard and button input for controlling the game character.
+ */
 class Keyboard {
-   KEYPRESSED = false;
+   /**
+     * Indicates whether the SPACE key is pressed.
+     * @type {boolean}
+     */
    SPACE = false;
 
+   /**
+    * Indicates the state of the directional keys.
+    * @type {boolean}
+    */
    UP = false;
    DOWN = false;
    LEFT = false;
    RIGHT = false;
 
+   /**
+    * Indicates whether the W and A keys are pressed for additional controls.
+    * @type {boolean}
+    */
    W = false;
    A = false;
 
+   /**
+    * Initializes the Keyboard class and binds key and button events.
+    */
    constructor() {
       this.bindKeyEvents();
       this.bindButtonEvents();
    }
 
+   /**
+     * Binds keyboard events to handle key presses and releases.
+     */
    bindKeyEvents() {
       window.addEventListener('keydown', (event) => {
-         keyboard.KEYPRESSED = true;
          switch (event.code) {
             case 'ArrowLeft':
                keyboard.LEFT = true;
@@ -38,7 +57,6 @@ class Keyboard {
       });
 
       window.addEventListener('keyup', (event) => {
-         keyboard.KEYPRESSED = false;
          switch (event.code) {
             case 'ArrowLeft':
                keyboard.LEFT = false;
@@ -58,7 +76,10 @@ class Keyboard {
          }
       });
    }
-
+      
+   /**
+     * Binds touch events to button elements for mobile controls.
+   */
    bindButtonEvents() {
       document.getElementById('btn-left').addEventListener('touchstart', () => {
          this.LEFT = true;

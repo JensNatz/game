@@ -1,4 +1,12 @@
+/**
+ * Creates Level 1 with pre-configured enemies, tokens, backgrounds, and foregrounds.
+ * @function
+ * @returns {Level} A new Level object with initialized elements.
+ */
 function createLevel1() {
+    /**
+     * Array of enemies in the level. Each enemy has a starting position value (in pixels).
+     */
     const enemies = [
         new EnemyWithClub(900),
         new EnemyWithGun(1500),
@@ -18,6 +26,9 @@ function createLevel1() {
         new Drone(10000)
     ];
 
+    /**
+     * Array of tokens in the level. Each token has a starting position value (in pixels).
+     */
     const tokens = [
         new HealthpackToken(2000),
         new BombToken(3700),
@@ -33,14 +44,26 @@ function createLevel1() {
         new HealthpackToken(9400),
     ];
 
+    /**
+     * Array of background elements in the level. Each background includes the image source and starting position.
+     */
     const backgrounds = [
         new Background('assets/img/backgrounds/background.jpg', -150)
     ];
 
+    /**
+     * Array of foreground elements in the level. Each foreground includes the image source, starting position, width, and height.
+     */
     const foregrounds = [
         new Foreground('../assets/img/backgrounds/celing.png', -150, 0, 13842, 103),
         new Foreground('../assets/img/backgrounds/floor.png', -104, 0, 13842, 784)
     ];
 
-    return new Level(enemies, tokens, backgrounds, foregrounds, 10400);
+    /**
+     * The total width of the level in pixels.
+     * @type {number}
+     */
+    const levelWidth = 10400;
+
+    return new Level(enemies, tokens, backgrounds, foregrounds, levelWidth);
 }

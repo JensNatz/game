@@ -42,6 +42,11 @@ class DrawableObject extends IntervalGenerator {
         }                 
     }
 
+    endSound(sound){
+        sound.pause();
+        sound.currentTime = 0;
+    }
+
     muteSounds(){
         if(this.isMuted){
             Object.values(this.sounds).forEach(sound => sound.pause());
