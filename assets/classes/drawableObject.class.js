@@ -1,4 +1,5 @@
 class DrawableObject extends IntervalGenerator {
+    loadingPromises;
     posX;
     posY;
     img;
@@ -19,13 +20,24 @@ class DrawableObject extends IntervalGenerator {
         this.img.src = src;
     }
 
-    loadImagesInCache(imageArray){
-        imageArray.forEach(path => {
-            let img = new Image();
+    loadImagesInCache(imageArray) {
+        // Erstelle für jeden Bildpfad eine Promise
+        const loadPromises = imageArray.map(path => {
+          return new Promise((resolve) => {
+            const img = new Image();
             img.src = path;
-            this.imageCache[path] = img;
+    
+            // Wenn das Bild geladen ist, speichere es im Cache und löse die Promise auf
+            img.onload = () => {
+              this.imageCache[path] = img;
+              resolve(); // Die Promise wird aufgelöst, wenn das Bild fertig ist
+            };
+          });
         });
-    }
+    
+        // Warte, bis alle Bild-Promises aufgelöst sind
+        return Promise.all(loadPromises);
+      }
 
     playAnimation(imageArray) {
         let i = this.currentImg % imageArray.length;

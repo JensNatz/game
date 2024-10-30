@@ -56,8 +56,14 @@ class Laserbeam extends MovableObject {
      */
     constructor() {
         super().loadImage(this.laserbeamImages[0]);
-        this.loadImagesInCache(this.laserbeamImages);
-        this.setStoppableInterval(this.animate.bind(this));
+
+        this.loadingPromises = [
+            this.loadImagesInCache(this.laserbeamImages)
+        ];
+
+        Promise.all(this.loadingPromises).then(() => {
+            this.setStoppableInterval(this.animate.bind(this));
+        })
     }
 
     /**

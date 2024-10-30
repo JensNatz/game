@@ -37,16 +37,16 @@ function init() {
 /**
  * Starts the game by initializing the world and hiding the home and end screen.
  */
-function startGame() {
+async function startGame() {
   keyboard = new Keyboard();
   if (world) {
     world = null;    
   }
-  const level1 = createLevel1();
-  // world = new World(canvas, keyboard, level1);
-  // document.getElementById('game').classList.remove('d-none');
-  // document.getElementById('controls').classList.add('d-none');
-  // document.getElementById('endscreen-controls').classList.add('d-none');
+  const level1 = await createLevel1();
+  world = new World(canvas, keyboard, level1);
+  document.getElementById('game').classList.remove('d-none');
+  document.getElementById('controls').classList.add('d-none');
+  document.getElementById('endscreen-controls').classList.add('d-none');
 };
 
 /**

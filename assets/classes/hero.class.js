@@ -265,15 +265,21 @@ class Hero extends Character {
      */
     constructor() {
         super().loadImage(this.idleImages[0]);
-        this.loadImagesInCache(this.walkImages);
-        this.loadImagesInCache(this.idleImages);
-        this.loadImagesInCache(this.jumpImages);
-        this.loadImagesInCache(this.getHitImages);
-        this.loadImagesInCache(this.dieImages);
-        this.loadImagesInCache(this.attackImages);
-        this.loadImagesInCache(this.trowImages);
-        this.setStoppableInterval(this.run.bind(this));
-        this.setStoppableInterval(this.animate.bind(this));
+
+        this.loadingPromises = [
+            this.loadImagesInCache(this.walkImages),
+            this.loadImagesInCache(this.idleImages),
+            this.loadImagesInCache(this.jumpImages),
+            this.loadImagesInCache(this.getHitImages),
+            this.loadImagesInCache(this.dieImages),
+            this.loadImagesInCache(this.attackImages),
+            this.loadImagesInCache(this.trowImages)
+        ];
+
+        Promise.all(this.loadingPromises).then(() => {
+            this.setStoppableInterval(this.run.bind(this));
+            this.setStoppableInterval(this.animate.bind(this));
+        })
     }
     /**
      * Runs the Hero logic, including checking health and state transitions.
