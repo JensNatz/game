@@ -43,10 +43,10 @@ function startGame() {
     world = null;    
   }
   const level1 = createLevel1();
-  world = new World(canvas, keyboard, level1);
-  document.getElementById('game').classList.remove('d-none');
-  document.getElementById('controls').classList.add('d-none');
-  document.getElementById('endscreen-controls').classList.add('d-none');
+  // world = new World(canvas, keyboard, level1);
+  // document.getElementById('game').classList.remove('d-none');
+  // document.getElementById('controls').classList.add('d-none');
+  // document.getElementById('endscreen-controls').classList.add('d-none');
 };
 
 /**
