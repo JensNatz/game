@@ -1,5 +1,6 @@
 /**
- * Represents an enemy character equipped with a gun, extending the Character class.
+ * Represents an enemy character equipped with a gun, extending the Character class.    
+ * It sets up intervals for running and animating the object once all images are loaded.
  * This enemy can idle, walk, shoot, and respond to damage.
  * @extends Character
  */

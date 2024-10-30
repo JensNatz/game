@@ -219,6 +219,25 @@ canvas {
     display: none;
 }
 
+.spinner {
+    width: 80px; 
+    height: 80px;
+    border: 8px solid #d3d3d3;
+    border-top: 8px solid #a9a9a9; 
+    border-radius: 50%; 
+    animation: spin 1s linear infinite; 
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg); 
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
 @media (hover: hover) and (pointer: fine) {
     .btn:hover {
         transform: scale(1.05);

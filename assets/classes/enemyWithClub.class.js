@@ -197,6 +197,7 @@ class EnemyWithClub extends Character {
 
     /**
      * Constructs a new EnemyWithClub instance and initializes images and intervals.
+     * It sets up intervals for running and animating the object once all images are loaded.
      * @param {number} posX - The horizontal position of the enemy.
      */
     constructor(posX) {

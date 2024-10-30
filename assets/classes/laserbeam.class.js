@@ -52,7 +52,7 @@ class Laserbeam extends MovableObject {
     speed = 15;
 
     /**
-     * Initializes the laser beam, loading the first image and setting up animation.
+     * Initializes the laser beam. It sets up intervals for running and animating the object once all images are loaded.
      */
     constructor() {
         super().loadImage(this.laserbeamImages[0]);

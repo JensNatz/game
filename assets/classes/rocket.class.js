@@ -77,7 +77,8 @@ class Rocket extends MovableObject {
     isExploded = false;
 
     /**
-     * Constructs a new Rocket instance at a specified horizontal position.
+     * Constructs a new Rocket instance at a specified horizontal position. 
+     * It sets up intervals for running and animating the object once all images are loaded.
      * @param {number} posX - The initial horizontal position of the rocket.
      */
     constructor(posX) {

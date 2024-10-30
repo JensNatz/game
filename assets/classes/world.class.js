@@ -4,8 +4,18 @@
  */
 class World extends IntervalGenerator {
 
+    /**
+     * An array that holds all the promises related to loading assets in the world.
+     * This includes promises for images, sounds, and any other resources that need to be loaded before the world is considered ready.
+     * @type {Promise[]}
+     */
     allLoadingPromises = [];
 
+    /**
+    * A promise that resolves when the world has fully loaded.
+    * @type {Promise}
+    */
+    worldLoadedPromise;
 
     /**
      * Sound effects of the world, i.e. the theme music
@@ -112,7 +122,7 @@ class World extends IntervalGenerator {
     isMuted = false;
 
     /**
-     * Constructs a new World instance and initializes the game elements.
+     * Constructs a new World instance and initializes the game elements once all loading promises are fulfilled
      * @param {HTMLCanvasElement} canvas - The canvas to draw the game on.
      * @param {Object} keyboard - The keyboard input handler.
      * @param {Object} level - The level data containing enemies, tokens, backgrounds, and foregrounds.
@@ -126,18 +136,30 @@ class World extends IntervalGenerator {
 
         this.allLoadingPromises = [
             ...this.enemies.flatMap(enemy => enemy.loadingPromises),
-            this.hero.loadingPromises,  
-            this.statusbar.loadingPromises 
-        ].flat(); 
+            this.hero.loadingPromises,
+            this.statusbar.loadingPromises
+        ].flat();
 
         this.setWorld();
         this.sounds.thememusic.loop = true;
 
-        Promise.all(this.allLoadingPromises).then(() => {
+        this.worldLoadedPromise = Promise.all(this.allLoadingPromises).then(() => {
             this.setStoppableInterval(this.runGame.bind(this));
             this.draw();
         })
     }
+
+    /**
+    * Checks if the world has completely loaded.
+    * This method returns a promise that resolves when the world is fully loaded.
+    * It can be used to determine the loading status of the world.
+    * 
+    * @returns {Promise} A promise that resolves when the world is completely loaded.
+    */
+    isCompleteyLoaded() {
+        return this.worldLoadedPromise;
+    }
+
     /**
      * Loads the level data into the world.
      * @param {Level} level - The level data containing enemies, tokens, backgrounds, and foregrounds.
@@ -168,8 +190,8 @@ class World extends IntervalGenerator {
         }
 
         try {
-        this.ctx.drawImage(object.img, object.posX, object.posY, object.width, object.height);
-        } catch(e){
+            this.ctx.drawImage(object.img, object.posX, object.posY, object.width, object.height);
+        } catch (e) {
             console.log(object)
         }
 

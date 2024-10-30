@@ -42,11 +42,17 @@ async function startGame() {
   if (world) {
     world = null;    
   }
+  showLoadingScreen()
   const level1 = await createLevel1();
   world = new World(canvas, keyboard, level1);
-  document.getElementById('game').classList.remove('d-none');
-  document.getElementById('controls').classList.add('d-none');
-  document.getElementById('endscreen-controls').classList.add('d-none');
+
+  world.isCompleteyLoaded().then(() => {
+    document.getElementById('game').classList.remove('d-none');
+    document.getElementById('controls').classList.add('d-none');
+    document.getElementById('endscreen-controls').classList.add('d-none');
+    hideLoadingScreen();
+  })
+
 };
 
 /**
@@ -95,4 +101,12 @@ function showEndScreen(event) {
   }
   document.getElementById('endscreen-controls').classList.remove('d-none');
   document.getElementById('game').classList.add('d-none');
+}
+
+function showLoadingScreen(){
+  document.getElementById('loadingScreen').classList.remove('d-none');
+}
+
+function hideLoadingScreen(){
+  document.getElementById('loadingScreen').classList.add('d-none');
 }

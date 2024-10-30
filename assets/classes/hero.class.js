@@ -261,7 +261,7 @@ class Hero extends Character {
     numberOfBombs = 0;
 
     /**
-     * Constructs a new Hero instance and initializes images and intervals.
+     * Constructs a new Hero instance. It sets up intervals for running and animating the object once all images are loaded.
      */
     constructor() {
         super().loadImage(this.idleImages[0]);
