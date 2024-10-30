@@ -3,6 +3,10 @@
  * Inherits from IntervalGenerator class.
  */
 class World extends IntervalGenerator {
+
+    allLoadingPromises = [];
+
+
     /**
      * Sound effects of the world, i.e. the theme music
      * @type {Object}
@@ -41,10 +45,10 @@ class World extends IntervalGenerator {
      */
     projectiles = []
 
-     /**
-     * Array of bomb symbols displayed in the status bar.
-     * @type {Array}
-     */
+    /**
+    * Array of bomb symbols displayed in the status bar.
+    * @type {Array}
+    */
     bombSymbols = [];
 
     /**
@@ -95,10 +99,10 @@ class World extends IntervalGenerator {
      */
     keyboard;
 
-     /**
-     * The current camera offset in the X direction.
-     * @type {number}
-     */
+    /**
+    * The current camera offset in the X direction.
+    * @type {number}
+    */
     cameraX = 0;
 
     /**
@@ -119,10 +123,20 @@ class World extends IntervalGenerator {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.loadLevel(level);
+
+        this.allLoadingPromises = [
+            ...this.enemies.flatMap(enemy => enemy.loadingPromises),
+            this.hero.loadingPromises,  
+            this.statusbar.loadingPromises 
+        ].flat(); 
+
         this.setWorld();
         this.sounds.thememusic.loop = true;
-        this.draw();
-        this.setStoppableInterval(this.runGame.bind(this));
+
+        Promise.all(this.allLoadingPromises).then(() => {
+            this.setStoppableInterval(this.runGame.bind(this));
+            this.draw();
+        })
     }
     /**
      * Loads the level data into the world.
@@ -152,7 +166,13 @@ class World extends IntervalGenerator {
         if (object.otherDirection) {
             this.flipImage(object);
         }
+
+        try {
         this.ctx.drawImage(object.img, object.posX, object.posY, object.width, object.height);
+        } catch(e){
+            console.log(object)
+        }
+
         if (object.otherDirection) {
             this.reverseFlipImage(object);
         }
@@ -199,14 +219,14 @@ class World extends IntervalGenerator {
     /**
      * Resets the canvas for a new frame.
      */
-    resetCanvas(){
+    resetCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.cameraX, 0);
     }
     /**
      * Draws the background layers.
      */
-    drawBackgrounds(){
+    drawBackgrounds() {
         this.backgrounds.forEach(background => {
             this.drawObject(background);
         })
@@ -214,7 +234,7 @@ class World extends IntervalGenerator {
     /**
      * Draws the enemies in the game.
      */
-    drawEnemies(){
+    drawEnemies() {
         this.enemies.forEach(enemy => {
             this.drawObject(enemy);
         })
@@ -222,7 +242,7 @@ class World extends IntervalGenerator {
     /**
      * Draws the bombs in the game.
      */
-    drawBombs(){
+    drawBombs() {
         this.bombs.forEach(bomb => {
             this.drawObject(bomb);
         })
@@ -230,7 +250,7 @@ class World extends IntervalGenerator {
     /**
      * Draws the projectiles in the game.
      */
-    drawProjectiles(){
+    drawProjectiles() {
         this.projectiles.forEach(projectile => {
             this.drawObject(projectile);
         })
@@ -238,7 +258,7 @@ class World extends IntervalGenerator {
     /**
      * Draws the collectible tokens in the game.
      */
-    drawTokens(){
+    drawTokens() {
         this.tokens.forEach(token => {
             this.drawObject(token);
         })
@@ -246,7 +266,7 @@ class World extends IntervalGenerator {
     /**
      * Draws the laser beam if the hero is attacking.
      */
-    drawLaserbeam(){
+    drawLaserbeam() {
         if (this.hero.currentState == 'attacking') {
             this.drawObject(this.laserbeam);
         }
@@ -254,7 +274,7 @@ class World extends IntervalGenerator {
     /**
      * Draws the foreground layers.
      */
-    drawForegounds(){
+    drawForegounds() {
         this.foregrounds.forEach(foreground => {
             this.drawObject(foreground);
         })
@@ -262,7 +282,7 @@ class World extends IntervalGenerator {
     /**
      * Draws the status bar and bomb symbols.
      */
-    drawStatusbars(){
+    drawStatusbars() {
         this.drawObject(this.statusbar);
         this.bombSymbols.forEach(symbol => {
             this.drawObject(symbol);
@@ -358,7 +378,7 @@ class World extends IntervalGenerator {
      * Handles enemy reactions to bombs in the game.
      * @param {Enemy} enemy - The enemy to check for reactions.
      */
-    handleEnemyReactionsToBombs(enemy){
+    handleEnemyReactionsToBombs(enemy) {
         this.bombs.forEach(bomb => {
             let distanceBombToEnemy = this.calcDistance(enemy, bomb);
             if (distanceBombToEnemy < bomb.range) {

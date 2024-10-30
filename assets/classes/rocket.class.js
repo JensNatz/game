@@ -82,9 +82,15 @@ class Rocket extends MovableObject {
      */
     constructor(posX) {
         super().loadImage(this.image);
-        this.loadImagesInCache(this.explodeImages);
         this.posX = posX;
-        this.setStoppableInterval(this.animate.bind(this));
+        
+        this.loadingPromises = [
+            this.loadImagesInCache(this.explodeImages)
+        ];
+
+        Promise.all(this.loadingPromises).then(() => {
+            this.setStoppableInterval(this.animate.bind(this));
+        })
     }
 
     /**

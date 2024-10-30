@@ -193,14 +193,20 @@ class EnemyWithGun extends Character {
     constructor(posX) {
         super().loadImage(this.walkImages[0]);
         this.posX = posX;
-        this.loadImagesInCache(this.idleImages);
-        this.loadImagesInCache(this.walkImages);
-        this.loadImagesInCache(this.dieImages);
-        this.loadImagesInCache(this.getHitImages);
-        this.loadImagesInCache(this.shootImages);
-        this.loadImagesInCache(this.getLaseredImages);
-        this.setStoppableInterval(this.run.bind(this));
-        this.setStoppableInterval(this.animate.bind(this));
+
+        this.loadingPromises = [
+            this.loadImagesInCache(this.idleImages),
+            this.loadImagesInCache(this.walkImages),
+            this.loadImagesInCache(this.dieImages),
+            this.loadImagesInCache(this.getHitImages),
+            this.loadImagesInCache(this.shootImages),
+            this.loadImagesInCache(this.getLaseredImages)
+        ];
+
+        Promise.all(this.loadingPromises).then(() => {
+            this.setStoppableInterval(this.run.bind(this));
+            this.setStoppableInterval(this.animate.bind(this));
+        })
     }
 
     /**

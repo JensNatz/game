@@ -6,9 +6,7 @@
 function createLevel1() {
     /**
      * Array of enemies in the level. Each enemy has a starting position value (in pixels).
-     */
-    console.log("level");
-    
+     */    
     const enemies = [
         new EnemyWithClub(900),
         new EnemyWithGun(1500),
@@ -67,5 +65,5 @@ function createLevel1() {
      */
     const levelWidth = 10400;
 
-    //return new Level(enemies, tokens, backgrounds, foregrounds, levelWidth);
+    return new Level(enemies, tokens, backgrounds, foregrounds, levelWidth);
 }

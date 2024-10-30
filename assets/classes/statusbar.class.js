@@ -65,13 +65,16 @@ class Statusbar extends DrawableObject {
      */
      constructor(){
         super().loadImage(this.statusImages[10]);
-        this.loadImagesInCache(this.statusImages);
+        this.loadingPromises = [
+            this.loadImagesInCache(this.statusImages)
+        ];
     }
+
     /**
      * Updates the displayed status based on the current health points (hp).
      * @param {number} hp - The current health points of the character.
      */
-    updateStatus(hp) {
+    updateStatus(hp) {        
         if (hp <= 0) {
             this.img = this.imageCache[this.statusImages[0]];
         }else if (hp <= 10) {
