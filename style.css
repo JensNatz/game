@@ -157,8 +157,8 @@ canvas {
 
 
 .control-btn {
-    width: 200px;
-    height: 69px;
+    width: 180px;
+    height: 62px;
 }
 
 .control-btn-back {
@@ -284,7 +284,8 @@ canvas {
     }
 
     .control-btn {
-        width: 180px;
+        width: 150px;
+        height: 52px;
     }
 
     .control-btn-back {
@@ -305,5 +306,6 @@ canvas {
 
     .control-btn {
         width: 120px;
+        height: 41px;
     }
 }
