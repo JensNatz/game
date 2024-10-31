@@ -125,14 +125,15 @@ class World extends IntervalGenerator {
      */
     draw() {
         this.resetCanvas();
-        this.drawBackgrounds();
+        // this.drawBackgrounds();
+        this.drawObjects(this.backgrounds)
         this.drawObject(this.hero);
-        this.drawEnemies();
-        this.drawBombs();
-        this.drawProjectiles();
-        this.drawTokens();
+        this.drawObjects(this.enemies)
+        this.drawObjects(this.bombs)
+        this.drawObjects(this.projectiles)
+        this.drawObjects(this.tokens)
         this.drawLaserbeam();
-        this.drawForegounds();
+        this.drawObjects(this.foregrounds)
         this.ctx.translate(this.cameraX * -1, 0);
         this.drawStatusbars();
         let self = this;
@@ -148,50 +149,14 @@ class World extends IntervalGenerator {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.cameraX, 0);
     }
-
     /**
-     * Draws the background layers.
+     * Draws a collection of objects by calling the `drawObject` method for each one.
+     * @param {Array} objects - The array of objects to be drawn.
      */
-    drawBackgrounds() {
-        this.backgrounds.forEach(background => {
-            this.drawObject(background);
-        })
-    }
-
-    /**
-     * Draws the enemies in the game.
-     */
-    drawEnemies() {
-        this.enemies.forEach(enemy => {
-            this.drawObject(enemy);
-        })
-    }
-
-    /**
-     * Draws the bombs in the game.
-     */
-    drawBombs() {
-        this.bombs.forEach(bomb => {
-            this.drawObject(bomb);
-        })
-    }
-
-    /**
-     * Draws the projectiles in the game.
-     */
-    drawProjectiles() {
-        this.projectiles.forEach(projectile => {
-            this.drawObject(projectile);
-        })
-    }
-
-    /**
-     * Draws the collectible tokens in the game.
-     */
-    drawTokens() {
-        this.tokens.forEach(token => {
-            this.drawObject(token);
-        })
+    drawObjects(objects) {
+        objects.forEach(object => {
+            this.drawObject(object);
+        });
     }
 
     /**
@@ -201,14 +166,6 @@ class World extends IntervalGenerator {
         if (this.hero.currentState == 'attacking') {
             this.drawObject(this.laserbeam);
         }
-    }
-    /**
-     * Draws the foreground layers.
-     */
-    drawForegounds() {
-        this.foregrounds.forEach(foreground => {
-            this.drawObject(foreground);
-        })
     }
 
     /**
@@ -275,7 +232,7 @@ class World extends IntervalGenerator {
             const token = this.tokens[i];
             let distanceTokenToHero = this.calcDistance(token, this.hero);
             if (distanceTokenToHero < 50) {
-                this.removeTokenFromWorld(i);
+                this.removeElementFromWorld(this.tokens, i)
                 if (token instanceof BombToken) {
                     this.hero.addBombToInventory();
                     if (!this.isMuted) {
@@ -334,7 +291,7 @@ class World extends IntervalGenerator {
                 if (this.hero.isVulnerable()) {
                     if (projectile instanceof Bullet) {
                         this.hero.takeDamage(projectile.power);
-                        this.removeProjectileFromWorld(i);
+                        this.removeElementFromWorld(this.projectiles, i)
                     } if (projectile instanceof Rocket) {
                         projectile.explode(this.hero);
                     }
@@ -424,19 +381,12 @@ class World extends IntervalGenerator {
     }
 
     /**
-     * Removes a token from the world based on its index.
-     * @param {number} index - The index of the token to remove.
+     * Removes a elenemt from the world based on its index.
+     * @param {Array} array - The array from which the element should be removed
+     * @param {number} index - The index of the element to remove.
      */
-    removeTokenFromWorld(index) {
-        this.tokens.splice(index, 1);
-    }
-
-    /**
-     * Removes a projectile from the world based on its index.
-     * @param {number} index - The index of the projectile to remove.
-     */
-    removeProjectileFromWorld(index) {
-        this.projectiles.splice(index, 1);
+    removeElementFromWorld(array, index) {
+        array.splice(index, 1);
     }
 
     /**
