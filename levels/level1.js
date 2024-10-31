@@ -23,7 +23,6 @@ function createLevel1() {
     ];
     const boss = new Drone(10000);
     const tokens = [
-        new BombToken(200),
         new HealthpackToken(2000),
         new BombToken(3700),
         new HealthpackToken(4900),

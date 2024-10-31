@@ -103,14 +103,24 @@ function showEndScreen(event) {
   document.getElementById('game').classList.add('d-none');
 }
 
+/**
+ * Displays the loading screen by removing the 'd-none' class from the element
+ */
 function showLoadingScreen(){
   document.getElementById('loadingScreen').classList.remove('d-none');
 }
 
+/**
+ * Hides the loading screen by adding the 'd-none' class from the element
+ */
 function hideLoadingScreen(){
   document.getElementById('loadingScreen').classList.add('d-none');
 }
 
+/**
+ * Prevents the context menu from appearing on mobile devices to prevent them from popping up when using touch controls
+ * @param {Event} e - The event object for the 'contextmenu' event.
+ */
 document.addEventListener('contextmenu', function (e) {
   if (window.matchMedia('(pointer: coarse)').matches) {
       e.preventDefault();
