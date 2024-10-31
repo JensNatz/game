@@ -7,6 +7,7 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    -webkit-touch-callout: none;
 }
 
 .d-none {
@@ -197,8 +198,8 @@ canvas {
     height: 65px;
     background-image: url('assets/img/gui/btn_mute.png');
     position: absolute;
-    top: 52px;
-    right: 32px;
+    top: 180px;
+    left: 32px;
 }
 
 .btn-mute.muted {
@@ -294,7 +295,7 @@ canvas {
 
     .btn-mute {
         width: 50px;
-        top: 24px;
+        top: 124px;
     }
 }
 

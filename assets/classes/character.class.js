@@ -4,105 +4,21 @@
  * @extends MovableObject
  */
 class Character extends MovableObject {
-    /**
-     * Reference to the game world the character interacts with.
-     * @type {object}
-     */
     world;
-
-    /**
-     * Health points of the character.
-     * @type {number}
-     */
     hp;
-
-    /**
-     * Attack power of the character.
-     * @type {number}
-     */
     power;
-
-    /**
-     * Default duration for damage immunity after taking a hit, in frames.
-     * @type {number}
-     */
     standardImunityTime = 0;
-
-    /**
-     * Remaining frames of damage immunity.
-     * @type {number}
-     */
     currentDamageImmunityDuration = 0;
-
-    /**
-     * Array of images for the walking animation.
-     * @type {string[]}
-     */
     walkImages;
-
-    /**
-     * Array of images for the 'get hit' animation.
-     * @type {string[]}
-     */
     getHitImages;
-
-    /**
-     * Array of images for the dying animation.
-     * @type {string[]}
-     */
     dieImages;
-
-    /**
-     * Array of images for the idle animation.
-     * @type {string[]}
-     */
     idleImages;
-
-    /**
-     * Array of images for the attack animation.
-     * @type {string[]}
-     */
     attackImages;
-
-    /**
-     * Array of images for the laser-hit animation.
-     * @type {string[]}
-     */
     getLaseredImages;
-
-    /**
-     * Indicates if the character has detected the hero.
-     * @type {boolean}
-     * @default false
-     */
     hasDetectedHero = false;
-
-    /**
-     * Duration for which the character is affected by a laser hit, in frames.
-     * @type {number}
-     * @default 0
-     */
     laserHitDuration = 0;
-
-    /**
-     * Current state of the character (e.g., 'idle', 'walking', 'hurting', etc.).
-     * @type {string}
-     * @default 'idle'
-     */
     currentState = 'idle';
-
-    /**
-     * Indicates if the death sound has been played.
-     * @type {boolean}
-     * @default false
-     */
     dieSoundPlayed = false;
-
-    /**
-     * Indicates if the death animation has been played completely.
-     * @type {boolean}
-     * @default false
-     */
     dieAnimationPlayed = false;
 
     /**

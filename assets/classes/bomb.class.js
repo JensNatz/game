@@ -4,10 +4,6 @@
  * @extends MovableObject
  */
 class Bomb extends MovableObject {
-    /**
-     * Array of image paths for the bomb explosion animation sequence.
-     * @type {string[]}
-     */
     explodeImages = [
         'assets/img/bomb/explosion/skeleton-Fx2_0.png',
         'assets/img/bomb/explosion/skeleton-Fx2_1.png',
@@ -28,72 +24,18 @@ class Bomb extends MovableObject {
         'assets/img/bomb/explosion/skeleton-Fx2_16.png',
         'assets/img/bomb/explosion/skeleton-Fx2_17.png'
     ];
-
-    /**
-     * Path to the default bomb image.
-     * @type {string}
-     */
     image = 'assets/img/bomb/bomb.png';
-
-    /**
-     * Audio files for the bomb sounds.
-     * @type {{ explosion: Audio }}
-     */
     sounds = {
         explosion: new Audio('assets/audio/explosion.wav')
     };
-
-    /**
-     * Width of the bomb in pixels.
-     * @type {number}
-     */
     width = 199;
-
-    /**
-     * Height of the bomb in pixels.
-     * @type {number}
-     */
     height = 185;
-
-    /**
-     * Damage power of the bomb.
-     * @type {number}
-     */
     power = 15;
-
-    /**
-     * Range of the bomb's impact.
-     * @type {number}
-     */
-    range = 200;
-
-    /**
-     * Vertical speed of the bomb.
-     * @type {number}
-     */
+    range = 100;
     speedY = 50;
-
-    /**
-     * Indicates whether the bomb is currently exploding.
-     * @type {boolean}
-     * @default false
-     */
     isExploding = false;
-
-    /**
-     * Indicates whether the bomb has completed its explosion.
-     * @type {boolean}
-     * @default false
-     */
     isExploded = false;
 
-    /**
-     * Creates a new bomb object.
-     * Loads the bomb image, initializes position, speed, and sets up animation.
-     * @param {number} posX - The horizontal position of the bomb in pixels.
-     * @param {number} posY - The vertical position of the bomb in pixels.
-     * @param {number} speed - The horizontal speed of the bomb.
-     */
     constructor(posX, posY, speed) {
         super().loadImage(this.image);
         this.loadImagesInCache(this.explodeImages);

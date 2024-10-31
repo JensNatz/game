@@ -3,136 +3,37 @@
  * Inherits from IntervalGenerator class.
  */
 class World extends IntervalGenerator {
-
-    /**
-     * An array that holds all the promises related to loading assets in the world.
-     * This includes promises for images, sounds, and any other resources that need to be loaded before the world is considered ready.
-     * @type {Promise[]}
-     */
     allLoadingPromises = [];
-
-    /**
-    * A promise that resolves when the world has fully loaded.
-    * @type {Promise}
-    */
     worldLoadedPromise;
-
-    /**
-     * Sound effects of the world, i.e. the theme music
-     * @type {Object}
-     */
     sounds = {
         thememusic: new Audio('assets/audio/soundtrack.mp3'),
     };
-
-    /**
-     * The hero character in the game.
-     * @type {Hero}
-     */
     hero = new Hero();
-
-    /**
-     * The laser beam used by the hero.
-     * @type {Laserbeam}
-     */
     laserbeam = new Laserbeam();
-
-    /**
-     * Array of tokens (collectibles) in the game.
-     * @type {Array}
-     */
     tokens = [];
-
-    /**
-     * Array of bombs in the game.
-     * @type {Array}
-     */
     bombs = [];
-
-    /**
-     * Array of projectiles in the game.
-     * @type {Array}
-     */
     projectiles = []
-
-    /**
-    * Array of bomb symbols displayed in the status bar.
-    * @type {Array}
-    */
     bombSymbols = [];
-
-    /**
-     * Array of enemies in the game.
-     * @type {Array}
-     */
-    enemies;
-
-    /**
-     * The status bar displaying the hero's health.
-     * @type {Statusbar}
-     */
-    statusbar = new Statusbar();
-
-    /**
-     * Background layers of the game.
-     * @type {Array}
-     */
+    enemies = [];
+    boss;
+    statusbar;
+    bossStatusbar;
     backgrounds;
-
-    /**
-     * Foreground layers of the game.
-     * @type {Array}
-     */
     foregrounds;
-
-    /**
-     * The length of the game level.
-     * @type {number}
-     */
     length;
-
-    /**
-     * The canvas element for rendering the game.
-     * @type {HTMLCanvasElement}
-     */
     canvas;
-
-    /**
-     * The 2D rendering context of the canvas.
-     * @type {CanvasRenderingContext2D}
-     */
     ctx;
-
-    /**
-     * The keyboard input handler.
-     * @type {Keyboard}
-     */
     keyboard;
-
-    /**
-    * The current camera offset in the X direction.
-    * @type {number}
-    */
     cameraX = 0;
-
-    /**
-     * Indicates whether the game sounds are muted.
-     * @type {boolean}
-     */
     isMuted = false;
 
-    /**
-     * Constructs a new World instance and initializes the game elements once all loading promises are fulfilled
-     * @param {HTMLCanvasElement} canvas - The canvas to draw the game on.
-     * @param {Object} keyboard - The keyboard input handler.
-     * @param {Object} level - The level data containing enemies, tokens, backgrounds, and foregrounds.
-     */
     constructor(canvas, keyboard, level) {
         super();
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.loadLevel(level);
+        this.initializeStatusbars();
 
         this.allLoadingPromises = [
             ...this.enemies.flatMap(enemy => enemy.loadingPromises),
@@ -152,8 +53,6 @@ class World extends IntervalGenerator {
     /**
     * Checks if the world has completely loaded.
     * This method returns a promise that resolves when the world is fully loaded.
-    * It can be used to determine the loading status of the world.
-    * 
     * @returns {Promise} A promise that resolves when the world is completely loaded.
     */
     isCompleteyLoaded() {
@@ -166,10 +65,20 @@ class World extends IntervalGenerator {
      */
     loadLevel(level) {
         this.enemies = level.enemies;
+        this.boss = level.boss;
+        this.enemies.push(this.boss);
         this.tokens = level.tokens;
         this.backgrounds = level.backgrounds;
         this.foregrounds = level.foregrounds;
         this.length = level.length;
+    }
+
+    /**
+    * Sets the statusbars of hero and boss
+    */
+    initializeStatusbars() {
+        this.statusbar = new Statusbar(-30, 20, 730, 205, this.hero);
+        this.bossStatusbar = new Statusbar(700, 20, 696, 146, this.boss);
     }
     /**
      * Sets the world context for the hero and enemies.
@@ -188,12 +97,7 @@ class World extends IntervalGenerator {
         if (object.otherDirection) {
             this.flipImage(object);
         }
-
-        try {
-            this.ctx.drawImage(object.img, object.posX, object.posY, object.width, object.height);
-        } catch (e) {
-            console.log(object)
-        }
+        this.ctx.drawImage(object.img, object.posX, object.posY, object.width, object.height);
 
         if (object.otherDirection) {
             this.reverseFlipImage(object);
@@ -306,6 +210,9 @@ class World extends IntervalGenerator {
      */
     drawStatusbars() {
         this.drawObject(this.statusbar);
+        if (this.boss.hasDetectedHero) {
+            this.drawObject(this.bossStatusbar);
+        }
         this.bombSymbols.forEach(symbol => {
             this.drawObject(symbol);
         })
@@ -318,7 +225,7 @@ class World extends IntervalGenerator {
         this.endGameIfHeroDead();
         this.endGameIfBossDead();
         this.removeExplodedRpojectilesFromWorld();
-        this.updateStatusbar();
+        this.updateStatusbars();
         this.handleTokens();
         this.handleEnemies();
         this.handleProjectiles();
@@ -341,15 +248,13 @@ class World extends IntervalGenerator {
         }
     }
     /**
-     * Ends the game if the boss (drone) is dead.
+     * Ends the game if the boss is dead.
      */
     endGameIfBossDead() {
-        this.enemies.forEach(enemy => {
-            if (enemy instanceof Drone && enemy.dieAnimationPlayed && enemy.sounds.die.ended) {
-                this.muteSounds();
-                this.stopGame('win');
-            }
-        })
+        if (this.boss.dieAnimationPlayed && this.boss.sounds.die.ended) {
+            this.muteSounds();
+            this.stopGame('win');
+        }
     }
     /**
      * Handles the collection of tokens by the hero.
@@ -530,10 +435,13 @@ class World extends IntervalGenerator {
         this.projectiles = this.projectiles.filter(projectile => !projectile.isExploded);
     }
     /**
-     * Updates the status bar with the hero's health.
+     * Updates the status bars with the hero's health. Updates the bosses bar, if he has deteced the hero
      */
-    updateStatusbar() {
-        this.statusbar.updateStatus(this.hero.hp);
+    updateStatusbars() {
+        this.statusbar.updateStatus();
+        if (this.boss.hasDetectedHero) {
+            this.bossStatusbar.updateStatus();
+        }
     }
     /**
      * Toggles the mute state for all game sounds.

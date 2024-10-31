@@ -3,75 +3,19 @@
 */
 
 class DrawableObject extends IntervalGenerator {
-    /**
-     * Array of promises representing the loading of images.
-     * @type {Promise[]}
-     */
     loadingPromises;
-
-    /**
-     * The vertical position of the object
-     * @type {number}
-     */
     posX;
-
-    /**
-     * The horizontal position of the object
-     * @type {number}
-     */
     posY;
-
-    /**
-     * The current img representing the object
-     * @type {Image}
-     */
     img;
-
-    /**
-     * The width of the object
-     * @type {number}
-     */
     width;
-     /**
-     * The height of the object
-     * @type {number}
-     */
     height;
-
-     /**
-     * The current key of the images array, used to iterate trough animations
-     * @type {number}
-     */
     currentImg = 0;
-
-     /**
-     * An Object containing all Image Objects of the Object
-     * @type {Object}
-     */
     imageCache = {};
-
-     /**
-     * Rerepsents whether the Object is facing in the other direction
-     * @type {boolean}
-     */
     otherDirection = false;
-
-     /**
-     * An Object containing all sounds of the Object
-     * @type {Object}
-     */
     sounds = {};
-
-    /**
-     * Rerepsents whether the Object is muted or not
-     * @type {boolean}
-     */
     isMuted = false;
 
-    /**
-     * Creates an instance of the `DrawableObject` class.
-     * Calls the constructor of the `IntervalGenerator` class.
-     */
+    
     constructor(){
         super();
     }
@@ -138,7 +82,7 @@ class DrawableObject extends IntervalGenerator {
         sound.pause();
         sound.currentTime = 0;
     }
-    
+
     /**
      * Mutes all sounds if the object is muted.
      */

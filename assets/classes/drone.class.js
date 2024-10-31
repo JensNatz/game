@@ -4,10 +4,6 @@
  * @extends Character
  */
 class Drone extends Character {
-    /**
-     * Array of images for the idle animation.
-     * @type {string[]}
-     */
     idleImages = [
         'assets/img/drone/MoveIdle/Moving_Idle_0.png',
         'assets/img/drone/MoveIdle/Moving_Idle_1.png',
@@ -17,11 +13,6 @@ class Drone extends Character {
         'assets/img/drone/MoveIdle/Moving_Idle_5.png',
         'assets/img/drone/MoveIdle/Moving_Idle_6.png'
     ];
-
-    /**
-     * Array of images for the dying animation.
-     * @type {string[]}
-     */
     dieImages = [
         'assets/img/drone/Destroy/Destroy_00.png',
         'assets/img/drone/Destroy/Destroy_01.png',
@@ -39,11 +30,6 @@ class Drone extends Character {
         'assets/img/drone/Destroy/Destroy_13.png',
         'assets/img/drone/Destroy/Destroy_14.png'
     ];
-
-    /**
-     * Array of images for the 'get hit' animation.
-     * @type {string[]}
-     */
     getHitImages = [
         'assets/img/drone/GetHit/Get_Hit_00.png',
         'assets/img/drone/GetHit/Get_Hit_01.png',
@@ -56,11 +42,6 @@ class Drone extends Character {
         'assets/img/drone/GetHit/Get_Hit_08.png',
         'assets/img/drone/GetHit/Get_Hit_09.png'
     ];
-
-    /**
-     * Array of images for the shooting animation.
-     * @type {string[]}
-     */
     shootImages = [
         'assets/img/drone/Shoot/Shoot_00.png',
         'assets/img/drone/Shoot/Shoot_01.png',
@@ -68,99 +49,42 @@ class Drone extends Character {
         'assets/img/drone/Shoot/Shoot_03.png',
         'assets/img/drone/Shoot/Shoot_04.png'
     ];
-
-    /**
-     * Array of images for the laser hit animation.
-     * @type {string[]}
-     */
     getLaseredImages = [
         'assets/img/drone/GetElectric/Get_Electric_0.png',
         'assets/img/drone/GetElectric/Get_Electric_1.png',
         'assets/img/drone/GetElectric/Get_Electric_2.png'
     ];
-
-    /**
-     * Object containing audio files for various actions.
-     * @type {object}
-     */
+    statusbarImages = [
+        'assets/img/statusbar_drone/HP_bar_00.png',
+        'assets/img/statusbar_drone/HP_bar_10.png',
+        'assets/img/statusbar_drone/HP_bar_20.png',
+        'assets/img/statusbar_drone/HP_bar_30.png',
+        'assets/img/statusbar_drone/HP_bar_40.png',
+        'assets/img/statusbar_drone/HP_bar_50.png',
+        'assets/img/statusbar_drone/HP_bar_60.png',
+        'assets/img/statusbar_drone/HP_bar_70.png',
+        'assets/img/statusbar_drone/HP_bar_80.png',
+        'assets/img/statusbar_drone/HP_bar_90.png',
+        'assets/img/statusbar_drone/HP_bar_100.png'
+    ];
     sounds = {
         shooting: new Audio('assets/audio/flaunch.wav'),
         takeDamage: new Audio('assets/audio/drone_damage.wav'),
         die: new Audio('assets/audio/drone_die.wav'),
         detected: new Audio('assets/audio/drone_detected.wav')
     };
-
-    /**
-     * Vertical position of the drone.
-     * @type {number}
-     */
     posY = 100;
-
-    /**
-     * Width of the drone.
-     * @type {number}
-     */
     width = 650;
-
-    /**
-     * Height of the drone.
-     * @type {number}
-     */
     height = 650;
-
-    /**
-     * Movement speed of the drone.
-     * @type {number}
-     */
     speed = 3;
-
-    /**
-     * Attack power of the drone.
-     * @type {number}
-     */
     power = 10;
-
-    /**
-     * Health points of the drone.
-     * @type {number}
-     */
     hp = 45;
-
-    /**
-     * Standard immunity time after taking damage.
-     * @type {number}
-     */
     standardImunityTime = 40;
-
-    /**
-     * Time interval between shots.
-     * @type {number}
-     */
     intervalBetweenShots = 50;
-
-    /**
-     * Time until the next shot can be fired.
-     * @type {number}
-     */
     timeToNextShot = 0;
-
-    /**
-     * Detection range for the drone to spot the hero.
-     * @type {number}
-     */
     detectionRange = 800;
-
-    /**
-     * Indicates if the detection sound has been played.
-     * @type {boolean}
-     */
     soundDetectedPlayed = false;
 
-    /**
-     * Constructs a new Drone instance and initializes images and intervals.
-     * It sets up intervals for running and animating the object once all images are loaded.
-     * @param {number} posX - The horizontal position of the drone.
-     */
     constructor(posX) {
         super().loadImage(this.idleImages[0]);
         this.posX = posX;
@@ -186,7 +110,15 @@ class Drone extends Character {
         this.reduceLaserHitDuration();
         this.reduceDamageImmunityDuration();
         this.reduceTimeToNextShot();
+        this.checkIfDead();
+        this.checkForHeroDetection();
+        this.checkLaseredState();
+    }
 
+    /**
+     * Checks if the character is dead. Sets current state and plays die sound once, if so.
+     */
+    checkIfDead() {
         if (this.hp <= 0 && (this.currentState !== 'lasered' || this.currentState !== 'hurting')) {
             this.currentState = 'dead';
             if (!this.dieSoundPlayed) {
@@ -197,14 +129,24 @@ class Drone extends Character {
                 this.dieSoundPlayed = true;
             }
         }
+    }
 
+    /**
+     * Checks if the character is has deteced the hero. plays detection sound once, if so.
+     */
+    checkForHeroDetection() {
         if (this.hasDetectedHero && !this.soundDetectedPlayed) {
             if (!this.isMuted) {
                 this.sounds.detected.play();
             }
             this.soundDetectedPlayed = true;
         }
+    }
 
+    /**
+     * Checks if the being lasered state has ended, sets state to "idle" if so.
+     */
+    checkLaseredState() {
         if (this.currentState === 'lasered' && !this.isBeingLasered()) {
             this.currentState = 'idle';
         }
@@ -216,25 +158,15 @@ class Drone extends Character {
     animate() {
         if (this.hasDetectedHero) {
             this.lookAtHero();
-        }
-
-        if (this.currentState === 'dead') {
+        } if (this.currentState === 'dead') {
             this.playDieAnimation();
-        }
-
-        if (this.currentState === 'hurting') {
+        } if (this.currentState === 'hurting') {
             this.playGetHitAnimation();
-        }
-
-        if (this.currentState === 'lasered') {
+        } if (this.currentState === 'lasered') {
             this.playLaseredAnimation();
-        }
-
-        if (this.currentState === 'attacking') {
+        } if (this.currentState === 'attacking') {
             this.playShootAnimation();
-        }
-
-        if (this.currentState === 'idle') {
+        } if (this.currentState === 'idle') {
             this.playIdleAnimation();
         }
     }
@@ -269,9 +201,9 @@ class Drone extends Character {
      * Creates and fires a rocket projectile.
      */
     shootRocket() {
-        let rocket = new Rocket(this.posX);
+        let rocket = new Rocket(this.posX+120);
         if (this.otherDirection) {
-            rocket.posX = this.posX + this.width - 100;
+            rocket.posX = this.posX + this.width - 220;
             rocket.otherDirection = true;
         }
         if (this.isMuted) {

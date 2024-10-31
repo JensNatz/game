@@ -23,8 +23,9 @@ function createLevel1() {
         new EnemyWithClub(8500),
         new EnemyWithClub(8600),
         new EnemyWithGun(9400),
-        new Drone(10000)
     ];
+
+    const boss = new Drone(10000);
 
     /**
      * Array of tokens in the level. Each token has a starting position value (in pixels).
@@ -65,5 +66,5 @@ function createLevel1() {
      */
     const levelWidth = 10400;
 
-    return new Level(enemies, tokens, backgrounds, foregrounds, levelWidth);
+    return new Level(enemies, boss, tokens, backgrounds, foregrounds, levelWidth);
 }

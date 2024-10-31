@@ -6,10 +6,6 @@
  * @extends Character
  */
 class Hero extends Character {
-    /**
-     * An array of image paths for the idle animation.
-     * @type {string[]}
-     */
     idleImages = [
         'assets/img/hero/Idle/Idle_00.png',
         'assets/img/hero/Idle/Idle_01.png',
@@ -26,11 +22,6 @@ class Hero extends Character {
         'assets/img/hero/Idle/Idle_12.png',
         'assets/img/hero/Idle/Idle_13.png'
     ];
-
-    /**
-     * An array of image paths for the walking animation.
-     * @type {string[]}
-     */
     walkImages = [
         'assets/img/hero/Walk/Walk_00.png',
         'assets/img/hero/Walk/Walk_01.png',
@@ -47,11 +38,6 @@ class Hero extends Character {
         'assets/img/hero/Walk/Walk_12.png',
         'assets/img/hero/Walk/Walk_13.png'
     ];
-
-    /**
-     * An array of image paths for the jumping animation.
-     * @type {string[]}
-     */
     jumpImages = [
         'assets/img/hero/Jump/Jump_00.png',
         'assets/img/hero/Jump/Jump_01.png',
@@ -68,11 +54,6 @@ class Hero extends Character {
         'assets/img/hero/Jump/Jump_12.png',
         'assets/img/hero/Jump/Jump_13.png'
     ];
-
-    /**
-     * An array of image paths for the hit animation.
-     * @type {string[]}
-     */
     getHitImages = [
         'assets/img/hero/GetHit/Get_Hit_00.png',
         'assets/img/hero/GetHit/Get_Hit_01.png',
@@ -85,11 +66,6 @@ class Hero extends Character {
         'assets/img/hero/GetHit/Get_Hit_08.png',
         'assets/img/hero/GetHit/Get_Hit_09.png',
     ];
-
-    /**
-     * An array of image paths for the dying animation.
-     * @type {string[]}
-     */
     dieImages = [
         'assets/img/hero/Death/Death_00.png',
         'assets/img/hero/Death/Death_01.png',
@@ -136,22 +112,12 @@ class Hero extends Character {
         'assets/img/hero/Death/Death_42.png',
         'assets/img/hero/Death/Death_43.png'
     ];
-
-    /**
-     * An array of image paths for the attack animation.
-     * @type {string[]}
-     */
     attackImages = [
         'assets/img/hero/ShootFX1/Shoot_FX_1_0.png',
         'assets/img/hero/ShootFX1/Shoot_FX_1_1.png',
         'assets/img/hero/ShootFX1/Shoot_FX_1_2.png',
         'assets/img/hero/ShootFX1/Shoot_FX_1_3.png',
     ];
-
-     /**
-     * An array of image paths for the throwing animation.
-     * @type {string[]}
-     */
     trowImages = [
         'assets/img/hero/Throw/Throw_bomb_00.png',
         'assets/img/hero/Throw/Throw_bomb_01.png',
@@ -175,16 +141,20 @@ class Hero extends Character {
         'assets/img/hero/Throw/Throw_bomb_19.png'
     ];
 
-    /**
-     * An object containing audio clips for various hero actions.
-     * @type {Object}
-     * @property {Audio} walking - Sound for walking.
-     * @property {Audio} laserbeam - Sound for laser beam attack.
-     * @property {Audio} jumping - Sound for jumping.
-     * @property {Audio} takeDamage - Sound for taking damage.
-     * @property {Audio} die - Sound for dying.
-     * @property {Audio} trow - Sound for throwing.
-     */
+    statusbarImages = [
+        'assets/img/statusbar/HP_bar_00.png',
+        'assets/img/statusbar/HP_bar_10.png',
+        'assets/img/statusbar/HP_bar_20.png',
+        'assets/img/statusbar/HP_bar_30.png',
+        'assets/img/statusbar/HP_bar_40.png',
+        'assets/img/statusbar/HP_bar_50.png',
+        'assets/img/statusbar/HP_bar_60.png',
+        'assets/img/statusbar/HP_bar_70.png',
+        'assets/img/statusbar/HP_bar_80.png',
+        'assets/img/statusbar/HP_bar_90.png',
+        'assets/img/statusbar/HP_bar_100.png'
+    ];
+ 
     sounds = {
         walking: new Audio('assets/audio/step.wav'),
         laserbeam: new Audio('assets/audio/laserbeam.wav'),
@@ -193,76 +163,18 @@ class Hero extends Character {
         die: new Audio('assets/audio/hero_die.wav'),
         trow: new Audio('assets/audio/hero_trow.wav')
     }
-
-    /**
-     * The horizontal position of the hero.
-     * @type {number}
-     */
     posX = -70;
-
-    /**
-     * The vertical position of the hero.
-     * @type {number}
-     */
     posY = 150;
-
-    /**
-     * The width of the hero.
-     * @type {number}
-     */
     width = 650;
-
-    /**
-     * The height of the hero.
-     * @type {number}
-     */
     height = 650;
-
-    /**
-     * The vertical offset for jumping animations.
-     * @type {number}
-     */
     offsetY = 0;
-
-    /**
-     * The speed of the hero's movement.
-     * @type {number}
-     */
     speed = 15;
-
-    /**
-     * The health points of the hero.
-     * @type {number}
-     */
     hp = 100;
-
-    /**
-     * The direction of the jump (1 for up, -1 for down).
-     * @type {number}
-     */
     jumpDirection = 1;
-
-    /**
-     * The time until the next shot can be fired.
-     * @type {number}
-     */
     timeToNextShot = 0;
-
-    /**
-     * The standard immunity time after taking damage.
-     * @type {number}
-     */
     standardImunityTime = 20;
-
-    /**
-     * The number of bombs the hero currently has.
-     * @type {number}
-     */
     numberOfBombs = 0;
 
-    /**
-     * Constructs a new Hero instance. It sets up intervals for running and animating the object once all images are loaded.
-     */
     constructor() {
         super().loadImage(this.idleImages[0]);
 
@@ -281,76 +193,102 @@ class Hero extends Character {
             this.setStoppableInterval(this.animate.bind(this));
         })
     }
+
     /**
      * Runs the Hero logic, including checking health and state transitions.
      */
     run() {
         this.reduceDamageImmunityDuration();
         this.reduceTimeToNextShot();
-
+        this.checkIfDead();
+        this.checkIdleState();
+        this.handleAttacking();
+        this.handleThrowing();
+        this.handleWalking();
+        this.handleJumping();
+        this.handleMovement();
+        this.setCameraOnHero();
+    }
+    
+    /**
+     * Checks if the character is dead. Sets current state and plays die sound once, if so.
+     */
+    checkIfDead() {
         if (this.hp <= 0) {
             this.currentState = 'dead';
         }
+    }
 
-        if (this.currentState == 'walking' && !this.world.keyboard.KEYPRESSED) {
+    /**
+     * Checks if the character is dead. Sets current state and plays die sound once, if so.
+     */
+    checkIdleState() {
+        if (this.currentState === 'walking' && !this.world.keyboard.KEYPRESSED) {
             this.currentState = 'idle';
         }
-
-        if (this.currentState == 'attacking' && this.timeToNextShot <= 10) {
+    }
+    
+    handleAttacking() {
+        if (this.currentState === 'attacking' && this.timeToNextShot <= 10) {
             this.currentState = 'idle';
             this.endSound(this.sounds.laserbeam);
         }
-
-        if (this.world.keyboard.A && this.timeToNextShot == 0 && (this.currentState == 'idle' || this.currentState == 'walking')) {
-            this.currentState = 'attacking'
+    
+        if (this.world.keyboard.A && this.timeToNextShot === 0 && (this.currentState === 'idle' || this.currentState === 'walking')) {
+            this.currentState = 'attacking';
             this.timeToNextShot = 20;
             if (!this.isMuted) {
                 this.sounds.laserbeam.play();
             }
         }
-
-        if (this.world.keyboard.W && this.numberOfBombs > 0 && this.currentState == 'idle') {
-            this.currentState = 'trowing'
+    }
+    
+    handleThrowing() {
+        if (this.world.keyboard.W && this.numberOfBombs > 0 && this.currentState === 'idle') {
+            this.currentState = 'throwing';
             this.trow();
             if (!this.isMuted) {
                 this.sounds.trow.play();
             }
         }
-
+    }
+    
+    handleWalking() {
         if (this.world.keyboard.LEFT || this.world.keyboard.RIGHT) {
-            if (this.currentState == 'idle') {
+            if (this.currentState === 'idle') {
                 this.currentState = 'walking';
             }
         }
-
-        if (this.world.keyboard.SPACE && (this.currentState == 'idle' || this.currentState == 'walking')) {
-            this.currentState = 'jumping'
+    }
+    
+    handleJumping() {
+        if (this.world.keyboard.SPACE && (this.currentState === 'idle' || this.currentState === 'walking')) {
+            this.currentState = 'jumping';
             if (!this.isMuted) {
                 this.sounds.jumping.play();
             }
         }
-
-        if (this.world.keyboard.RIGHT && this.posX < this.world.length && (this.currentState == 'jumping' || this.currentState == 'walking')) {
+    }
+    
+    handleMovement() {
+        if (this.world.keyboard.RIGHT && this.posX < this.world.length && (this.currentState === 'jumping' || this.currentState === 'walking')) {
             this.moveRight();
             this.otherDirection = false;
             this.world.laserbeam.faceRight(this.posX);
             this.world.laserbeam.moveRight();
             this.world.foregrounds.forEach(foreground => {
                 foreground.moveLeft();
-            })
+            });
         }
-
-        if (this.world.keyboard.LEFT && this.posX > -72 && (this.currentState == 'jumping' || this.currentState == 'walking')) {
+        if (this.world.keyboard.LEFT && this.posX > -72 && (this.currentState === 'jumping' || this.currentState === 'walking')) {
             this.moveLeft();
             this.otherDirection = true;
             this.world.laserbeam.moveLeft();
             this.world.laserbeam.faceLeft(this.posX);
             this.world.foregrounds.forEach(foreground => {
                 foreground.moveRight();
-            })
+            });
         }
-
-        this.setCameraOnHero();
     }
 
     /**
@@ -365,32 +303,20 @@ class Hero extends Character {
                 }
                 this.dieSoundPlayed = true;
             }
-        }
-
-        if (this.currentState == "jumping") {
+        } if (this.currentState == "jumping") {
             this.playJumpAnimation();
-        }
-
-        if (this.currentState == "trowing") {
+        } if (this.currentState == "trowing") {
             this.playTrowAnimation();
-        }
-
-        if (this.currentState == "attacking") {
+        } if (this.currentState == "attacking") {
             this.playAttackingAnimation();
-        }
-
-        if (this.currentState == "hurting") {
+        } if (this.currentState == "hurting") {
             this.playGetHitAnimation();
-        }
-
-        if (this.currentState == "walking") {
+        } if (this.currentState == "walking") {
             this.playWalkingAnimation();
             if (!this.isMuted) {
                 this.sounds.walking.play();
             }
-        }
-
-        if (this.currentState == "idle") {
+        } if (this.currentState == "idle") {
             this.playIdleAnimation();
         }
     }

@@ -54,7 +54,7 @@ class Rocket extends MovableObject {
      * The vertical position of the rocket.
      * @type {number}
      */
-    posY = 490;
+    posY = 480;
 
     /**
      * Sound effects associated with the rocket.
@@ -89,9 +89,7 @@ class Rocket extends MovableObject {
             this.loadImagesInCache(this.explodeImages)
         ];
 
-        Promise.all(this.loadingPromises).then(() => {
-            this.setStoppableInterval(this.animate.bind(this));
-        })
+        this.setStoppableInterval(this.animate.bind(this));
     }
 
     /**

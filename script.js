@@ -110,3 +110,7 @@ function showLoadingScreen(){
 function hideLoadingScreen(){
   document.getElementById('loadingScreen').classList.add('d-none');
 }
+
+document.addEventListener('contextmenu', function (e) {
+ // e.preventDefault();
+});

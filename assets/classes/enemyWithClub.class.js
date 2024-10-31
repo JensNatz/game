@@ -4,10 +4,6 @@
  * @extends Character
  */
 class EnemyWithClub extends Character {
-    /**
-     * Array of images for the idle animation.
-     * @type {string[]}
-     */
     idleImages = [
         'assets/img/enemyWithClub/Idle/Idle_00.png',
         'assets/img/enemyWithClub/Idle/Idle_01.png',
@@ -24,11 +20,6 @@ class EnemyWithClub extends Character {
         'assets/img/enemyWithClub/Idle/Idle_12.png',
         'assets/img/enemyWithClub/Idle/Idle_13.png'
     ];
-
-    /**
-     * Array of images for the walking animation.
-     * @type {string[]}
-     */
     walkImages = [
         'assets/img/enemyWithClub/Walk/Walk_00.png',
         'assets/img/enemyWithClub/Walk/Walk_01.png',
@@ -45,11 +36,6 @@ class EnemyWithClub extends Character {
         'assets/img/enemyWithClub/Walk/Walk_12.png',
         'assets/img/enemyWithClub/Walk/Walk_13.png'
     ];
-
-    /**
-     * Array of images for the attack animation.
-     * @type {string[]}
-     */
     attackImages = [
         'assets/img/enemyWithClub/Hit/Hit_00.png',
         'assets/img/enemyWithClub/Hit/Hit_01.png',
@@ -66,11 +52,6 @@ class EnemyWithClub extends Character {
         'assets/img/enemyWithClub/Hit/Hit_12.png',
         'assets/img/enemyWithClub/Hit/Hit_13.png'
     ];
-
-    /**
-     * Array of images for the dying animation.
-     * @type {string[]}
-     */
     dieImages = [
         'assets/img/enemyWithClub/Death/Death_00.png',
         'assets/img/enemyWithClub/Death/Death_01.png',
@@ -97,11 +78,6 @@ class EnemyWithClub extends Character {
         'assets/img/enemyWithClub/Death/Death_22.png',
         'assets/img/enemyWithClub/Death/Death_23.png'
     ];
-
-    /**
-     * Array of images for the hit animation.
-     * @type {string[]}
-     */
     getHitImages = [
         'assets/img/enemyWithClub/GetHit/Get_Hit_00.png',
         'assets/img/enemyWithClub/GetHit/Get_Hit_01.png',
@@ -114,92 +90,27 @@ class EnemyWithClub extends Character {
         'assets/img/enemyWithClub/GetHit/Get_Hit_08.png',
         'assets/img/enemyWithClub/GetHit/Get_Hit_09.png'
     ];
-
-    /**
-     * Array of images for the laser hit animation.
-     * @type {string[]}
-     */
     getLaseredImages = [
         'assets/img/enemyWithClub/GetElectric/Get_Electric_0.png',
         'assets/img/enemyWithClub/GetElectric/Get_Electric_1.png',
         'assets/img/enemyWithClub/GetElectric/Get_Electric_2.png'
     ];
-
-    /**
-     * Object containing audio files for various actions.
-     * @type {object}
-     */
     sounds = {
         attacking: new Audio('assets/audio/hitWithClub.flac'),
         takeDamage: new Audio('assets/audio/pain2.wav'),
         die: new Audio('assets/audio/death2.wav')
     };
-
-    /**
-     * Vertical position of the enemy.
-     * @type {number}
-     */
     posY = 150;
-
-    /**
-     * Width of the enemy.
-     * @type {number}
-     */
     width = 650;
-
-    /**
-     * Height of the enemy.
-     * @type {number}
-     */
     height = 650;
-
-    /**
-     * Movement speed of the enemy.
-     * @type {number}
-     */
     speed = 6;
-
-    /**
-     * Attack power of the enemy.
-     * @type {number}
-     */
     power = 10;
-
-    /**
-     * Health points of the enemy.
-     * @type {number}
-     */
     hp = 10;
-
-    /**
-     * Standard immunity time after taking damage.
-     * @type {number}
-     */
     standardImunityTime = 20;
-
-    /**
-     * Detection range for the enemy to spot the hero.
-     * @type {number}
-     */
     detectionRange = 800;
-
-    /**
-     * Indicates whether the enemy has detected the hero.
-     * @type {boolean}
-     */
     hasDetectedHero = false;
-
-    /**
-     * Distance within which the enemy will attack the hero.
-     * @type {number}
-     */
     attackingDistance = 200;
 
-    /**
-     * Constructs a new EnemyWithClub instance and initializes images and intervals.
-     * It sets up intervals for running and animating the object once all images are loaded.
-     * @param {number} posX - The horizontal position of the enemy.
-     */
     constructor(posX) {
         super().loadImage(this.walkImages[0]);
         this.posX = posX;
@@ -225,7 +136,14 @@ class EnemyWithClub extends Character {
     run() {
         this.reduceLaserHitDuration();
         this.reduceDamageImmunityDuration();
+        this.checkIfDead();
+        this.checkLaseredState();
+    }
 
+    /**
+     * Checks if the character is dead. Sets current state and plays die sound once, if so.
+     */
+    checkIfDead() {
         if (this.hp <= 0 && (this.currentState != 'lasered' || this.currentState != 'hurting')) {
             this.currentState = 'dead';
             if (!this.dieSoundPlayed) {
@@ -235,6 +153,12 @@ class EnemyWithClub extends Character {
                 this.dieSoundPlayed = true;
             }
         }
+    }
+
+    /**
+     * Checks if the being lasered state has ended, sets state to "idle" if so.
+     */
+    checkLaseredState() {
         if (this.currentState == 'lasered' && !this.isBeingLasered()) {
             this.currentState = 'idle';
         }
@@ -246,26 +170,16 @@ class EnemyWithClub extends Character {
     animate() {
         if (this.currentState == 'dead') {
             this.playDieAnimation();
-        }
-
-        if (this.currentState == 'walking') {
+        } if (this.currentState == 'walking') {
             this.playWalkingAnimation();
             this.moveTowardsHero();
-        }
-
-        if (this.currentState == 'hurting') {
+        } if (this.currentState == 'hurting') {
             this.playGetHitAnimation();
-        }
-
-        if (this.currentState == 'lasered') {
+        } if (this.currentState == 'lasered') {
             this.playLaseredAnimation();
-        }
-
-        if (this.currentState == 'attacking') {
+        } if (this.currentState == 'attacking') {
             this.playAttackingAnimation();
-        }
-
-        if (this.currentState == "idle") {
+        } if (this.currentState == "idle") {
             this.playIdleAnimation();
         }
     }
