@@ -1,7 +1,6 @@
 /**
  * Represents any  object in the game, that can be drawn on the canvas
 */
-
 class DrawableObject extends IntervalGenerator {
     loadingPromises;
     posX;
@@ -15,7 +14,6 @@ class DrawableObject extends IntervalGenerator {
     sounds = {};
     isMuted = false;
 
-    
     constructor(){
         super();
     }

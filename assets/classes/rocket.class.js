@@ -3,10 +3,6 @@
  * Extends the MovableObject class to inherit movement and positioning properties.
  */
 class Rocket extends MovableObject {
-   /**
-   * Array of explosion images for the rocket.
-   * @type {string[]}
-   */
     explodeImages = [
         'assets/img/rocket/explosion/Rocket_Explosion_0.png',
         'assets/img/rocket/explosion/Rocket_Explosion_1.png',
@@ -19,68 +15,18 @@ class Rocket extends MovableObject {
         'assets/img/rocket/explosion/Rocket_Explosion_8.png',
         'assets/img/rocket/explosion/Rocket_Explosion_9.png'
     ];
-
-    /**
-     * The image representing the rocket.
-     * @type {string}
-     */
     image = 'assets/img/rocket/rocket.png';
-
-    /**
-     * The width of the rocket.
-     * @type {number}
-     */
     width = 242;
-
-    /**
-     * The height of the rocket.
-     * @type {number}
-     */
     height = 134;
-
-    /**
-     * The power of the rocket's explosion.
-     * @type {number}
-     */
     power = 20;
-
-    /**
-     * The speed of the rocket.
-     * @type {number}
-     */
     speed = 15;
-
-    /**
-     * The vertical position of the rocket.
-     * @type {number}
-     */
     posY = 480;
-
-    /**
-     * Sound effects associated with the rocket.
-     * @type {Object}
-     */
     sounds = {
         explosion: new Audio('assets/audio/explosion.wav')
     }
-
-    /**
-     * Indicates if the rocket is currently exploding.
-     * @type {boolean}
-     */
     isExploding = false;
-
-    /**
-     * Indicates if the rocket has exploded completely.
-     * @type {boolean}
-     */
     isExploded = false;
 
-    /**
-     * Constructs a new Rocket instance at a specified horizontal position. 
-     * It sets up intervals for running and animating the object once all images are loaded.
-     * @param {number} posX - The initial horizontal position of the rocket.
-     */
     constructor(posX) {
         super().loadImage(this.image);
         this.posX = posX;

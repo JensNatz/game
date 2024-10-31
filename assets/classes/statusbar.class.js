@@ -10,7 +10,6 @@ class Statusbar extends DrawableObject {
     character;
     maxHp;
 
-
     constructor(posX, posY, width, height, character) {
         super();
         this.posX = posX;
@@ -57,6 +56,11 @@ class Statusbar extends DrawableObject {
         }
     }
 
+/**
+ * This function computes the character's current health as a percentage
+ * of the maximum health points. The result is constrained to fall within a 0-100% range.
+ * @returns {number} The current health percentage, constrained between 0 and 100.
+ */
     calculateHpPercentage() {
         let hpPercentage = (this.character.hp / this.maxHp) * 100;
         return Math.max(0, Math.min(100, hpPercentage));

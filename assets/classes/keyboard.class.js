@@ -2,119 +2,114 @@
  * A class to handle keyboard and button input for controlling the game character.
  */
 class Keyboard {
-   /**
-     * Indicates whether the SPACE key is pressed.
-     * @type {boolean}
-     */
+   KEYPRESSED = false;
    SPACE = false;
-
-   /**
-    * Indicates the state of the directional keys.
-    * @type {boolean}
-    */
    UP = false;
    DOWN = false;
    LEFT = false;
    RIGHT = false;
-
-   /**
-    * Indicates whether the W and A keys are pressed for additional controls.
-    * @type {boolean}
-    */
    W = false;
    A = false;
 
-   /**
-    * Initializes the Keyboard class and binds key and button events.
-    */
    constructor() {
       this.bindKeyEvents();
       this.bindButtonEvents();
    }
 
    /**
-     * Binds keyboard events to handle key presses and releases.
-     */
+   * Binds keyboard events to handle key presses and releases.
+   */
    bindKeyEvents() {
       window.addEventListener('keydown', (event) => {
+         this.KEYPRESSED = true;
          switch (event.code) {
             case 'ArrowLeft':
-               keyboard.LEFT = true;
+               this.LEFT = true;
                break;
             case 'ArrowRight':
-               keyboard.RIGHT = true;
+               this.RIGHT = true;
                break;
             case 'Space':
-               keyboard.SPACE = true;
+               this.SPACE = true;
                break;
             case 'KeyW':
-               keyboard.W = true;
+               this.W = true;
                break;
             case 'KeyA':
-               keyboard.A = true;
+               this.A = true;
                break;
          }
       });
 
       window.addEventListener('keyup', (event) => {
+         this.KEYPRESSED = false;
          switch (event.code) {
             case 'ArrowLeft':
-               keyboard.LEFT = false;
+               this.LEFT = false;
                break;
             case 'ArrowRight':
-               keyboard.RIGHT = false;
+               this.RIGHT = false;
                break;
             case 'Space':
-               keyboard.SPACE = false;
+               this.SPACE = false;
                break;
             case 'KeyW':
-               keyboard.W = false;
+               this.W = false;
                break;
             case 'KeyA':
-               keyboard.A = false;
+               this.A = false;
                break;
          }
       });
    }
       
    /**
-     * Binds touch events to button elements for mobile controls.
+   * Binds touch events to button elements for mobile controls.
    */
    bindButtonEvents() {
       document.getElementById('btn-left').addEventListener('touchstart', () => {
          this.LEFT = true;
+         this.KEYPRESSED = true;
       });
       document.getElementById('btn-left').addEventListener('touchend', () => {
          this.LEFT = false;
+         this.KEYPRESSED = false;
       });
 
       document.getElementById('btn-right').addEventListener('touchstart', () => {
          this.RIGHT = true;
+         this.KEYPRESSED = true;
       });
       document.getElementById('btn-right').addEventListener('touchend', () => {
          this.RIGHT = false;
+         this.KEYPRESSED = false;
       });
 
       document.getElementById('btn-jump').addEventListener('touchstart', () => {
          this.SPACE = true;
+         this.KEYPRESSED = true;
       });
       document.getElementById('btn-jump').addEventListener('touchend', () => {
          this.SPACE = false;
+         this.KEYPRESSED = false;
       });
 
       document.getElementById('btn-laser').addEventListener('touchstart', () => {
          this.A = true;
+         this.KEYPRESSED = true;
       });
       document.getElementById('btn-laser').addEventListener('touchend', () => {
          this.A = false;
+         this.KEYPRESSED = false;
       });
 
       document.getElementById('btn-bomb').addEventListener('touchstart', () => {
          this.W = true;
+         this.KEYPRESSED = true;
       });
       document.getElementById('btn-bomb').addEventListener('touchend', () => {
          this.W = false;
+         this.KEYPRESSED = false;
       });
    }
-
 }

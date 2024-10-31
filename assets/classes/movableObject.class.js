@@ -1,12 +1,7 @@
 /**
  * Represents a movable object in the game, inheriting from DrawableObject.
 */
-
 class MovableObject extends DrawableObject {
-    /**
-     * The speed at which the object moves. Default is 1.
-     * @type {number}
-     */
     speed = 1;
     
     /**

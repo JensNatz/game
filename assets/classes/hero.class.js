@@ -227,7 +227,10 @@ class Hero extends Character {
             this.currentState = 'idle';
         }
     }
-    
+
+    /**
+     * Handles the attacking options of the hero
+     */
     handleAttacking() {
         if (this.currentState === 'attacking' && this.timeToNextShot <= 10) {
             this.currentState = 'idle';
@@ -243,6 +246,9 @@ class Hero extends Character {
         }
     }
     
+    /**
+     * Handles the trowing logic 
+     */
     handleThrowing() {
         if (this.world.keyboard.W && this.numberOfBombs > 0 && this.currentState === 'idle') {
             this.currentState = 'throwing';
@@ -252,7 +258,10 @@ class Hero extends Character {
             }
         }
     }
-    
+
+    /**
+     * sets the heros state to walking if keys are pressed
+     */
     handleWalking() {
         if (this.world.keyboard.LEFT || this.world.keyboard.RIGHT) {
             if (this.currentState === 'idle') {
@@ -261,6 +270,9 @@ class Hero extends Character {
         }
     }
     
+    /**
+     * sets the jumping state and plays the according sound
+     */
     handleJumping() {
         if (this.world.keyboard.SPACE && (this.currentState === 'idle' || this.currentState === 'walking')) {
             this.currentState = 'jumping';
@@ -269,7 +281,10 @@ class Hero extends Character {
             }
         }
     }
-    
+
+    /**
+     * Handles the movement of the hero, including his laserbeam
+     */
     handleMovement() {
         if (this.world.keyboard.RIGHT && this.posX < this.world.length && (this.currentState === 'jumping' || this.currentState === 'walking')) {
             this.moveRight();
@@ -305,7 +320,7 @@ class Hero extends Character {
             }
         } if (this.currentState == "jumping") {
             this.playJumpAnimation();
-        } if (this.currentState == "trowing") {
+        } if (this.currentState == "throwing") {
             this.playTrowAnimation();
         } if (this.currentState == "attacking") {
             this.playAttackingAnimation();
@@ -321,7 +336,7 @@ class Hero extends Character {
         }
     }
 
-     /**
+    /**
      * Reduces the time until the next shot can be fired.
      */
     reduceTimeToNextShot() {
@@ -330,7 +345,7 @@ class Hero extends Character {
         }
     }
 
-     /**
+    /**
      * Sets the camera 100px left to the heros position
      */
     setCameraOnHero() {
@@ -342,7 +357,7 @@ class Hero extends Character {
     /**
      * Plays the trowing animation and returns to idle afterward.
      */
-    playTrowAnimation() {
+    playTrowAnimation() {        
         this.ensureAnimationStartsAtBeginning(this.trowImages);
         if (this.currentImg % this.trowImages.length != this.trowImages.length - 1) {
             this.playAnimation(this.trowImages);
@@ -400,6 +415,7 @@ class Hero extends Character {
     addBombToInventory() {
         this.numberOfBombs++;
     }
+
     /**
      * Apply healthpack effect to heros hp, to a maximum of 100 hp. Plays the pickup sound, if not muted
      */

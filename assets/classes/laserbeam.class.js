@@ -2,58 +2,21 @@
  * Represents a laser beam object that can be animated and has a specific power and speed.
  * Extends the MovableObject class to inherit position and movement properties.
  */
-
 class Laserbeam extends MovableObject {
-    /**
-     * The power of the laser beam, representing the amount of damage it inflicts
-     * @type {number}
-     */
     power = 5;
-
-    /**
-     * Array of image paths for the laser beam animation.
-     * @type {string[]}
-     */
     laserbeamImages = [
         'assets/img/laserbeam/skeleton-animation_0.png',
         'assets/img/laserbeam/skeleton-animation_1.png',
         'assets/img/laserbeam/skeleton-animation_2.png',
         'assets/img/laserbeam/skeleton-animation_3.png',
         'assets/img/laserbeam/skeleton-animation_4.png',
-    ]
-    /**
-     * The horizontal position of the laser beam.
-     * @type {number}
-     */
+    ];
     posX = 395;
-
-    /**
-     * The vertical position of the laser beam.
-     * @type {number}
-     */
     posY = 490;
-
-    /**
-     * The width of the laser beam.
-     * @type {number}
-     */
     width = 521;
-
-    /**
-     * The height of the laser beam.
-     * @type {number}
-     */
     height = 144;
-
-    /**
-     * The speed of the laser beam - must be the same speed as the heroes speed.
-     * @type {number}
-     */
     speed = 15;
 
-    /**
-     * Initializes the laser beam. It sets up intervals for running and animating the object once all images are loaded.
-     */
     constructor() {
         super().loadImage(this.laserbeamImages[0]);
 
@@ -79,6 +42,7 @@ class Laserbeam extends MovableObject {
     animate() {
         this.playLaserbeamAnimation();
     }
+
     /**
     * Adjusts the position of the laser beam to face right relative to the hero's position.
     * @param {number} heroPosX - The horizontal position of the hero.
@@ -89,6 +53,7 @@ class Laserbeam extends MovableObject {
             this.posX = heroPosX + 450;
         }
     }
+
     /**
      * Adjusts the position of the laser beam to face left relative to the hero's position.
      * @param {number} heroPosX - The horizontal position of the hero.

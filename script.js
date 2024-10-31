@@ -112,5 +112,7 @@ function hideLoadingScreen(){
 }
 
 document.addEventListener('contextmenu', function (e) {
- // e.preventDefault();
+  if (window.matchMedia('(pointer: coarse)').matches) {
+      e.preventDefault();
+  }
 });

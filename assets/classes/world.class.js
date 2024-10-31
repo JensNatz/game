@@ -80,6 +80,7 @@ class World extends IntervalGenerator {
         this.statusbar = new Statusbar(-30, 20, 730, 205, this.hero);
         this.bossStatusbar = new Statusbar(700, 20, 696, 146, this.boss);
     }
+
     /**
      * Sets the world context for the hero and enemies.
      */
@@ -89,6 +90,7 @@ class World extends IntervalGenerator {
             enemy.world = this;
         })
     }
+
     /**
      * Draws an individual object on the canvas.
      * @param {DrawableObject} object - The object to draw.
@@ -103,6 +105,7 @@ class World extends IntervalGenerator {
             this.reverseFlipImage(object);
         }
     }
+
     /**
      * Flips the image of an object horizontally.
      * @param {DrawableObject} object - The object to flip.
@@ -113,6 +116,7 @@ class World extends IntervalGenerator {
         this.ctx.scale(-1, 1);
         object.posX = object.posX * -1;
     }
+
     /**
      * Reverses the flip effect on the object's image.
      * @param {DrawableObject} object - The object to reverse the flip.
@@ -121,6 +125,7 @@ class World extends IntervalGenerator {
         this.ctx.restore();
         object.posX = object.posX * -1;
     }
+
     /**
      * Main draw loop for rendering the game.
      */
@@ -140,7 +145,7 @@ class World extends IntervalGenerator {
         requestAnimationFrame(function () {
             self.draw();
         });
-    };
+    }
 
     /**
      * Resets the canvas for a new frame.
@@ -149,6 +154,7 @@ class World extends IntervalGenerator {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.cameraX, 0);
     }
+
     /**
      * Draws the background layers.
      */
@@ -157,6 +163,7 @@ class World extends IntervalGenerator {
             this.drawObject(background);
         })
     }
+
     /**
      * Draws the enemies in the game.
      */
@@ -165,6 +172,7 @@ class World extends IntervalGenerator {
             this.drawObject(enemy);
         })
     }
+
     /**
      * Draws the bombs in the game.
      */
@@ -173,6 +181,7 @@ class World extends IntervalGenerator {
             this.drawObject(bomb);
         })
     }
+
     /**
      * Draws the projectiles in the game.
      */
@@ -181,6 +190,7 @@ class World extends IntervalGenerator {
             this.drawObject(projectile);
         })
     }
+
     /**
      * Draws the collectible tokens in the game.
      */
@@ -189,6 +199,7 @@ class World extends IntervalGenerator {
             this.drawObject(token);
         })
     }
+
     /**
      * Draws the laser beam if the hero is attacking.
      */
@@ -205,6 +216,7 @@ class World extends IntervalGenerator {
             this.drawObject(foreground);
         })
     }
+
     /**
      * Draws the status bar and bomb symbols.
      */
@@ -217,6 +229,7 @@ class World extends IntervalGenerator {
             this.drawObject(symbol);
         })
     }
+
     /**
      * Main game loop for updating game state.
      */
@@ -230,6 +243,7 @@ class World extends IntervalGenerator {
         this.handleEnemies();
         this.handleProjectiles();
     }
+
     /**
      * Plays the theme music if not muted.
      */
@@ -238,6 +252,7 @@ class World extends IntervalGenerator {
             this.sounds.thememusic.play();
         }
     }
+
     /**
      * Ends the game if the hero is dead.
      */
@@ -247,6 +262,7 @@ class World extends IntervalGenerator {
             this.stopGame('lose');
         }
     }
+
     /**
      * Ends the game if the boss is dead.
      */
@@ -256,6 +272,7 @@ class World extends IntervalGenerator {
             this.stopGame('win');
         }
     }
+
     /**
      * Handles the collection of tokens by the hero.
      */
@@ -278,6 +295,7 @@ class World extends IntervalGenerator {
             }
         }
     }
+
     /**
      * Handles the behavior of enemies in the game.
      */
@@ -301,6 +319,7 @@ class World extends IntervalGenerator {
             }
         })
     }
+
     /**
      * Handles enemy reactions to bombs in the game.
      * @param {Enemy} enemy - The enemy to check for reactions.
@@ -313,6 +332,7 @@ class World extends IntervalGenerator {
             }
         });
     }
+
     /**
      * Handles the behavior of projectiles and their impact on the characters
      */
@@ -336,6 +356,7 @@ class World extends IntervalGenerator {
             }
         }
     }
+
     /**
      * Stops the game and displays the game over status.
      * @param {string} status - The status of the game (win/lose).
@@ -344,6 +365,7 @@ class World extends IntervalGenerator {
         this.stopAllIntervals();
         this.sendGameEndEventToCanvas(status);
     }
+
     /**
      * Stops all intervals for the hero, enemies, bombs, and projectiles.
      */
@@ -371,6 +393,7 @@ class World extends IntervalGenerator {
         });
         this.canvas.dispatchEvent(event);
     }
+
     /**
      * Calculates the distance between two objects.
      * @param {Object} obj - The first object.
@@ -405,6 +428,7 @@ class World extends IntervalGenerator {
             return false;
         }
     }
+
     /**
      * Adds a bomb symbol to the status bar based on the hero's inventory.
      */
@@ -413,6 +437,7 @@ class World extends IntervalGenerator {
         let bombSymbol = new BombSymbol(offsetX);
         this.bombSymbols.push(bombSymbol);
     }
+
     /**
      * Removes a token from the world based on its index.
      * @param {number} index - The index of the token to remove.
@@ -420,6 +445,7 @@ class World extends IntervalGenerator {
     removeTokenFromWorld(index) {
         this.tokens.splice(index, 1);
     }
+
     /**
      * Removes a projectile from the world based on its index.
      * @param {number} index - The index of the projectile to remove.
@@ -427,6 +453,7 @@ class World extends IntervalGenerator {
     removeProjectileFromWorld(index) {
         this.projectiles.splice(index, 1);
     }
+
     /**
      * Removes exploded projectiles and bombs from the world.
      */
@@ -434,6 +461,7 @@ class World extends IntervalGenerator {
         this.bombs = this.bombs.filter(bomb => !bomb.isExploded);
         this.projectiles = this.projectiles.filter(projectile => !projectile.isExploded);
     }
+
     /**
      * Updates the status bars with the hero's health. Updates the bosses bar, if he has deteced the hero
      */
@@ -443,6 +471,7 @@ class World extends IntervalGenerator {
             this.bossStatusbar.updateStatus();
         }
     }
+
     /**
      * Toggles the mute state for all game sounds.
      */
@@ -466,6 +495,7 @@ class World extends IntervalGenerator {
             this.muteSounds();
         }
     }
+    
     /**
      * Mutes all sounds in the game.
      */

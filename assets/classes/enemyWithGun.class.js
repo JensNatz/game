@@ -147,6 +147,7 @@ class EnemyWithGun extends Character {
             }
         }
     }
+    
      /**
      * Checks if the being lasered state has ended, sets state to "idle" if so.
      */

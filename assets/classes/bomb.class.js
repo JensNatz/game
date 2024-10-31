@@ -31,7 +31,7 @@ class Bomb extends MovableObject {
     width = 199;
     height = 185;
     power = 15;
-    range = 100;
+    range = 150;
     speedY = 50;
     isExploding = false;
     isExploded = false;
