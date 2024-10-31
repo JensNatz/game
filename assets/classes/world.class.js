@@ -1,6 +1,5 @@
 /**
- * Represents the game world, managing the hero, enemies, projectiles, and overall game state.
- * Inherits from IntervalGenerator class.
+ * Represents the game world, managing the hero, enemies, projectiles, and overall game state. Inherits from IntervalGenerator class.
  */
 class World extends IntervalGenerator {
     allLoadingPromises = [];
@@ -34,16 +33,13 @@ class World extends IntervalGenerator {
         this.keyboard = keyboard;
         this.loadLevel(level);
         this.initializeStatusbars();
-
         this.allLoadingPromises = [
             ...this.enemies.flatMap(enemy => enemy.loadingPromises),
             this.hero.loadingPromises,
             this.statusbar.loadingPromises
         ].flat();
-
         this.setWorld();
         this.sounds.thememusic.loop = true;
-
         this.worldLoadedPromise = Promise.all(this.allLoadingPromises).then(() => {
             this.setStoppableInterval(this.runGame.bind(this));
             this.draw();
@@ -51,8 +47,7 @@ class World extends IntervalGenerator {
     }
 
     /**
-    * Checks if the world has completely loaded.
-    * This method returns a promise that resolves when the world is fully loaded.
+    * Checks if the world has completely loaded. This method returns a promise that resolves when the world is fully loaded.
     * @returns {Promise} A promise that resolves when the world is completely loaded.
     */
     isCompleteyLoaded() {
@@ -100,7 +95,6 @@ class World extends IntervalGenerator {
             this.flipImage(object);
         }
         this.ctx.drawImage(object.img, object.posX, object.posY, object.width, object.height);
-
         if (object.otherDirection) {
             this.reverseFlipImage(object);
         }
@@ -288,8 +282,7 @@ class World extends IntervalGenerator {
                         token.sounds.pickup.play();
                     }
                     this.addBombSymbolToStatusbar();
-                }
-                if (token instanceof HealthpackToken) {
+                } if (token instanceof HealthpackToken) {
                     this.hero.applyHealthPack(token)
                 }
             }
@@ -305,14 +298,11 @@ class World extends IntervalGenerator {
                 let distanceToEnemy = this.calcDistance(enemy, this.hero);
                 if (enemy instanceof EnemyWithClub) {
                     enemy.actBasedOnDistance(distanceToEnemy, this.hero);
-                }
-                if (enemy instanceof EnemyWithGun || enemy instanceof Drone) {
+                } if (enemy instanceof EnemyWithGun || enemy instanceof Drone) {
                     enemy.shootAtHeroIfDeteced();
-                }
-                if (this.hero.currentState == 'attacking' && this.isHitByLaserbeam(enemy)) {
+                } if (this.hero.currentState == 'attacking' && this.isHitByLaserbeam(enemy)) {
                     enemy.reactToLaserbeam(this.laserbeam.power);
-                }
-                if (distanceToEnemy <= enemy.detectionRange) {
+                } if (distanceToEnemy <= enemy.detectionRange) {
                     enemy.detectHero();
                 }
                 this.handleEnemyReactionsToBombs(enemy);
@@ -340,16 +330,12 @@ class World extends IntervalGenerator {
         for (let i = this.projectiles.length - 1; i >= 0; i--) {
             const projectile = this.projectiles[i];
             let distanceBulletToHero = this.calcDistance(projectile, this.hero);
-
             if (distanceBulletToHero < 150) {
                 if (this.hero.isVulnerable()) {
-
                     if (projectile instanceof Bullet) {
                         this.hero.takeDamage(projectile.power);
                         this.removeProjectileFromWorld(i);
-                    }
-
-                    if (projectile instanceof Rocket) {
+                    } if (projectile instanceof Rocket) {
                         projectile.explode(this.hero);
                     }
                 }
@@ -418,7 +404,6 @@ class World extends IntervalGenerator {
     isHitByLaserbeam(enemy) {
         let enemyOffsetX = 260;
         let enemyOffsetY = 240;
-
         if (this.laserbeam.posX < enemy.posX + enemy.width - enemyOffsetX &&
             this.laserbeam.posX + this.laserbeam.width > enemy.posX + enemyOffsetX &&
             this.laserbeam.posY < enemy.posY + enemy.height - enemyOffsetY &&
@@ -490,12 +475,11 @@ class World extends IntervalGenerator {
         this.projectiles.forEach(projectile => {
             projectile.isMuted = !projectile.isMuted;
         });
-
         if (this.isMuted) {
             this.muteSounds();
         }
     }
-    
+
     /**
      * Mutes all sounds in the game.
      */
